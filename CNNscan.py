@@ -100,7 +100,7 @@ def fetch_feature_maps(model, img):
   for num_layer in range(len(feature_maps)):
     layer_viz = feature_maps[num_layer][0, :, :, :]
     layer_viz = layer_viz.data
-    print(layer_viz.size())
+    st.write(layer_viz.size())
     fig, axis =plt.subplots(2, 8, figsize=(20, 10))
     ax = axis.flatten()
     for i in range(len(ax)):
