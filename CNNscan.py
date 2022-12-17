@@ -14,9 +14,14 @@ from torch.hub import load_state_dict_from_url
 import matplotlib.pyplot as plt
 import math
 
-def fetch_filters(layer = 0):
+def load_model():
     model = torch.hub.load('pytorch/vision:v0.6.0', 'alexnet', pretrained=True)
     model.eval()
+    return model
+
+
+def fetch_filters(model, layer = 0):
+    
     idx_conv_layer = [0, 3, 6, 8, 10]
     filters = []
     for layer_idx in idx_conv_layer:
@@ -62,7 +67,8 @@ def main():
     option = int(conv_layer)
     show_filters = st.button('show the filters')
     if show_filters:
-        fetch_filters(layer = option)
+        model = load_model()
+        fetch_filters(model, layer = option)
     
 
 
