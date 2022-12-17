@@ -17,6 +17,7 @@ import math
 def fetch_filters(layer = 0):
     model = torch.hub.load('pytorch/vision:v0.6.0', 'alexnet', pretrained=True)
     model.eval()
+    print('done downloading')
     idx_conv_layer = [0, 3, 6, 8, 10]
     filters = []
     for layer_idx in idx_conv_layer:
