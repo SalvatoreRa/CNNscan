@@ -73,7 +73,10 @@ def main():
         if show_filters:
             model = load_model()
             fetch_filters(model, layer = option)
-    
+    with st.expander("Visualize the filters"):
+        show_featuremaps = st.button('show the feature maps')
+        if show_featuremaps:
+            st.write('ok')
 
 
 if __name__ == "__main__":
