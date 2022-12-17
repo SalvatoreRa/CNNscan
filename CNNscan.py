@@ -51,6 +51,9 @@ def fetch_filters(layer = 0):
 
 # Create the main app
 def main():
+    show_filters = st.button('show the filters')
+    if show_filters:
+        fetch_filters(layer = 0)
     
 
 
