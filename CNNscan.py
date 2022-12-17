@@ -41,7 +41,7 @@ def fetch_filters(layer = 0):
         ax[i].set_xticklabels([])
         ax[i].set_yticklabels([]) 
       plt.tight_layout()
-      plt.show()
+      st.pyplot(fig)
     else:
       plt_dim = int(math.sqrt(16))
       fig, axis =plt.subplots(plt_dim, plt_dim)
@@ -51,7 +51,7 @@ def fetch_filters(layer = 0):
         ax[i].set_title(str(i))
         ax[i].axis('off')
       plt.tight_layout()
-      plt.show()
+      st.pyplot(fig)
 
 
 # Create the main app
