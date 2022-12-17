@@ -138,7 +138,7 @@ def main():
         if show_featuremaps:
             if model is None:
                 model = load_model()
-            def fetch_feature_maps(model, image_features)
+            fetch_feature_maps(model, image_features)
 
 
 if __name__ == "__main__":
