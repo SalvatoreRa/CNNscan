@@ -59,9 +59,10 @@ def main():
     conv_layer = st.selectbox(
     'Select the convolution layer',
     ('0', '3', '6', '8','10'))
+    option = int(conv_layer)
     show_filters = st.button('show the filters')
     if show_filters:
-        fetch_filters(layer = 0)
+        fetch_filters(layer = option)
     
 
 
