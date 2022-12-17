@@ -59,8 +59,41 @@ def fetch_filters(model, layer = 0):
       plt.tight_layout()
       st.pyplot(fig)
 
-def fetch_featuremaps(model, img):
-    return None
+def fetch_feature_maps(model, img):
+  norm_mean = [0.485, 0.456, 0.406]
+  norm_std = [0.229, 0.224, 0.225]
+
+  data_transform = transforms.Compose([
+          transforms.Resize(256),
+          transforms.CenterCrop(256),
+          transforms.ToTensor(),
+          transforms.Normalize(norm_mean, norm_std),
+      ])
+  im = data_transform(img)
+
+  def fetcher(image, model):
+    model_children = list(list(model.children())[0])
+    results=[model_children[0](image)]
+    for i in range(1,len(model_children)):
+      results.append(model_children[i](results[-1]))
+    features = [results[i] for i in [2,5,12]]
+    return features
+
+  feature_maps = fetcher(im.unsqueeze(0), model)
+  for num_layer in range(len(feature_maps)):
+    layer_viz = feature_maps[num_layer][0, :, :, :]
+    layer_viz = layer_viz.data
+    print(layer_viz.size())
+    fig, axis =plt.subplots(2, 8, figsize=(20, 10))
+    ax = axis.flatten()
+    for i in range(len(ax)):
+        ax[i].imshow(layer_viz[i], cmap="gray")
+        ax[i].set_title(str(i))
+        ax[i].axis('off')
+    
+    plt.show()
+    plt.close() 
+
 
 # Create the main app
 def main():
