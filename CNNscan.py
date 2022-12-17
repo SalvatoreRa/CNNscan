@@ -114,6 +114,7 @@ def fetch_feature_maps(model, img):
 
 # Create the main app
 def main():
+    model = load_model()
     with st.expander("Visualize the filters"):
         conv_layer = st.selectbox(
         'Select the convolution layer',
@@ -121,7 +122,6 @@ def main():
         option = int(conv_layer)
         show_filters = st.button('show the filters')
         if show_filters:
-            model = load_model()
             fetch_filters(model, layer = option)
 
     with st.expander("Visualize the filters"):
@@ -136,8 +136,6 @@ def main():
 
         show_featuremaps = st.button('show the feature maps')
         if show_featuremaps:
-            if model is None:
-                model = load_model()
             fetch_feature_maps(model, image_features)
 
 
