@@ -91,7 +91,7 @@ def fetch_feature_maps(model, img):
         ax[i].set_title(str(i))
         ax[i].axis('off')
     
-    plt.show()
+    st.pyplot(fig)
     plt.close() 
 
 
@@ -107,6 +107,10 @@ def main():
             model = load_model()
             fetch_filters(model, layer = option)
     with st.expander("Visualize the filters"):
+        image_to_use = st.selectbox(
+        'Select the image to use',
+        ('0', '3', '6', '8','10'))
+        option = int(conv_layer)
         show_featuremaps = st.button('show the feature maps')
         if show_featuremaps:
             st.write('ok')
