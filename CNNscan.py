@@ -20,7 +20,7 @@ def load_model():
     model.eval()
     return model
 
-
+#Fetch filters
 def fetch_filters(model, layer = 0):
     
     idx_conv_layer = [0, 3, 6, 8, 10]
@@ -58,6 +58,22 @@ def fetch_filters(model, layer = 0):
         ax[i].axis('off')
       plt.tight_layout()
       st.pyplot(fig)
+
+### Feature Maps
+def load_test_image():
+    uploaded_file = st.file_uploader(label='Upload an image for test')
+    if uploaded_file is not None:
+        image_data = uploaded_file.getvalue()
+        st.image(image_data)
+        return Image.open(io.BytesIO(image_data))
+    else:
+        return None
+
+def load_baseline():
+    img_path = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/manja-vitolic-gKXKBY-C-Dk-unsplash.jpg?raw=true"
+    response = requests.get(img_path)
+    img_screen = Image.open(BytesIO(response.content))
+    st.image(img_screen
 
 def fetch_feature_maps(model, img):
   norm_mean = [0.485, 0.456, 0.406]
@@ -110,7 +126,10 @@ def main():
         image_to_use = st.selectbox(
         'Select the image to use',
         ('provided test', 'provide image'))
-        option = int(conv_layer)
+        if image_to_use == 'provide image':
+            image_features = load_test_image()
+        else:
+
         show_featuremaps = st.button('show the feature maps')
         if show_featuremaps:
             st.write('ok')
