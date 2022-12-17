@@ -115,6 +115,10 @@ def fetch_feature_maps(model, img):
 # Create the main app
 def main():
     model = load_model()
+    with st.expander("Visualize the structure"):
+        url1 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet.png?raw=true"
+        url2 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet2.png?raw=true"
+
     with st.expander("Visualize the filters"):
         conv_layer = st.selectbox(
         'Select the convolution layer',
