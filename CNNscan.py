@@ -130,6 +130,7 @@ def main():
         if image_to_use == 'provide image':
             image_features = load_test_image()
         else:
+            load_baseline()            
 
         show_featuremaps = st.button('show the feature maps')
         if show_featuremaps:
