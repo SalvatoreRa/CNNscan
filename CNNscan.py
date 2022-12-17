@@ -73,7 +73,8 @@ def load_baseline():
     img_path = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/manja-vitolic-gKXKBY-C-Dk-unsplash.jpg?raw=true"
     response = requests.get(img_path)
     img_screen = Image.open(BytesIO(response.content))
-    st.image(img_screen
+    st.image(img_screen)
+    return img_screen
 
 def fetch_feature_maps(model, img):
   norm_mean = [0.485, 0.456, 0.406]
