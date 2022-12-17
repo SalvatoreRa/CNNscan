@@ -116,6 +116,17 @@ def fetch_feature_maps(model, img):
 def main():
     model = load_model()
 
+    with st.sidebar.expander("About this App"):
+     st.write("""
+        This simple app is showing how to "do a radiography to a CNN".
+        //
+        Showed here there are different methods to visualize what is happening inside the convolutional neural network
+     """)
+    with st.sidebar.expander("About AlexNet"):
+        st.write("""
+        
+        """)
+
     with st.expander("Visualize the structure"):
         url1 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet.png?raw=true"
         url2 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet2.png?raw=true"
