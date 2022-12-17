@@ -62,7 +62,7 @@ def fetch_filters(model, layer = 0):
 
 # Create the main app
 def main():
-    with st.sidebar.expander("Visualize the filters"):
+    with st.expander("Visualize the filters"):
         conv_layer = st.selectbox(
         'Select the convolution layer',
         ('0', '3', '6', '8','10'))
