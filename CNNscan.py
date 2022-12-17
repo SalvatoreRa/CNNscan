@@ -59,6 +59,8 @@ def fetch_filters(model, layer = 0):
       plt.tight_layout()
       st.pyplot(fig)
 
+def fetch_featuremaps(model, img):
+    return None
 
 # Create the main app
 def main():
