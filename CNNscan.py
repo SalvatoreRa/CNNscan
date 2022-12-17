@@ -123,18 +123,22 @@ def main():
         if show_filters:
             model = load_model()
             fetch_filters(model, layer = option)
+
     with st.expander("Visualize the filters"):
         image_to_use = st.selectbox(
         'Select the image to use',
         ('provided test', 'provide image'))
+
         if image_to_use == 'provide image':
             image_features = load_test_image()
         else:
-            load_baseline()            
+            image_features = load_baseline()
 
         show_featuremaps = st.button('show the feature maps')
         if show_featuremaps:
-            st.write('ok')
+            if model is None:
+                model = load_model()
+            def fetch_feature_maps(model, image_features)
 
 
 if __name__ == "__main__":
