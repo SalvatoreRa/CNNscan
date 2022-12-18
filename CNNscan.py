@@ -233,6 +233,18 @@ def main():
         st.write("""
         
         """)
+    with st.sidebar.expander("About visualize filters"):
+        st.write("""
+        
+        """)
+    with st.sidebar.expander("About visualize feature maps"):
+        st.write("""
+        
+        """)
+    with st.sidebar.expander("About GradCam"):
+        st.write("""
+        
+        """)
 
     with st.expander("Visualize the structure"):
         url1 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet.png?raw=true"
