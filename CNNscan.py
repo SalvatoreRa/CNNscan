@@ -17,11 +17,6 @@ import torchvision.transforms as transforms
 from sklearn.preprocessing import minmax_scale
 
 def load_model():
-    model = torch.hub.load('pytorch/vision:v0.6.0', 'alexnet', pretrained=True)
-    model.eval()
-    return model
-
-def load_model():
   model_urls = {
     'alexnet': 'https://download.pytorch.org/models/alexnet-owt-7be5be79.pth',
   }
@@ -220,6 +215,19 @@ def main():
         if show_featuremaps:
             fetch_feature_maps(model, image_features)
 
+with st.expander("Visualize GradCam"):
+        image_to_use = st.selectbox(
+        'Select the image to use',
+        ('provided test', 'provide image'))
+
+        if image_to_use == 'provide image':
+            image_features = load_test_image()
+        else:
+            image_features = load_baseline()
+
+        show_gradcam = st.button('show GradCam')
+        if show_gradcam:
+            st.written('ok')
 
 if __name__ == "__main__":
     main()
