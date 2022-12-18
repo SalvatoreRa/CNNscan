@@ -237,6 +237,13 @@ def main():
         logo = Image.open(BytesIO(response.content))               
         st.image(logo,  width=150)
 
+    img_path = 'https://github.com/SalvatoreRa/CNNscan/blob/main/img/cnn_scan.png?raw=true'
+    capt = 'An android holding a radiography of a robot. Image created by the author with DALL-E'
+    response = requests.get(img_path)
+    img_screen = Image.open(BytesIO(response.content))
+    st.image(img_screen, caption=capt, width=None, use_column_width=None, clamp=False, channels="RGB", output_format="auto")
+    st.subheader('Visualize what happening inside a convolutional neural network (CNN)')
+
     with st.sidebar.expander("About this App"):
      st.write("""
         This simple app is showing how to "do a radiography to a CNN".
