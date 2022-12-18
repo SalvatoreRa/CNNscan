@@ -109,7 +109,7 @@ def fetch_filters(model, layer = 0):
       fig, axis =plt.subplots(plt_dim, plt_dim)
       ax = axis.flatten()
       for i in range(len(ax)):
-        ax[i].imshow(filters[layer].numpy()[i][0], cmap="gray")
+        ax[i].imshow(filters[idx_conv_layer.index(layer)].numpy()[i][0], cmap="gray")
         ax[i].set_title(str(i))
         ax[i].axis('off')
       plt.tight_layout()
