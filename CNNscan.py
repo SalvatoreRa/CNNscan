@@ -14,6 +14,8 @@ from torch.hub import load_state_dict_from_url
 import matplotlib.pyplot as plt
 import math
 import torchvision.transforms as transforms
+import cv2
+from sklearn.preprocessing import minmax_scale
 
 def load_model():
     model = torch.hub.load('pytorch/vision:v0.6.0', 'alexnet', pretrained=True)
