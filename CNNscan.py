@@ -216,14 +216,14 @@ def main():
             fetch_feature_maps(model, image_features)
 
 with st.expander("Visualize GradCam"):
-        image_to_use = st.selectbox(
+        image_to_cam = st.selectbox(
         'Select the image to use',
         ('provided test', 'provide image'))
 
-        if image_to_use == 'provide image':
-            image_features = load_test_image()
+        if image_to_cam == 'provide image':
+            image_cam = load_test_image()
         else:
-            image_features = load_baseline()
+            image_cam = load_baseline()
 
         show_gradcam = st.button('show GradCam')
         if show_gradcam:
