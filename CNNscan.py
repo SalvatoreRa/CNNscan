@@ -83,7 +83,7 @@ def fetch_filters(model, layer = 0):
     filters = []
     for layer_idx in idx_conv_layer:
         filters.append(model.features[layer_idx].weight.data)
-    t = filters[layer]
+    t = filters[idx_conv_layer.index(layer)]
     fig = plt.figure(figsize=(4,4))
     num_rows = 4
     num_cols = 4
