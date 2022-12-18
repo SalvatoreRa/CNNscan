@@ -16,6 +16,7 @@ import math
 import torchvision.transforms as transforms
 from sklearn.preprocessing import minmax_scale
 
+
 def load_model():
   model_urls = {
     'alexnet': 'https://download.pytorch.org/models/alexnet-owt-7be5be79.pth',
@@ -164,7 +165,46 @@ def fetch_feature_maps(model, img):
         ax[i].axis('off')
     
     st.pyplot(fig)
-    plt.close() 
+    plt.close()
+
+# Visualize GradCam
+def visualize_gradcam(model, img):
+  shapes = (np.array(img).shape[1], np.array(img).shape[0])
+
+  norm_mean = [0.485, 0.456, 0.406]
+  norm_std = [0.229, 0.224, 0.225]
+
+  data_transform = transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(256),
+            transforms.ToTensor(),
+            transforms.Normalize(norm_mean, norm_std),
+        ])
+  im = data_transform(img)
+
+  output = model(im.unsqueeze(0))
+  _, pred_cls = output.max(dim=1, keepdim=True)
+  def generate_heatmap(output, class_id, model, image):
+    
+    prediction = model(image)
+    prediction = torch.max(prediction)
+    prediction.backward()
+    gradients = model.gradients
+    pooled_gradients = torch.mean(gradients, dim=[0, 2, 3])
+    activations = model.get_activations(image)
+    for i in range(256):
+      activations[:, i, :, :] *= pooled_gradients[i]
+    heatmap = torch.mean(activations, dim=1).squeeze()
+    heatmap = np.maximum(heatmap.detach().numpy(), 0)
+    heatmap = torch.from_numpy(heatmap)
+    heatmap /= torch.max(heatmap)
+    return heatmap
+  heatmap = generate_heatmap(output, pred_cls, model, im.unsqueeze(0))
+  heat = Image.fromarray(np.uint8(cm.jet(heatmap.numpy())*255))
+  heats = heat.resize(shapes, Image.ANTIALIAS)
+  sup =  Image.blend(img.convert("RGBA"), heats, 0.5)
+  return heats, sup
+
 
 
 # Create the main app
