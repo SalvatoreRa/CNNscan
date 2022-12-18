@@ -217,7 +217,7 @@ def main():
 
 with st.expander("Visualize GradCam"):
         image_to_cam = st.selectbox(
-        'Select the image to use',
+        'Select an image to use',
         ('provided test', 'provide image'))
 
         if image_to_cam == 'provide image':
