@@ -215,7 +215,7 @@ def main():
         if show_featuremaps:
             fetch_feature_maps(model, image_features)
 
-with st.expander("Visualize GradCam"):
+    with st.expander("Visualize GradCam"):
         image_to_cam = st.selectbox(
         'Select an image to use',
         ('provided test', 'provide image'))
