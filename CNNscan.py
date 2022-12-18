@@ -223,6 +223,20 @@ def outputs(image_cam, heats, sup):
 def main():
     model = load_model()
 
+    col1, col2 = st.columns( [0.8, 0.2])
+    with col1:               
+        st.markdown(""" <style> .font {
+        font-size:35px ; font-family: 'Cooper Black'; color: #000000;} 
+        </style> """, unsafe_allow_html=True)
+        st.markdown('<p class="font">CNNscan</p>', unsafe_allow_html=True)
+            
+        
+    with col2:
+        img_logo = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/logo.png?raw=true"
+        response = requests.get(img_logo)
+        logo = Image.open(BytesIO(response.content))               
+        st.image(logo,  width=150)
+
     with st.sidebar.expander("About this App"):
      st.write("""
         This simple app is showing how to "do a radiography to a CNN".
