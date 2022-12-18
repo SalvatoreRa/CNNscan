@@ -201,7 +201,7 @@ def main():
         if show_filters:
             fetch_filters(model, layer = option)
 
-    with st.expander("Visualize the filters"):
+    with st.expander("Visualize the feature maps"):
         image_to_use = st.selectbox(
         'Select the image to use',
         ('provided test', 'provide image'))
