@@ -2,4 +2,3 @@ torch
 matplotlib
 torchvision
 cv2
-sklearn
