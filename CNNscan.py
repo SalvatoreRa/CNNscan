@@ -205,6 +205,18 @@ def visualize_gradcam(model, img):
   sup =  Image.blend(img.convert("RGBA"), heats, 0.5)
   return heats, sup
 
+def outputs(image_cam, heats, sup):
+    col1, col2, col3 = st.columns([0.25, 0.25, 0.25])
+    with col1:
+        st.write('Original image')
+        st.image(image_cam)
+    with col2:
+        st.write('Correspective heatmap')
+        st.image(heats)
+    with col3:
+        st.write('Superimposed image')
+        st.image(sup)
+
 
 
 # Create the main app
