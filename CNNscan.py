@@ -280,6 +280,7 @@ def main():
         show_gradcam = st.button('show GradCam')
         if show_gradcam:
             heats, sup =visualize_gradcam(model, image_cam)
+            outputs(image_cam, heats, sup)
 
 if __name__ == "__main__":
     main()
