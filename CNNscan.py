@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import math
 import torchvision.transforms as transforms
 from sklearn.preprocessing import minmax_scale
-
+from matplotlib import cm
 
 def load_model():
   model_urls = {
