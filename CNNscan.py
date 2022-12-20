@@ -423,6 +423,21 @@ def main():
         if show_gradcam:
             heats, sup =visualize_gradcam(model, image_cam)
             outputs(image_cam, heats, sup)
+            
+     with st.expander("Visualize Vanilla Backpropagation"):
+        image_to_backpr = st.selectbox(
+        'Select an image to use',
+        ('provided test', 'provide image'))
+
+        if image_to_backpr == 'provide image':
+            image_to_backpr = load_test_image()
+        else:
+            image_to_backpr = load_baseline()
+
+        show_backprop = st.button('show Vanilla Backpropagation')
+        if show_backprop:
+            backprop_im, backprop_bn =VanillaBackprop_process(model, image_to_backpr)
+            outputs(image_to_backpr, backprop_im, backprop_bn)
 
 if __name__ == "__main__":
     main()
