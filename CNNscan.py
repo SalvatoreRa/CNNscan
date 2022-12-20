@@ -437,6 +437,7 @@ def main():
 
         show_backprop = st.button('show Vanilla Backpropagation')
         if show_backprop:
+            model = load_model()
             backprop_im, backprop_bn =VanillaBackprop_process(model, image_to_backpr)
             outputs(image_to_backpr, backprop_im, backprop_bn)
 
