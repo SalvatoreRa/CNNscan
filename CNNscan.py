@@ -303,7 +303,14 @@ class VanillaBackprop():
         gradients_as_arr = self.gradients.data.numpy()[0]
         return gradients_as_arr
 
-
+def VanillaBackprop_process(model, img):
+  VBP = VanillaBackprop(model)
+  im, pred_cls = process_img(img)
+  gradient = VBP.generate_gradients(im, pred_cls)
+  grad_im =save_gradient_images(gradient)
+  grad_bn= convert_to_grayscale(gradient)
+  grad_im_bn =save_gradient_images(grad_bn)
+  return grad_im, grad_im_bn
 
 
 
@@ -361,6 +368,10 @@ def main():
         
         """)
     with st.sidebar.expander("About GradCam"):
+        st.write("""
+        
+        """)
+    with st.sidebar.expander("Vanilla Backpropagation"):
         st.write("""
         
         """)
