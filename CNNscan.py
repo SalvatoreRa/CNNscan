@@ -900,7 +900,7 @@ def main():
         else:
             image_to_LRP = load_baseline()
 
-        show_LRP = st.button('show Guided GradCam')
+        show_LRP = st.button('show Layerwise Relevance')
         if show_LRP:
             heat_list =LRP_process(model, image_to_LRP)
             outputs_LRP(image_to_LRP, heat_list)         
