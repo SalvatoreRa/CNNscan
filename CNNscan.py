@@ -414,6 +414,7 @@ def main():
     st.image(img_screen, caption=capt, width=None, use_column_width=None, clamp=False, channels="RGB", output_format="auto")
     st.subheader('Visualize what happening inside a convolutional neural network (CNN)')
 
+    st.sidebar.image(logo,  width=150)
     with st.sidebar.expander("About this App"):
      st.write("""
         This simple app is showing how to "do a radiography to a CNN".
