@@ -538,7 +538,7 @@ def main():
                              txt1, txt2, txt3)
             
             txt1 = 'Original image' 
-            txt2 = 'Colored Guided Backpropagation'
+            txt2 = 'Guided Backpropagation Negative Saliency'
             txt3 = 'Guided Backpropagation Positive Saliency'
             outputs_backprop(image_to_Gbackpr, pos_sal_bp, neg_sal_bp, 
                              txt1, txt2, txt3)
