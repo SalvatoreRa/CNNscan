@@ -656,7 +656,7 @@ def LRP_process_group(model, img):
   layerwise_relevance = LRP(model)
   im, pred_cls = process_img(img, model)
   LRP_per_layer = layerwise_relevance.generate(im, pred_cls)
-  heat_list = []
+  heat_list = list()
   for layer in range(1,12):
       lrp_to_vis = np.array(LRP_per_layer[layer][0]).sum(axis=0)
       lrp_to_vis = np.array(Image.fromarray(lrp_to_vis).resize((im.shape[2],
