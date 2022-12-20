@@ -427,7 +427,7 @@ def main():
     with st.expander("Visualize Vanilla Backpropagation"):
       
         image_to_backpr = st.selectbox(
-        'Select an image to use',
+        'Select an image for Vanilla Backpropagation:',
         ('provided test', 'provide image'))
 
         if image_to_backpr == 'provide image':
