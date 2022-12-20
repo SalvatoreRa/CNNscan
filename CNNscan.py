@@ -662,7 +662,7 @@ def main():
           txt2 = 'Score-weighted Class Activation Map'
           txt3 = 'Score-weighted Class Activation Map on image'
           txt4 = 'Score-weighted Class Activation Map'
-          outputs_scorecam(image_to_scorecam, heatmap, heatmap_on_image, activation_map, txt1, txt2, txt3, text4)
+          outputs_scorecam(image_to_scorecam, heatmap, heatmap_on_image, activation_map, txt1, txt2, txt3, txt4)
             
             
 
