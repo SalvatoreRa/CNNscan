@@ -527,6 +527,11 @@ def main():
         st.write("""
         
         """)
+    with st.sidebar.expander("ScoreCam"):
+        st.write("""
+        
+        """)
+        
 
     with st.expander("Visualize the structure"):
         url1 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet.png?raw=true"
@@ -625,6 +630,24 @@ def main():
             txt3 = 'Guided Backpropagation Positive Saliency'
             outputs_backprop(image_to_Gbackpr, pos_sal_bp, neg_sal_bp, 
                              txt1, txt2, txt3)
+    with st.expander("Visualize ScoreCam"):
+      
+        image_to_scorecam = st.selectbox(
+        'Select an image for ScoreCam:',
+        ('provided test', 'provide image'))
+
+        if image_to_scorecam == 'provide image':
+            image_to_scorecam = load_test_image()
+        else:
+            image_to_scorecam = load_baseline()
+
+        show_scorecam = st.button('show ScoreCam')
+        if show_scorecam:
+          scorecam = scorecam_process(model, image_to_scorecam)
+          heatmap, heatmap_on_image, activation_map = save_class_activation_images(image_to_scorecam, scorecam)
+            
+            
+
 
 if __name__ == "__main__":
     main()
