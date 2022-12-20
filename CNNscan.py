@@ -226,7 +226,7 @@ def outputs(image_cam, heats, sup):
 # Visualize vanilla propagation
 #this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
 
-def process_img(img):
+def process_img(img, model):
   norm_mean = [0.485, 0.456, 0.406]
   norm_std = [0.229, 0.224, 0.225]
 
@@ -437,7 +437,7 @@ def main():
 
         show_backprop = st.button('show Vanilla Backpropagation')
         if show_backprop:
-            model = load_model()
+            
             backprop_im, backprop_bn =VanillaBackprop_process(model, image_to_backpr)
             outputs(image_to_backpr, backprop_im, backprop_bn)
 
