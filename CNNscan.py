@@ -667,7 +667,7 @@ def LRP_process(model, img):
 
 
 def outputs_LRP(img, heat_list):
-col1, col2, col3, col4 = st.columns([0.25, 0.25, 0.25, 0.25])
+    col1, col2, col3, col4 = st.columns([0.25, 0.25, 0.25, 0.25])
     with col1:
         st.write('Original image')
         st.image(im1)
