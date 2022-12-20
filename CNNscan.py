@@ -449,7 +449,7 @@ def main():
         if show_backprop:
             
             backprop_im, backprop_bn =VanillaBackprop_process(model, image_to_backpr)
-            outputs_backprop(image_to_backpr, backprop_im, backprop_bn)
+            
             txt1 = 'Original image' 
             txt2 = 'Colored Vanilla Backpropagation'
             txt3 = 'Vanilla Backpropagation Saliency'
