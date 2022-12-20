@@ -424,7 +424,8 @@ def main():
             heats, sup =visualize_gradcam(model, image_cam)
             outputs(image_cam, heats, sup)
             
-     with st.expander("Visualize Vanilla Backpropagation"):
+    with st.expander("Visualize Vanilla Backpropagation"):
+      
         image_to_backpr = st.selectbox(
         'Select an image to use',
         ('provided test', 'provide image'))
