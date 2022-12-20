@@ -556,9 +556,102 @@ def gradient_gradcam(model, img):
   cam_gs =save_gradient_images(cam_gs)
   return cam_im, cam_gs
 
-# Visualize vanilla propagation
+# Visualize Layerwise Relevance LRP
 #this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
-        
+
+
+class LRP():
+    def __init__(self, model):
+        self.model = model
+
+    def LRP_forward(self, layer, input_tensor, gamma=None, epsilon=None):
+
+        if gamma is None:
+            gamma = lambda value: value + 0.05 * copy.deepcopy(value.data.detach()).clamp(min=0)
+        if epsilon is None:
+            eps = 1e-9
+            epsilon = lambda value: value + eps
+        layer = copy.deepcopy(layer)
+
+        try:
+            layer.weight = nn.Parameter(gamma(layer.weight))
+        except AttributeError:
+            pass
+
+        try:
+            layer.bias = nn.Parameter(gamma(layer.bias))
+        except AttributeError:
+            pass
+
+
+        return epsilon(layer(input_tensor))
+
+    def LRP_step(self, forward_output, layer, LRP_next_layer):
+
+        forward_output = forward_output.requires_grad_(True)
+
+        lrp_rule_forward_out = self.LRP_forward(layer, forward_output, None, None)
+
+        ele_div = (LRP_next_layer / lrp_rule_forward_out).data
+
+        (lrp_rule_forward_out * ele_div).sum().backward()
+
+        LRP_this_layer = (forward_output * forward_output.grad).data
+
+        return LRP_this_layer
+
+    def generate(self, input_image, target_class):
+        layers_in_model = list(self.model._modules['features']) + list(self.model._modules['classifier'])
+        number_of_layers = len(layers_in_model)
+
+        features_to_classifier_loc = len(self.model._modules['features'])
+
+        forward_output = [input_image]
+
+        for conv_layer in list(self.model._modules['features']):
+            forward_output.append(conv_layer.forward(forward_output[-1].detach()))
+
+        feature_to_class_shape = forward_output[-1].shape
+
+        forward_output[-1] = torch.flatten(forward_output[-1], 1)
+        for index, classifier_layer in enumerate(list(self.model._modules['classifier'])):
+            forward_output.append(classifier_layer.forward(forward_output[-1].detach()))
+
+        target_class_one_hot = torch.FloatTensor(1, 1000).zero_()
+        target_class_one_hot[0][target_class] = 1
+
+        LRP_per_layer = [None] * number_of_layers + [(forward_output[-1] * target_class_one_hot).data]
+
+        for layer_index in range(1, number_of_layers)[::-1]:
+
+            if layer_index == features_to_classifier_loc-1:
+                LRP_per_layer[layer_index+1] = LRP_per_layer[layer_index+1].reshape(feature_to_class_shape)
+
+            if isinstance(layers_in_model[layer_index], (torch.nn.Linear, torch.nn.Conv2d, torch.nn.MaxPool2d)):
+
+                lrp_this_layer = self.LRP_step(forward_output[layer_index], layers_in_model[layer_index], LRP_per_layer[layer_index+1])
+                LRP_per_layer[layer_index] = lrp_this_layer
+            else:
+                LRP_per_layer[layer_index] = LRP_per_layer[layer_index+1]
+        return LRP_per_layer
+
+
+def apply_heatmap(R, sx, sy):
+    b = 10*((np.abs(R)**3.0).mean()**(1.0/3))
+    my_cmap = plt.cm.seismic(np.arange(plt.cm.seismic.N))
+    my_cmap[:, 0:3] *= 0.85
+    my_cmap = ListedColormap(my_cmap)
+    plt.figure(figsize=(sx, sy))
+    plt.subplots_adjust(left=0, right=1, bottom=0, top=1)
+    plt.axis('off')
+    plt.imshow(R, cmap=my_cmap, vmin=-b, vmax=b, interpolation='nearest')
+    with BytesIO() as buffer:
+      plt.savefig(buffer, format = "png")
+      buffer.seek(0)
+      image = Image.open(buffer)
+      ar = np.asarray(image)
+    return image
+          
 
 # Create the main app
 def main():
