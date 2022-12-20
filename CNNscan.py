@@ -219,9 +219,102 @@ def outputs(image_cam, heats, sup):
         st.write('Superimposed image')
         st.image(sup)
 
+
+        
+        
+        
 # Visualize vanilla propagation
 #this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
-        
+
+def process_img(img):
+  norm_mean = [0.485, 0.456, 0.406]
+  norm_std = [0.229, 0.224, 0.225]
+
+  data_transform = transforms.Compose([
+              transforms.Resize(224),
+              transforms.CenterCrop(224),
+              transforms.ToTensor(),
+              transforms.Normalize(norm_mean, norm_std),
+          ])
+  im = data_transform(img)
+  im = im.unsqueeze(0)
+  output = model(im)
+  _, pred_cls = output.max(dim=1, keepdim=True)
+  im = Variable(im, requires_grad=True)
+  return im, pred_cls
+
+
+def format_np_output(np_arr):
+    if len(np_arr.shape) == 2:
+        np_arr = np.expand_dims(np_arr, axis=0)
+    if np_arr.shape[0] == 1:
+        np_arr = np.repeat(np_arr, 3, axis=0)
+    if np_arr.shape[0] == 3:
+        np_arr = np_arr.transpose(1, 2, 0)
+    if np.max(np_arr) <= 1:
+        np_arr = (np_arr*255).astype(np.uint8)
+    return np_arr
+
+def save_image(im):
+  im = format_np_output(im)
+  im = Image.fromarray(im)
+  return im
+
+def save_gradient_images(gradient):
+    # Normalize
+    gradient = gradient - gradient.min()
+    gradient /= gradient.max()
+    # Save image
+    im =save_image(gradient)
+    return im
+
+def convert_to_grayscale(im_as_arr):
+    grayscale_im = np.sum(np.abs(im_as_arr), axis=0)
+    im_max = np.percentile(grayscale_im, 99)
+    im_min = np.min(grayscale_im)
+    grayscale_im = (np.clip((grayscale_im - im_min) / (im_max - im_min), 0, 1))
+    grayscale_im = np.expand_dims(grayscale_im, axis=0)
+    return grayscale_im
+
+class VanillaBackprop():
+    """
+        Produces gradients generated with vanilla back propagation from the image
+    """
+    def __init__(self, model):
+        self.model = model
+        self.gradients = None
+
+        self.model.eval()
+        self.hook_layers()
+
+    def hook_layers(self):
+        def hook_function(module, grad_in, grad_out):
+            self.gradients = grad_in[0]
+
+        first_layer = list(self.model.features._modules.items())[0][1]
+        first_layer.register_backward_hook(hook_function)
+
+    def generate_gradients(self, input_image, target_class):
+        model_output = self.model(input_image)
+        self.model.zero_grad()
+        one_hot_output = torch.FloatTensor(1, model_output.size()[-1]).zero_()
+        one_hot_output[0][target_class] = 1
+        model_output.backward(gradient=one_hot_output)
+        gradients_as_arr = self.gradients.data.numpy()[0]
+        return gradients_as_arr
+
+
+
+
+
+
+
+
+
+
+
+
+
         
 
 # Create the main app
