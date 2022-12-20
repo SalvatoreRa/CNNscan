@@ -652,7 +652,32 @@ def apply_heatmap(R, sx, sy):
       ar = np.asarray(image)
     return image
 
+def LRP_process(model, img):
+  layerwise_relevance = LRP(model)
+  im, pred_cls = process_img(img, model)
+  LRP_per_layer = layerwise_relevance.generate(im, pred_cls)
+  heat_list = []
+  for layer in range(1,12):
+      lrp_to_vis = np.array(LRP_per_layer[layer][0]).sum(axis=0)
+      lrp_to_vis = np.array(Image.fromarray(lrp_to_vis).resize((im.shape[2],
+                              im.shape[3]), Image.ANTIALIAS))
+      heatmap = apply_heatmap(lrp_to_vis, 4, 4)
+      heat_list.append(heatmap)
+  return heatmap
 
+
+def outputs_LRP(img, heat_list)
+col1, col2, col3, col4 = st.columns([0.25, 0.25, 0.25, 0.25])
+    with col1:
+        st.write('Original image')
+        st.image(im1)
+        st.write('Layer 4')
+        st.image(heat_list[3])
+    with col2:
+        st.write('Layer 1')
+        st.image(heat_list[0])
+        st.write('Layer 5')
+        st.image(heat_list[4])
           
 
 # Create the main app
@@ -876,7 +901,9 @@ def main():
             image_to_LRP = load_baseline()
 
         show_LRP = st.button('show Guided GradCam')
-        if show_LRP:         
+        if show_LRP:
+            heat_list =LRP_process(model, image_to_LRP)
+            outputs_LRP(image_to_LRP, heat_list)         
 
 
 if __name__ == "__main__":
