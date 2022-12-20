@@ -717,7 +717,10 @@ def main():
         st.write("""
         
         """)
+    with st.sidebar.expander("Layerwise Relevance"):
+        st.write("""
         
+        """)    
 
     with st.expander("Visualize the structure"):
         url1 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet.png?raw=true"
@@ -857,7 +860,21 @@ def main():
             txt2 = 'Guided GradCam Colors'
             txt3 = 'Guided GradCam grayscale'
             outputs_backprop(image_to_GGradCam, cam_im, cam_gs, 
-                             txt1, txt2, txt3)            
+                             txt1, txt2, txt3)   
+
+    with st.expander("Visualize Layerwise Relevance"):
+      
+        image_to_LRP = st.selectbox(
+        'Select an image for Layerwise Relevance:',
+        ('provided test', 'provide image'))
+
+        if image_to_LRP == 'provide image':
+            image_to_LRP = load_test_image()
+        else:
+            image_to_LRP = load_baseline()
+
+        show_LRP = st.button('show Guided GradCam')
+        if show_LRP:         
 
 
 if __name__ == "__main__":
