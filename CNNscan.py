@@ -305,7 +305,7 @@ class VanillaBackprop():
 
 def VanillaBackprop_process(model, img):
   VBP = VanillaBackprop(model)
-  im, pred_cls = process_img(img)
+  im, pred_cls = process_img(img, model)
   gradient = VBP.generate_gradients(im, pred_cls)
   grad_im =save_gradient_images(gradient)
   grad_bn= convert_to_grayscale(gradient)
