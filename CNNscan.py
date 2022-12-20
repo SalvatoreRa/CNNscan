@@ -467,7 +467,7 @@ def scorecam_process(model, img):
   cam = score_cam.generate_cam(im, pred_cls)
   return cam
 
-def outputs_scorecam(im1, im2, im3, im4, txt1, txt2, txt3, text4):
+def outputs_scorecam(im1, im2, im3, im4, txt1, txt2, txt3, txt4):
     col1, col2 = st.columns([0.25, 0.25])
     with col1:
         st.write(txt1)
