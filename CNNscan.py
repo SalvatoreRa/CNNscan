@@ -20,6 +20,7 @@ from torch.nn import ReLU
 from torch.autograd import Variable
 import torch.nn.functional as F
 import copy
+from matplotlib.colors import ListedColormap
 
 def load_model():
   model_urls = {
