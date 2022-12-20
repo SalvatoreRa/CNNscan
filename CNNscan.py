@@ -312,7 +312,17 @@ def VanillaBackprop_process(model, img):
   grad_im_bn =save_gradient_images(grad_bn)
   return grad_im, grad_im_bn
 
-
+def outputs_backprop(im1, im2, im3):
+    col1, col2, col3 = st.columns([0.25, 0.25, 0.25])
+    with col1:
+        st.write('Original image')
+        st.image(image_cam)
+    with col2:
+        st.write('Correspective heatmap')
+        st.image(heats)
+    with col3:
+        st.write('Superimposed image')
+        st.image(sup)
 
 
 
@@ -422,7 +432,7 @@ def main():
         show_gradcam = st.button('show GradCam')
         if show_gradcam:
             heats, sup =visualize_gradcam(model, image_cam)
-            outputs(image_cam, heats, sup)
+            outputs_prog(image_cam, heats, sup)
             
     with st.expander("Visualize Vanilla Backpropagation"):
       
@@ -439,7 +449,7 @@ def main():
         if show_backprop:
             
             backprop_im, backprop_bn =VanillaBackprop_process(model, image_to_backpr)
-            outputs(image_to_backpr, backprop_im, backprop_bn)
+            outputs_backprop(image_to_backpr, backprop_im, backprop_bn)
 
 if __name__ == "__main__":
     main()
