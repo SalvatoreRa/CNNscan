@@ -237,10 +237,10 @@ def process_img(img):
               transforms.Normalize(norm_mean, norm_std),
           ])
   im = data_transform(img)
-  _im = im.unsqueeze(0)
-  output = model(_im)
+  
+  output = model( im.unsqueeze(0))
   _, pred_cls = output.max(dim=1, keepdim=True)
-  im_proc = Variable(_im, requires_grad=True)
+  im_proc = Variable( im.unsqueeze(0), requires_grad=True)
   return im_proc, pred_cls
 
 
