@@ -16,6 +16,8 @@ import math
 import torchvision.transforms as transforms
 from sklearn.preprocessing import minmax_scale
 from matplotlib import cm
+from torch.nn import ReLU
+from torch.autograd import Variable
 
 def load_model():
   model_urls = {
@@ -217,7 +219,10 @@ def outputs(image_cam, heats, sup):
         st.write('Superimposed image')
         st.image(sup)
 
-
+# Visualize vanilla propagation
+#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
+        
+        
 
 # Create the main app
 def main():
