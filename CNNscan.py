@@ -672,12 +672,30 @@ def outputs_LRP(img, heat_list):
         st.write('Original image')
         st.image(img)
         st.write('Layer 4')
-        st.image(heat_list[0])
+        st.image(heat_list[3])
+        st.write('Layer 8')
+        st.image(heat_list[7])
     with col2:
         st.write('Layer 1')
         st.image(heat_list[0])
         st.write('Layer 5')
-        st.image(heat_list[0])
+        st.image(heat_list[4])
+        st.write('Layer 9')
+        st.image(heat_list[8])
+    with col3:
+        st.write('Layer 2')
+        st.image(heat_list[1])
+        st.write('Layer 6')
+        st.image(heat_list[5])
+        st.write('Layer 10')
+        st.image(heat_list[9])
+    with col4:
+        st.write('Layer 3')
+        st.image(heat_list[2])
+        st.write('Layer 7')
+        st.image(heat_list[6])
+        st.write('Layer 11')
+        st.image(heat_list[10])
           
 
 # Create the main app
