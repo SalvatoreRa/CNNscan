@@ -369,6 +369,11 @@ class GuidedBackprop():
         gradients_as_arr = self.gradients.data.numpy()[0]
         return gradients_as_arr
 
+def get_positive_negative_saliency(gradient):
+    pos_saliency = (np.maximum(0, gradient) / gradient.max())
+    neg_saliency = (np.maximum(0, -gradient) / -gradient.min())
+    return pos_saliency, neg_saliency
+ 
 def GuidedBackprop_process(model, img):
   GuideProg = GuidedBackprop(model)
   im, pred_cls = process_img(img, model)
@@ -376,8 +381,10 @@ def GuidedBackprop_process(model, img):
   grad_im =save_gradient_images(gradient)
   grad_bn= convert_to_grayscale(gradient)
   grad_im_bn =save_gradient_images(grad_bn)
-  return grad_im, grad_im_bn
-
+  pos_sal, neg_sal = get_positive_negative_saliency(gradient)
+  pos_sal =save_gradient_images(pos_sal)
+  neg_sal =save_gradient_images(neg_sal)
+  return grad_im, grad_im_bn, pos_sal, neg_sal
 
 
         
@@ -522,12 +529,18 @@ def main():
         show_Gbackprop = st.button('show Guided Backpropagation')
         if show_Gbackprop:
             
-            Gbackprop_im, Gbackprop_bn =GuidedBackprop_process(model, image_to_Gbackpr)
+            Gbackprop_im, Gbackprop_bn, pos_sal_bp, neg_sal_bp =GuidedBackprop_process(model, image_to_Gbackpr)
+            
+            txt1 = 'Original image' 
+            txt2 = 'Guided Backpropagation Negative Saliency'
+            txt3 = 'Guided Backpropagation Saliency'
+            outputs_backprop(image_to_Gbackpr, Gbackprop_im, Gbackprop_bn, 
+                             txt1, txt2, txt3)
             
             txt1 = 'Original image' 
             txt2 = 'Colored Guided Backpropagation'
-            txt3 = 'Guided Backpropagation Saliency'
-            outputs_backprop(image_to_Gbackpr, Gbackprop_im, Gbackprop_bn, 
+            txt3 = 'Guided Backpropagation Positive Saliency'
+            outputs_backprop(image_to_Gbackpr, pos_sal_bp, neg_sal_bp, 
                              txt1, txt2, txt3)
 
 if __name__ == "__main__":
