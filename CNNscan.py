@@ -670,7 +670,7 @@ def outputs_LRP(img, heat_list):
     col1, col2, col3, col4 = st.columns([0.25, 0.25, 0.25, 0.25])
     with col1:
         st.write('Original image')
-        st.image(im1)
+        st.image(img)
         st.write('Layer 4')
         st.image(heat_list[3])
     with col2:
