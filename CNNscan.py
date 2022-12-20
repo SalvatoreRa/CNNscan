@@ -371,7 +371,7 @@ class GuidedBackprop():
 
 def GuidedBackprop_process(model, img):
   GuideProg = GuidedBackprop(model)
-  im, pred_cls = process_img(img)
+  im, pred_cls = process_img(img, model)
   gradient = GuideProg.generate_gradients(im, pred_cls)
   grad_im =save_gradient_images(gradient)
   grad_bn= convert_to_grayscale(gradient)
