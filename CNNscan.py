@@ -19,6 +19,7 @@ from matplotlib import cm
 from torch.nn import ReLU
 from torch.autograd import Variable
 import torch.nn.functional as F
+import copy
 
 def load_model():
   model_urls = {
