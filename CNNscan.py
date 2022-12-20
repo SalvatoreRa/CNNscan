@@ -651,6 +651,8 @@ def apply_heatmap(R, sx, sy):
       image = Image.open(buffer)
       ar = np.asarray(image)
     return image
+
+
           
 
 # Create the main app
