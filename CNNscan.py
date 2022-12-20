@@ -652,7 +652,7 @@ def apply_heatmap(R, sx, sy):
       ar = np.asarray(image)
     return image
 
-def LRP_process(model, img):
+def LRP_process_group(model, img):
   layerwise_relevance = LRP(model)
   im, pred_cls = process_img(img, model)
   LRP_per_layer = layerwise_relevance.generate(im, pred_cls)
@@ -665,6 +665,16 @@ def LRP_process(model, img):
       heat_list.append(heatmap)
   return heatmap
 
+def LRP_process(model, img, layer = 1):
+  layerwise_relevance = LRP(model)
+  im, pred_cls = process_img(img, model)
+  LRP_per_layer = layerwise_relevance.generate(im, pred_cls)
+  lrp_to_vis = np.array(LRP_per_layer[layer][0]).sum(axis=0)
+  lrp_to_vis = np.array(Image.fromarray(lrp_to_vis).resize((im.shape[2],
+                          im.shape[3]), Image.ANTIALIAS))
+  heatmap = apply_heatmap(lrp_to_vis, 4, 4)
+  return heatmap
+
 
 def outputs_LRP(img, heat_list):
     col1, col2, col3, col4 = st.columns([0.25, 0.25, 0.25, 0.25])
@@ -672,13 +682,12 @@ def outputs_LRP(img, heat_list):
         st.write('Original image')
         st.image(img)
         st.write('Layer 4')
-        imx = heat_list[3]
-        st.image(imx)
+        st.image(heat_list)
     with col2:
         st.write('Layer 1')
-        st.image(heat_list[0])
+        st.image(heat_list)
         st.write('Layer 5')
-        st.image(heat_list[4])
+        st.image(heat_list)
           
 
 # Create the main app
