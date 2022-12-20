@@ -480,7 +480,79 @@ def outputs_scorecam(im1, im2, im3, im4, txt1, txt2, txt3, txt4):
         st.write(txt4)
         st.image(im4)
 
+# Visualize Guided SCORE-CAM
+#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
 
+def guided_grad_cam(grad_cam_mask, guided_backprop_mask):
+    cam_gb = np.multiply(grad_cam_mask, guided_backprop_mask)
+    return cam_gb
+
+class CamExtractor():
+
+    def __init__(self, model, target_layer):
+        self.model = model
+        self.target_layer = target_layer
+        self.gradients = None
+
+    def save_gradient(self, grad):
+        self.gradients = grad
+
+    def forward_pass_on_convolutions(self, x):
+        conv_output = None
+        for module_pos, module in self.model.features._modules.items():
+            x = module(x)  # Forward
+            if int(module_pos) == self.target_layer:
+                x.register_hook(self.save_gradient)
+                conv_output = x  # Save the convolution output on that layer
+        return conv_output, x
+
+    def forward_pass(self, x):
+        conv_output, x = self.forward_pass_on_convolutions(x)
+        x = x.view(x.size(0), -1)  # Flatten
+        x = self.model.classifier(x)
+        return conv_output, x
+
+
+class GradCam():
+    def __init__(self, model, target_layer):
+        self.model = model
+        self.model.eval()
+        self.extractor = CamExtractor(self.model, target_layer)
+
+    def generate_cam(self, input_image, target_class=None):
+        conv_output, model_output = self.extractor.forward_pass(input_image)
+        if target_class is None:
+            target_class = np.argmax(model_output.data.numpy())
+        one_hot_output = torch.FloatTensor(1, model_output.size()[-1]).zero_()
+        one_hot_output[0][target_class] = 1
+        self.model.features.zero_grad()
+        self.model.classifier.zero_grad()
+        model_output.backward(gradient=one_hot_output, retain_graph=True)
+        guided_gradients = self.extractor.gradients.data.numpy()[0]
+        target = conv_output.data.numpy()[0]
+        weights = np.mean(guided_gradients, axis=(1, 2))  # Take averages for each gradient
+        # Create empty numpy array for cam
+        cam = np.ones(target.shape[1:], dtype=np.float32)
+        for i, w in enumerate(weights):
+            cam += w * target[i, :, :]
+        cam = np.maximum(cam, 0)
+        cam = (cam - np.min(cam)) / (np.max(cam) - np.min(cam))  # Normalize between 0-1
+        cam = np.uint8(cam * 255)  # Scale between 0-255 to visualize
+        cam = np.uint8(Image.fromarray(cam).resize((input_image.shape[2],
+                       input_image.shape[3]), Image.ANTIALIAS))/255
+        return cam
+
+def gradient_gradcam(model, img):
+  gcv2 = GradCam(model, target_layer=11)
+  im, pred_cls = process_img(img, model)
+  cam = gcv2.generate_cam(im, pred_cls)
+  GBP = GuidedBackprop(model)
+  guided_grads = GBP.generate_gradients(im, pred_cls)
+  cam_gb = guided_grad_cam(cam, guided_grads)
+  cam_im =save_gradient_images(cam_gb)
+  cam_gs = convert_to_grayscale(cam_gb)
+  cam_gs =save_gradient_images(cam_gs)
+  return cam_im, cam_gs
 
         
 
@@ -541,6 +613,10 @@ def main():
         
         """)
     with st.sidebar.expander("ScoreCam"):
+        st.write("""
+        
+        """)
+    with st.sidebar.expander("Guided GradCam"):
         st.write("""
         
         """)
@@ -664,7 +740,27 @@ def main():
           txt4 = 'Score-weighted Class Activation Map - black and white'
           outputs_scorecam(image_to_scorecam, heatmap, heatmap_on_image, activation_map, txt1, txt2, txt3, txt4)
             
+    with st.expander("Visualize guided GradCam"):
+      
+        image_to_GGradCam = st.selectbox(
+        'Select an image for Guided GradCam:',
+        ('provided test', 'provide image'))
+
+        if image_to_GGradCam == 'provide image':
+            image_to_GGradCam = load_test_image()
+        else:
+            image_to_GGradCam = load_baseline()
+
+        show_GGradCam = st.button('show Guided GradCam')
+        if show_GGradCam:
             
+            cam_im, cam_gs = gradient_gradcam(model, image_to_GGradCam)
+            
+            txt1 = 'Original image' 
+            txt2 = 'Guided GradCam Colors'
+            txt3 = 'Guided GradCam grayscale'
+            outputs_backprop(image_to_GGradCam, cam_im, cam_gs, 
+                             txt1, txt2, txt3)            
 
 
 if __name__ == "__main__":
