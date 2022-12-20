@@ -433,6 +433,10 @@ def main():
         st.write("""
         
         """)
+    with st.sidebar.expander("Guided Backpropagation"):
+        st.write("""
+        
+        """)
 
     with st.expander("Visualize the structure"):
         url1 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet.png?raw=true"
@@ -502,6 +506,28 @@ def main():
             txt2 = 'Colored Vanilla Backpropagation'
             txt3 = 'Vanilla Backpropagation Saliency'
             outputs_backprop(image_to_backpr, backprop_im, backprop_bn, 
+                             txt1, txt2, txt3)
+            
+    with st.expander("Visualize guided Backpropagation"):
+      
+        image_to_Gbackpr = st.selectbox(
+        'Select an image for Guided Backpropagation:',
+        ('provided test', 'provide image'))
+
+        if image_to_Gbackpr == 'provide image':
+            image_to_Gbackpr = load_test_image()
+        else:
+            image_to_Gbackpr = load_baseline()
+
+        show_Gbackprop = st.button('show Guided Backpropagation')
+        if show_Gbackprop:
+            
+            Gbackprop_im, Gbackprop_bn =GuidedBackprop_process(model, image_to_Gbackpr)
+            
+            txt1 = 'Original image' 
+            txt2 = 'Colored Guided Backpropagation'
+            txt3 = 'Guided Backpropagation Saliency'
+            outputs_backprop(image_to_Gbackpr, Gbackprop_im, Gbackprop_bn, 
                              txt1, txt2, txt3)
 
 if __name__ == "__main__":
