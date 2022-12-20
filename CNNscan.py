@@ -237,11 +237,11 @@ def process_img(img):
               transforms.Normalize(norm_mean, norm_std),
           ])
   im = data_transform(img)
-  im = im.unsqueeze(0)
-  output = model(im)
+  _im = im.unsqueeze(0)
+  output = model(_im)
   _, pred_cls = output.max(dim=1, keepdim=True)
-  im = Variable(im, requires_grad=True)
-  return im, pred_cls
+  im_proc = Variable(_im, requires_grad=True)
+  return im_proc, pred_cls
 
 
 def format_np_output(np_arr):
