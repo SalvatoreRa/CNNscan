@@ -387,6 +387,87 @@ def GuidedBackprop_process(model, img):
   neg_sal =save_gradient_images(neg_sal)
   return grad_im, grad_im_bn, pos_sal, neg_sal
 
+# Visualize SCORE-CAM
+#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
+
+class CamExtractor():
+    """
+        Extracts cam features from the model
+    """
+    def __init__(self, model, target_layer):
+        self.model = model
+        self.target_layer = target_layer
+
+    def forward_pass_on_convolutions(self, x):
+        conv_output = None
+        for module_pos, module in self.model.features._modules.items():
+            x = module(x)  # Forward
+            if int(module_pos) == self.target_layer:
+                conv_output = x  # Save the convolution output on that layer
+        return conv_output, x
+
+    def forward_pass(self, x):
+        conv_output, x = self.forward_pass_on_convolutions(x)
+        x = x.view(x.size(0), -1)  # Flatten
+        x = self.model.classifier(x)
+        return conv_output, x
+
+
+class ScoreCam():
+    def __init__(self, model, target_layer):
+        self.model = model
+        self.model.eval()
+        # Define extractor
+        self.extractor = CamExtractor(self.model, target_layer)
+
+    def generate_cam(self, input_image, target_class=None):
+        conv_output, model_output = self.extractor.forward_pass(input_image)
+        if target_class is None:
+            target_class = np.argmax(model_output.data.numpy())
+        target = conv_output[0]
+        cam = np.ones(target.shape[1:], dtype=np.float32)
+        for i in range(len(target)):
+            saliency_map = torch.unsqueeze(torch.unsqueeze(target[i, :, :],0),0)
+            saliency_map = F.interpolate(saliency_map, size=(224, 224), mode='bilinear', align_corners=False)
+            if saliency_map.max() == saliency_map.min():
+                continue
+            norm_saliency_map = (saliency_map - saliency_map.min()) / (saliency_map.max() - saliency_map.min())
+            w = F.softmax(self.extractor.forward_pass(input_image*norm_saliency_map)[1],dim=1)[0][target_class]
+            cam += w.data.numpy() * target[i, :, :].data.numpy()
+        cam = np.maximum(cam, 0)
+        cam = (cam - np.min(cam)) / (np.max(cam) - np.min(cam))  # Normalize between 0-1
+        cam = np.uint8(cam * 255)  # Scale between 0-255 to visualize
+        cam = np.uint8(Image.fromarray(cam).resize((input_image.shape[2],
+                       input_image.shape[3]), Image.ANTIALIAS))/255
+        return cam
+
+def apply_colormap_on_image(org_im, activation, colormap_name):
+    color_map = cm.get_cmap(colormap_name)
+    no_trans_heatmap = color_map(activation)
+
+    heatmap = copy.copy(no_trans_heatmap)
+    heatmap[:, :, 3] = 0.4
+    heatmap = Image.fromarray((heatmap*255).astype(np.uint8))
+    no_trans_heatmap = Image.fromarray((no_trans_heatmap*255).astype(np.uint8))
+
+    shapes = (np.array(org_im).shape[1], np.array(org_im).shape[0])
+    heatmap_on_image = heatmap.resize(shapes, Image.ANTIALIAS)
+    heatmap_on_image =  Image.blend(org_im.convert("RGBA"), heatmap_on_image, 0.5)
+    return no_trans_heatmap, heatmap_on_image
+
+def save_class_activation_images(org_img, activation_map):
+    heatmap, heatmap_on_image = apply_colormap_on_image(org_img, activation_map, 'hsv')
+    activation_map = save_image(activation_map )
+    return heatmap, heatmap_on_image, activation_map
+
+def scorecam_process(model, img):
+  im, pred_cls = process_img(img, model)
+  score_cam = ScoreCam(model, target_layer=11)
+  cam = score_cam.generate_cam(im, pred_cls)
+  return cam
+
+
+
 
         
 
