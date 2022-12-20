@@ -467,6 +467,18 @@ def scorecam_process(model, img):
   cam = score_cam.generate_cam(im, pred_cls)
   return cam
 
+def outputs_scorecam(im1, im2, im3, im4, txt1, txt2, txt3, text4):
+    col1, col2 = st.columns([0.25, 0.25])
+    with col1:
+        st.write(txt1)
+        st.image(im1)
+        st.write(txt3)
+        st.image(im3)
+    with col2:
+        st.write(txt2)
+        st.image(im2)
+        st.write(txt4)
+        st.image(im4)
 
 
 
@@ -646,6 +658,11 @@ def main():
         if show_scorecam:
           scorecam = scorecam_process(model, image_to_scorecam)
           heatmap, heatmap_on_image, activation_map = save_class_activation_images(image_to_scorecam, scorecam)
+          txt1 = 'Original image' 
+          txt2 = 'Score-weighted Class Activation Map'
+          txt3 = 'Score-weighted Class Activation Map on image'
+          txt4 = 'Score-weighted Class Activation Map'
+          outputs_scorecam(image_to_scorecam, heatmap, heatmap_on_image, activation_map, txt1, txt2, txt3, text4)
             
             
 
