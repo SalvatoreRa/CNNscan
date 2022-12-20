@@ -21,6 +21,7 @@ from torch.autograd import Variable
 import torch.nn.functional as F
 import copy
 from matplotlib.colors import ListedColormap
+from copy import deepcopy
 
 def load_model():
   model_urls = {
@@ -555,6 +556,8 @@ def gradient_gradcam(model, img):
   cam_gs =save_gradient_images(cam_gs)
   return cam_im, cam_gs
 
+# Visualize vanilla propagation
+#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
         
 
 # Create the main app
