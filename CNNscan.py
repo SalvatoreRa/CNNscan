@@ -652,7 +652,7 @@ def apply_heatmap(R, sx, sy):
       ar = np.asarray(image)
     return image
 
-def LRP_process_group(model, img):
+def LRP_process(model, img):
   layerwise_relevance = LRP(model)
   im, pred_cls = process_img(img, model)
   LRP_per_layer = layerwise_relevance.generate(im, pred_cls)
