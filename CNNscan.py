@@ -18,6 +18,7 @@ from sklearn.preprocessing import minmax_scale
 from matplotlib import cm
 from torch.nn import ReLU
 from torch.autograd import Variable
+import torch.nn.functional as F
 
 def load_model():
   model_urls = {
