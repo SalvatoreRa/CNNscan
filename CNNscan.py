@@ -1020,6 +1020,11 @@ def main():
         show_LayerCAM = st.button('show LayerCAM')
         if show_LayerCAM:
             heatmap, heatmap_on_image, activation_map = LayerCAM_process(image_to_layerCAM, model, layer =Layer)
+            txt1 = 'Original image' 
+            txt2 = 'Class Activation Map - layerCAM, layer: ' + str(Layer)
+            txt3 = 'Class Activation HeatMap - layerCAM, layer: ' + str(Layer)
+            txt4 = 'layerCAM usperimposed on the image, layer: ' + str(Layer)
+            outputs_scorecam(image_to_layerCAM, activation_map, heatmap, heatmap_on_image, txt1, txt2, txt3, txt4)
           
 
 
