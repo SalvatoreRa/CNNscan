@@ -766,7 +766,7 @@ def LayerCAM_process(img, model, layer =1):
   heatmap, heatmap_on_image, activation_map = save_class_activation_images(img, cam)
   return heatmap, heatmap_on_image, activation_map
 
-# Visualize LayerCAM
+# Visualize Integrated Gradients
 #this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
 
 class IntegratedGradients():
@@ -808,7 +808,7 @@ class IntegratedGradients():
             integrated_grads = integrated_grads + single_integrated_grad/steps
         return integrated_grads[0]
 
-
+@st.cache(ttl=12*3600)
 def integrated_gradient_process(img, model):
     im, pred_cls = process_img(img, model)
     IG = IntegratedGradients(model)
