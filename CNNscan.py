@@ -1012,12 +1012,12 @@ def main():
         else:
             image_to_layerCAM = load_baseline()
 
-        show_LayerCAM = st.button('show Layerwise Relevance')
+        
         Layer = st.selectbox(
         'Select the layer',
         ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10' '11'))
-        option = int(Layer)
-        
+        Layer = int(Layer)
+        show_LayerCAM = st.button('show LayerCAM')
         if show_LayerCAM:
             heatmap, heatmap_on_image, activation_map = LayerCAM_process(image_to_layerCAM, model, layer =Layer)
           
