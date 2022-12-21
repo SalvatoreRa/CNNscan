@@ -695,7 +695,7 @@ def Grad_times_process(img, model):
   grayscale_int_grads_times = save_gradient_images(grayscale_int_grads_times)
   return grad_times_image, grayscale_vanilla_grads, BackProg_times_image, grayscale_BackProg_grads, integrated_grads_times, grayscale_int_grads_times
 
-grad_times_image, grayscale_vanilla_grads, BackProg_times_image, grayscale_BackProg_grads, integrated_grads_times, grayscale_int_grads_times = Grad_times_process(img, model)
+#grad_times_image, grayscale_vanilla_grads, BackProg_times_image, grayscale_BackProg_grads, integrated_grads_times, grayscale_int_grads_times = Grad_times_process(img, model)
 
 
 
