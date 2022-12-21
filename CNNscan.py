@@ -667,49 +667,6 @@ def LRP_process(model, img):
       heat_list.append(heatmap)
   return heat_list
 
-# Visualize Grad Times images
-#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
-
-@st.cache(ttl=12*3600)    
-def Grad_times_process(img, model):
-  im, pred_cls = process_img(img, model)
-  VBP = VanillaBackprop(model)
-  vanilla_grads = VBP.generate_gradients(im, pred_cls)
-  grad_times_image = vanilla_grads * im.detach().numpy()[0]
-  grayscale_vanilla_grads = convert_to_grayscale(grad_times_image)
-  grad_times_image = save_gradient_images(grad_times_image)
-  grayscale_vanilla_grads = save_gradient_images(grayscale_vanilla_grads)
-
-  GuideProg = GuidedBackprop(model)
-  BackProg_grads = GuideProg.generate_gradients(im, pred_cls)
-  BackProg_times_image = BackProg_grads * im.detach().numpy()[0]
-  grayscale_BackProg_grads = convert_to_grayscale(BackProg_times_image)
-  BackProg_times_image = save_gradient_images(BackProg_times_image)
-  grayscale_BackProg_grads = save_gradient_images(grayscale_BackProg_grads)
-
-  IG = IntegratedGradients(model)
-  integrated_gradient = IG.generate_integrated_gradients(im, pred_cls, 100)
-  integrated_grads_times = integrated_gradient * im.detach().numpy()[0]
-  grayscale_int_grads_times = convert_to_grayscale(integrated_grads_times)
-  integrated_grads_times = save_gradient_images(integrated_grads_times)
-  grayscale_int_grads_times = save_gradient_images(grayscale_int_grads_times)
-  return grad_times_image, grayscale_vanilla_grads, BackProg_times_image, grayscale_BackProg_grads, integrated_grads_times, grayscale_int_grads_times
-
-#grad_times_image, grayscale_vanilla_grads, BackProg_times_image, grayscale_BackProg_grads, integrated_grads_times, grayscale_int_grads_times = Grad_times_process(img, model)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def outputs_LRP(img, heat_list):
@@ -862,9 +819,35 @@ def integrated_gradient_process(img, model):
     im_bn = save_gradient_images(grayscale_integrated_grads)
     return im, im_bn
 
+# Visualize Grad Times images
+#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
+
+@st.cache(ttl=12*3600)    
+def Grad_times_process(img, model):
+  im, pred_cls = process_img(img, model)
+  VBP = VanillaBackprop(model)
+  vanilla_grads = VBP.generate_gradients(im, pred_cls)
+  grad_times_image = vanilla_grads * im.detach().numpy()[0]
+  grayscale_vanilla_grads = convert_to_grayscale(grad_times_image)
+  grad_times_image = save_gradient_images(grad_times_image)
+  grayscale_vanilla_grads = save_gradient_images(grayscale_vanilla_grads)
+
+  GuideProg = GuidedBackprop(model)
+  BackProg_grads = GuideProg.generate_gradients(im, pred_cls)
+  BackProg_times_image = BackProg_grads * im.detach().numpy()[0]
+  grayscale_BackProg_grads = convert_to_grayscale(BackProg_times_image)
+  BackProg_times_image = save_gradient_images(BackProg_times_image)
+  grayscale_BackProg_grads = save_gradient_images(grayscale_BackProg_grads)
+
+  IG = IntegratedGradients(model)
+  integrated_gradient = IG.generate_integrated_gradients(im, pred_cls, 100)
+  integrated_grads_times = integrated_gradient * im.detach().numpy()[0]
+  grayscale_int_grads_times = convert_to_grayscale(integrated_grads_times)
+  integrated_grads_times = save_gradient_images(integrated_grads_times)
+  grayscale_int_grads_times = save_gradient_images(grayscale_int_grads_times)
+  return grad_times_image, grayscale_vanilla_grads, BackProg_times_image, grayscale_BackProg_grads, integrated_grads_times, grayscale_int_grads_times
 
 
-          
 
 # Create the main app
 def main():
@@ -941,7 +924,11 @@ def main():
     with st.sidebar.expander("LayerCAM"):
         st.write("""
         
-        """)   
+        """)
+    with st.sidebar.expander("Grad Times Image"):
+        st.write("""
+        
+        """) 
 
     with st.expander("Visualize the structure"):
         url1 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet.png?raw=true"
@@ -1133,8 +1120,7 @@ def main():
             image_to_layerCAM = load_test_image()
         else:
             image_to_layerCAM = load_baseline()
-
-        
+                
         Layer = st.selectbox(
         'Select the layer',
         ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10' '11'))
@@ -1147,6 +1133,27 @@ def main():
             txt3 = 'Class Activation HeatMap - layerCAM, layer: ' + str(Layer)
             txt4 = 'layerCAM usperimposed on the image, layer: ' + str(Layer)
             outputs_scorecam(image_to_layerCAM, activation_map, heatmap, heatmap_on_image, txt1, txt2, txt3, txt4)
+            
+    with st.expander("Grad Times Image"):
+      
+        image_to_GTI = st.selectbox(
+        'Select an image for Grad Times Imagee:',
+        ('provided test', 'provide image'))
+
+        if image_to_GTI == 'provide image':
+            image_to_GTI = load_test_image()
+        else:
+            image_to_GTI = load_baseline()
+
+        show_GTI = st.button('show Layerwise Relevance')
+        if show_GTI:
+            grad_times_image, grayscale_vanilla_grads, BackProg_times_image, grayscale_BackProg_grads, integrated_grads_times, grayscale_int_grads_times = Grad_times_process(image_to_GTI, model)
+            txt1 = 'Original image' 
+            txt2 = 'Colored Vanilla x Gradient image'
+            txt3 = 'gray-scale Vanilla x Gradient image'
+            outputs_backprop(image_to_GTI, grad_times_image, grayscale_vanilla_grads, 
+                             txt1, txt2, txt3)
+            
           
 
 
