@@ -886,6 +886,10 @@ def main():
         st.write("""
         
         """)
+    with st.sidebar.expander("Integrated Gradient"):
+        st.write("""
+        
+        """)  
     with st.sidebar.expander("Layerwise Relevance"):
         st.write("""
         
@@ -992,6 +996,7 @@ def main():
             txt3 = 'Guided Backpropagation Positive Saliency'
             outputs_backprop(image_to_Gbackpr, pos_sal_bp, neg_sal_bp, 
                              txt1, txt2, txt3)
+            
     with st.expander("Visualize ScoreCam"):
       
         image_to_scorecam = st.selectbox(
@@ -1012,6 +1017,28 @@ def main():
           txt3 = 'Score-weighted Class Activation Map on image'
           txt4 = 'Score-weighted Class Activation Map - black and white'
           outputs_scorecam(image_to_scorecam, heatmap, heatmap_on_image, activation_map, txt1, txt2, txt3, txt4)
+          
+    with st.expander("Visualize Vanilla Integrated Gradients"):
+      
+        image_to_grad = st.selectbox(
+        'Select an image for Integrated Gradients:',
+        ('provided test', 'provide image'))
+
+        if image_to_grad == 'provide image':
+            image_to_grad = load_test_image()
+        else:
+            image_to_grad = load_baseline()
+
+        show_int_grad = st.button('show Integrated Gradient')
+        if show_int_grad:
+            
+            im, im_bn = integrated_gradient_process(image_to_grad, model)
+            
+            txt1 = 'Original image' 
+            txt2 = 'Colored Integrated Gradient'
+            txt3 = 'Integrated Gradient in grays'
+            outputs_backprop(image_to_grad, im, im_bn, 
+                             txt1, txt2, txt3)
             
     with st.expander("Visualize guided GradCam"):
       
