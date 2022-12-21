@@ -1153,7 +1153,16 @@ def main():
             txt3 = 'gray-scale Vanilla x Gradient image'
             outputs_backprop(image_to_GTI, grad_times_image, grayscale_vanilla_grads, 
                              txt1, txt2, txt3)
-            
+            txt1 = 'Original image' 
+            txt2 = 'Colored backpropagated x Gradient image'
+            txt3 = 'gray-scale backpropagated x Gradient image'
+            outputs_backprop(image_to_GTI, BackProg_times_image, grayscale_BackProg_grads, 
+                             txt1, txt2, txt3)
+            txt1 = 'Original image' 
+            txt2 = 'Colored integrated x Gradient image'
+            txt3 = 'gray-scale integrated x Gradient image'
+            outputs_backprop(image_to_GTI, integrated_grads_times, grayscale_int_grads_times, 
+                             txt1, txt2, txt3)
           
 
 
