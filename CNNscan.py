@@ -698,6 +698,78 @@ def outputs_LRP(img, heat_list):
         st.write('Layer 11')
         st.image(heat_list[10])
           
+# Visualize LayerCAM
+#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
+
+class CamExtractor():
+
+    def __init__(self, model, target_layer):
+        self.model = model
+        self.target_layer = target_layer
+        self.gradients = None
+
+    def save_gradient(self, grad):
+        self.gradients = grad
+
+    def forward_pass_on_convolutions(self, x):
+        conv_output = None
+        for module_pos, module in self.model.features._modules.items():
+            x = module(x)  # Forward
+            if int(module_pos) == self.target_layer:
+                x.register_hook(self.save_gradient)
+                conv_output = x  # Save the convolution output on that layer
+        return conv_output, x
+
+    def forward_pass(self, x):
+
+        conv_output, x = self.forward_pass_on_convolutions(x)
+        x = x.view(x.size(0), -1)  # Flatten
+        x = self.model.classifier(x)
+        return conv_output, x
+
+
+class LayerCam():
+
+    def __init__(self, model, target_layer):
+        self.model = model
+        self.model.eval()
+        # Define extractor
+        self.extractor = CamExtractor(self.model, target_layer)
+
+    def generate_cam(self, input_image, target_class=None):
+        conv_output, model_output = self.extractor.forward_pass(input_image)
+        if target_class is None:
+            target_class = np.argmax(model_output.data.numpy())
+        one_hot_output = torch.FloatTensor(1, model_output.size()[-1]).zero_()
+        one_hot_output[0][target_class] = 1
+        self.model.features.zero_grad()
+        self.model.classifier.zero_grad()
+        model_output.backward(gradient=one_hot_output, retain_graph=True)
+        guided_gradients = self.extractor.gradients.data.numpy()[0]
+        target = conv_output.data.numpy()[0]
+        weights = guided_gradients
+        weights[weights < 0] = 0 # discard negative gradients
+        cam = np.sum(weights * target, axis=0)
+        cam = (cam - np.min(cam)) / (np.max(cam) - np.min(cam))  # Normalize between 0-1
+        cam = np.uint8(cam * 255)  # Scale between 0-255 to visualize
+        cam = np.uint8(Image.fromarray(cam).resize((input_image.shape[2],
+                       input_image.shape[3]), Image.ANTIALIAS))/255
+
+        return cam
+
+
+def LayerCAM_process(img, model, layer =1):
+  im, pred_cls = process_img(img, model)
+  layer_cam = LayerCam(model, target_layer=layer)
+  cam = layer_cam.generate_cam(im, pred_cls)
+  heatmap, heatmap_on_image, activation_map = save_class_activation_images(img, cam)
+  return heatmap, heatmap_on_image, activation_map
+
+
+
+
+
+          
 
 # Create the main app
 def main():
@@ -766,7 +838,11 @@ def main():
     with st.sidebar.expander("Layerwise Relevance"):
         st.write("""
         
-        """)    
+        """)
+    with st.sidebar.expander("LayerCAM"):
+        st.write("""
+        
+        """)   
 
     with st.expander("Visualize the structure"):
         url1 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet.png?raw=true"
@@ -922,7 +998,29 @@ def main():
         show_LRP = st.button('show Layerwise Relevance')
         if show_LRP:
             heat_list =LRP_process(model, image_to_LRP)
-            outputs_LRP(image_to_LRP, heat_list)         
+            outputs_LRP(image_to_LRP, heat_list)
+            
+    with st.expander("Visualize LayerCAM"):
+      
+        image_to_layerCAM = st.selectbox(
+        'Select an image for LayerCAM:',
+        ('provided test', 'provide image'))
+        
+        
+        if image_to_layerCAM == 'provide image':
+            image_to_layerCAM = load_test_image()
+        else:
+            image_to_layerCAM = load_baseline()
+
+        show_LayerCAM = st.button('show Layerwise Relevance')
+        Layer = st.selectbox(
+        'Select the layer',
+        ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10' '11'))
+        option = int(Layer)
+        
+        if show_LayerCAM:
+            heatmap, heatmap_on_image, activation_map = LayerCAM_process(image_to_layerCAM, model, layer =Layer)
+          
 
 
 if __name__ == "__main__":
