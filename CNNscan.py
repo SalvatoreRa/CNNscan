@@ -23,7 +23,7 @@ import copy
 from matplotlib.colors import ListedColormap
 from copy import deepcopy
 
-@st.cache
+@st.cache(ttl=12*3600)
 def load_model():
   model_urls = {
     'alexnet': 'https://download.pytorch.org/models/alexnet-owt-7be5be79.pth',
