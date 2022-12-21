@@ -1018,7 +1018,7 @@ def main():
           txt4 = 'Score-weighted Class Activation Map - black and white'
           outputs_scorecam(image_to_scorecam, heatmap, heatmap_on_image, activation_map, txt1, txt2, txt3, txt4)
           
-    with st.expander("Visualize Vanilla Integrated Gradients"):
+    with st.expander("Visualize Integrated Gradients"):
       
         image_to_grad = st.selectbox(
         'Select an image for Integrated Gradients:',
