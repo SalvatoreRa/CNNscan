@@ -667,6 +667,50 @@ def LRP_process(model, img):
       heat_list.append(heatmap)
   return heat_list
 
+# Visualize Grad Times images
+#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
+
+@st.cache(ttl=12*3600)    
+def Grad_times_process(img, model):
+  im, pred_cls = process_img(img, model)
+  VBP = VanillaBackprop(model)
+  vanilla_grads = VBP.generate_gradients(im, pred_cls)
+  grad_times_image = vanilla_grads * im.detach().numpy()[0]
+  grayscale_vanilla_grads = convert_to_grayscale(grad_times_image)
+  grad_times_image = save_gradient_images(grad_times_image)
+  grayscale_vanilla_grads = save_gradient_images(grayscale_vanilla_grads)
+
+  GuideProg = GuidedBackprop(model)
+  BackProg_grads = GuideProg.generate_gradients(im, pred_cls)
+  BackProg_times_image = BackProg_grads * im.detach().numpy()[0]
+  grayscale_BackProg_grads = convert_to_grayscale(BackProg_times_image)
+  BackProg_times_image = save_gradient_images(BackProg_times_image)
+  grayscale_BackProg_grads = save_gradient_images(grayscale_BackProg_grads)
+
+  IG = IntegratedGradients(model)
+  integrated_gradient = IG.generate_integrated_gradients(im, pred_cls, 100)
+  integrated_grads_times = integrated_gradient * im.detach().numpy()[0]
+  grayscale_int_grads_times = convert_to_grayscale(integrated_grads_times)
+  integrated_grads_times = save_gradient_images(integrated_grads_times)
+  grayscale_int_grads_times = save_gradient_images(grayscale_int_grads_times)
+  return grad_times_image, grayscale_vanilla_grads, BackProg_times_image, grayscale_BackProg_grads, integrated_grads_times, grayscale_int_grads_times
+
+grad_times_image, grayscale_vanilla_grads, BackProg_times_image, grayscale_BackProg_grads, integrated_grads_times, grayscale_int_grads_times = Grad_times_process(img, model)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def outputs_LRP(img, heat_list):
     col1, col2, col3, col4 = st.columns([0.25, 0.25, 0.25, 0.25])
