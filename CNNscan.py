@@ -850,7 +850,6 @@ def Grad_times_process(img, model):
 # Visualize Smooth Grad
 #this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
 
-@st.cache(ttl=12*3600)
 def generate_smooth_grad(Backprop, prep_img, target_class, param_n, param_sigma_multiplier):
 
     smooth_grad = np.zeros(prep_img.size()[1:])
@@ -866,6 +865,7 @@ def generate_smooth_grad(Backprop, prep_img, target_class, param_n, param_sigma_
     smooth_grad = smooth_grad / param_n
     return smooth_grad
 
+@st.cache(ttl=12*3600)
 def smooth_grad_process(img, model):
   im, pred_cls = process_img(img, model)
   param_n = 50
@@ -960,6 +960,10 @@ def main():
         
         """)
     with st.sidebar.expander("Grad Times Image"):
+        st.write("""
+        
+        """)
+    with st.sidebar.expander("Smooth Grad Image"):
         st.write("""
         
         """) 
@@ -1198,7 +1202,22 @@ def main():
             outputs_backprop(image_to_GTI, integrated_grads_times, grayscale_int_grads_times, 
                              txt1, txt2, txt3)
           
+    with st.expander("Smooth Grad Image"):
+      
+        image_to_SGI = st.selectbox(
+        'Select an image for Smooth Grad Imagee:',
+        ('provided test', 'provide image'))
 
+        if image_to_SGI == 'provide image':
+            image_to_SGI = load_test_image()
+        else:
+            image_to_SGI = load_baseline()
+
+        show_SGI = st.button('show Grad Times Images')
+        if show_SGI:
+            smooths, smooths_bn = smooth_grad_process(image_to_SGI, model)
+          
+          
 
 if __name__ == "__main__":
     main()
