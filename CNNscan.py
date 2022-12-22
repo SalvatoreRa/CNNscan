@@ -882,6 +882,23 @@ def smooth_grad_process(img, model):
     smooths_bn.append(smooth_grad_bn)
   return smooths, smooths_bn
 
+@st.cache(ttl=12*3600)
+def smooth_grad_process_guidBackprop(img, model):
+  im, pred_cls = process_img(img, model)
+  param_n = 50
+  GBP = GuidedBackprop(model)
+  smooths = list()
+  smooths_bn = list()
+  for param_sigma in range(1,6):
+    
+    smooth_grad = generate_smooth_grad(GBP, im, pred_cls, param_n, param_sigma)
+    smooth_grad_bn = convert_to_grayscale(smooth_grad)
+    smooth_grad = save_gradient_images(smooth_grad)
+    smooth_grad_bn = save_gradient_images(smooth_grad_bn)
+    smooths.append(smooth_grad)
+    smooths_bn.append(smooth_grad_bn)
+  return smooths, smooths_bn
+
 def outputs_smoothgrad(img, smooths, smooths_bn, desc= 'Vanilla Backprop.'):
     col1, col2, col3,  = st.columns([0.33, 0.33, 0.33])
     with col1:
@@ -1243,11 +1260,17 @@ def main():
         else:
             image_to_SGI = load_baseline()
 
-        show_SGI = st.button('show Smooth Grad Images')
-        if show_SGI:
+        show_VSGI = st.button('show Vanilla Smooth Grad Images')
+        if show_VSGI:
             smooths, smooths_bn = smooth_grad_process(image_to_SGI, model)
             outputs_smoothgrad(image_to_SGI, smooths, smooths_bn, desc= 'Vanilla Backprop.')
-          
+        
+        show_GSGI = st.button('show Guided Smooth Grad Images')
+        
+        if show_GSGI:
+            smooths, smooths_bn = smooth_grad_process_guidBackprop(image_to_SGI, model)
+            outputs_smoothgrad(image_to_SGI, smooths, smooths_bn, desc= 'Guided Backprop.')
+            
           
 
 if __name__ == "__main__":
