@@ -882,6 +882,36 @@ def smooth_grad_process(img, model):
     smooths_bn.append(smooth_grad_bn)
   return smooths, smooths_bn
 
+def outputs_smoothgrad(img, smooths, smooths_bn, desc= 'Vanilla Backprop.'):
+    col1, col2, col3,  = st.columns([0.33, 0.33, 0.33])
+    with col1:
+        st.write('Original image')
+        st.image(img)
+        st.write('Colored ' + desc + ' sigma: 3')
+        st.image(smooths[2])
+        st.write('Original image')
+        st.image(img)
+        st.write('Grayscale ' + desc + ' sigma: 3')
+        st.image(smooths[2])
+    with col2:
+        st.write('Colored ' + desc + ' sigma: 1')
+        st.image(smooths[0])
+        st.write('Colored ' + desc + ' sigma: 4')
+        st.image(smooths[3])
+        st.write('Grayscale ' + desc + ' sigma: 1')
+        st.image(smooths[0])
+        st.write('Grayscale ' + desc + ' sigma: 4')
+        st.image(smooths[3])
+    with col3:
+        st.write('Colored ' + desc + ' sigma: 2')
+        st.image(smooths[1])
+        st.write('Colored ' + desc + ' sigma: 5')
+        st.image(smooths[4])
+        st.write('Grayscale ' + desc + ' sigma: 2')
+        st.image(smooths[1])
+        st.write('Grayscale ' + desc + ' sigma: 5')
+        st.image(smooths[4])
+
 
 # Create the main app
 def main():
@@ -1216,6 +1246,7 @@ def main():
         show_SGI = st.button('show Smooth Grad Images')
         if show_SGI:
             smooths, smooths_bn = smooth_grad_process(image_to_SGI, model)
+            outputs_smoothgrad(image_to_SGI, smooths, smooths_bn, desc= 'Vanilla Backprop.')
           
           
 
