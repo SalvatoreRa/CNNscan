@@ -847,6 +847,40 @@ def Grad_times_process(img, model):
   grayscale_int_grads_times = save_gradient_images(grayscale_int_grads_times)
   return grad_times_image, grayscale_vanilla_grads, BackProg_times_image, grayscale_BackProg_grads, integrated_grads_times, grayscale_int_grads_times
 
+# Visualize Smooth Grad
+#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
+
+@st.cache(ttl=12*3600)
+def generate_smooth_grad(Backprop, prep_img, target_class, param_n, param_sigma_multiplier):
+
+    smooth_grad = np.zeros(prep_img.size()[1:])
+
+    mean = 0
+    sigma = param_sigma_multiplier / (torch.max(prep_img) - torch.min(prep_img)).item()
+    for x in range(param_n):
+
+        noise = Variable(prep_img.data.new(prep_img.size()).normal_(mean, sigma**2))
+        noisy_img = prep_img + noise
+        vanilla_grads = Backprop.generate_gradients(noisy_img, target_class)
+        smooth_grad = smooth_grad + vanilla_grads
+    smooth_grad = smooth_grad / param_n
+    return smooth_grad
+
+def smooth_grad_process(img, model):
+  im, pred_cls = process_img(img, model)
+  param_n = 50
+  VBP = VanillaBackprop(model)
+  smooths = list()
+  smooths_bn = list()
+  for param_sigma in range(1,6):
+    
+    smooth_grad = generate_smooth_grad(VBP, im, pred_cls, param_n, param_sigma)
+    smooth_grad_bn = convert_to_grayscale(smooth_grad)
+    smooth_grad = save_gradient_images(smooth_grad)
+    smooth_grad_bn = save_gradient_images(smooth_grad_bn)
+    smooths.append(smooth_grad)
+    smooths_bn.append(smooth_grad_bn)
+  return smooths, smooths_bn
 
 
 # Create the main app
