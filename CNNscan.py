@@ -1213,7 +1213,7 @@ def main():
         else:
             image_to_SGI = load_baseline()
 
-        show_SGI = st.button('show Grad Times Images')
+        show_SGI = st.button('show Smooth Grad Images')
         if show_SGI:
             smooths, smooths_bn = smooth_grad_process(image_to_SGI, model)
           
