@@ -14,9 +14,9 @@ A CT-scan of your CNN
 * Layerwise Relevance
 * LayerCAM
 * Grad Times Images
+* Smooth Grad
 
 # On their way 
-* Smooth Grad
 * enhanced filter visualization
 * Layer activation
 * Inverted image representation
