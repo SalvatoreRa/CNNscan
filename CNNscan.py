@@ -962,58 +962,13 @@ def main():
         //
         Showed here there are different methods to visualize what is happening inside the convolutional neural network
      """)
-    with st.sidebar.expander("About AlexNet"):
-        st.write("""
-        
-        """)
-    with st.sidebar.expander("About visualize filters"):
-        st.write("""
-        
-        """)
-    with st.sidebar.expander("About visualize feature maps"):
-        st.write("""
-        
-        """)
-    with st.sidebar.expander("About GradCam"):
-        st.write("""
-        
-        """)
-    with st.sidebar.expander("Vanilla Backpropagation"):
-        st.write("""
-        
-        """)
-    with st.sidebar.expander("Guided Backpropagation"):
-        st.write("""
-        
-        """)
-    with st.sidebar.expander("ScoreCam"):
-        st.write("""
-        
-        """)
-    with st.sidebar.expander("Guided GradCam"):
-        st.write("""
-        
-        """)
-    with st.sidebar.expander("Integrated Gradient"):
-        st.write("""
-        
-        """)  
-    with st.sidebar.expander("Layerwise Relevance"):
-        st.write("""
-        
-        """)
-    with st.sidebar.expander("LayerCAM"):
-        st.write("""
-        
-        """)
-    with st.sidebar.expander("Grad Times Image"):
-        st.write("""
-        
-        """)
-    with st.sidebar.expander("Smooth Grad Image"):
-        st.write("""
-        
-        """) 
+    with st.sidebar.expander("Additional information"):
+     st.write("""
+     """)
+    with st.sidebar.expander("Aknowledgment"):
+     st.write("""
+     """)
+    
 
     with st.expander("Visualize the structure"):
         url1 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet.png?raw=true"
