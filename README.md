@@ -23,6 +23,8 @@ A CT-scan of your CNN
 * Deep Dream
 * Class Specific Image Generation
 * implementation other models (VGG16, VGG19...)
+* download option
+* theoretical description
 
 Stay tuned!
 
