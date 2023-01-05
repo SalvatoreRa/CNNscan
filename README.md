@@ -22,7 +22,7 @@ A CT-scan of your CNN
 * Inverted image representation
 * Deep Dream
 * Class Specific Image Generation
-
+* implementation other models (VGG16, VGG19...)
 
 Stay tuned!
 
