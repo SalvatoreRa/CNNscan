@@ -1373,7 +1373,9 @@ def main():
                 pret_mod = VGG19()
                 mod_dd = pret_mod
                 cnn_layer = st.selectbox('Select layer:', 
-                ('0', '3', '6', '8', '10'))
+                ('0', '2', '5', '7', '10', '12', '14', '16',
+                '19', '21', '23', '25', '28', '30',
+                '32', '34',))
                 cnn_layer = int(cnn_layer)
             
             x = mod_dd.eval()
