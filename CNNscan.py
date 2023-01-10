@@ -1365,10 +1365,17 @@ def main():
 
         else:
             mod_dd = st.selectbox('Select model for DeepDream:',
-            ('AlexaNET', 'VGG19'))
+            ('AlexaNET', 'VGG16', 'VGG19'))
             if mod_dd == 'AlexaNET':
                 mod_dd = model
                 cnn_layer = st.selectbox('Select layer:', ('0', '3', '6', '8', '10'))
+                cnn_layer = int(cnn_layer)
+            if mod_dd == 'VGG16':
+                pret_mod = VGG16()
+                mod_dd = pret_mod
+                cnn_layer = st.selectbox('Select layer:', 
+                ('0', '2', '5', '7', '10', '12', '14', '17',
+                '19', '21', '24', '26', '28' ))
                 cnn_layer = int(cnn_layer)
             if mod_dd == 'VGG19':
                 pret_mod = VGG19()
@@ -1376,7 +1383,7 @@ def main():
                 cnn_layer = st.selectbox('Select layer:', 
                 ('0', '2', '5', '7', '10', '12', '14', '16',
                 '19', '21', '23', '25', '28', '30',
-                '32', '34',))
+                '32', '34'))
                 cnn_layer = int(cnn_layer)
             
             x = mod_dd.eval()
