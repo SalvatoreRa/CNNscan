@@ -1288,9 +1288,23 @@ def main():
         else:
             image_to_DD = load_baseline()
 
+        DD_par = st.selectbox(
+        'Select parameters for DD:',
+        ('default', 'customize'))
+
+        if DD_par == 'default':
+            mod = model
+            cnn_layer = 10
+            filter_pos = 8
+
+        else:
+            mod = model
+            cnn_layer = 10
+            filter_pos = 9
+
         show_DD = st.button('show DeepDream')
         if show_DD:
-            images = dream(model, cnn_layer, filter_pos, image_to_DD)       
+            images = dream(mod, cnn_layer, filter_pos, image_to_DD)       
           
 
 if __name__ == "__main__":
