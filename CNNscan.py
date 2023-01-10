@@ -1274,7 +1274,23 @@ def main():
         if show_GSGI:
             smooths, smooths_bn = smooth_grad_process_guidBackprop(image_to_SGI, model)
             outputs_smoothgrad(image_to_SGI, smooths, smooths_bn, desc= 'Guided Backprop.')
-            
+
+    with st.expander("DeepDream"):
+
+        st.write('Default model is **AlexNet** which is faster, however other models leads to better results')
+      
+        image_to_DD = st.selectbox(
+        'Select an image for DeepDream:',
+        ('provided test', 'provide image'))
+
+        if image_to_DD == 'provide image':
+            image_to_DD = load_test_image()
+        else:
+            image_to_DD = load_baseline()
+
+        show_DD = st.button('show DeepDream')
+        if show_DD:
+            images = dream(model, cnn_layer, filter_pos, image_to_DD)       
           
 
 if __name__ == "__main__":
