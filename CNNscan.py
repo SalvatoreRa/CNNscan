@@ -1337,6 +1337,9 @@ def main():
             mod = model
             cnn_layer = st.selectbox('Select layer:', ('0', '3', '6', '8', '10'))
             cnn_layer = int(cnn_layer)
+            x = mod.eval()
+            max = x.features[int('0')].out_channels -1
+            filter_pos = st.slider('select filter', 0, max, 1)
             filter_pos = 9
 
                 
