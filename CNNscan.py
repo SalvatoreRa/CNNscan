@@ -14,6 +14,7 @@ from torch.hub import load_state_dict_from_url
 import matplotlib.pyplot as plt
 import math
 import torchvision.transforms as transforms
+from torchvision import models
 from sklearn.preprocessing import minmax_scale
 from matplotlib import cm
 from torch.nn import ReLU
