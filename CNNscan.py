@@ -1368,6 +1368,15 @@ def main():
         if show_DD:
             images_dd = dream(mod, cnn_layer, filter_pos, image_to_DD)       
             outputs_DD(images_dd)
+            buf = BytesIO()
+            images_dd[11].save(buf, format="JPEG")
+            byte_im =buf.getvalue()
+            st.download_button(
+                label="Download Last Image",
+                data=byte_im,
+                file_name="styled_img"+".jpg",
+                mime="image/jpg"
+                )
 
 if __name__ == "__main__":
     main()
