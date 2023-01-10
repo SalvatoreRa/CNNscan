@@ -1366,8 +1366,8 @@ def main():
 
         show_DD = st.button('show DeepDream')
         if show_DD:
-            images = dream(mod, cnn_layer, filter_pos, image_to_DD)       
-          
+            images_dd = dream(mod, cnn_layer, filter_pos, image_to_DD)       
+            outputs_DD(images_dd)
 
 if __name__ == "__main__":
     main()
