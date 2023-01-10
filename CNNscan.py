@@ -1013,6 +1013,25 @@ def dream(model, cnn_layer, filter_pos, image):
     dd = DeepDream(model.features, cnn_layer, filter_pos, image)
     images = dd.dream()
     return images
+    
+def outputs_DD(images):
+    col1, col2, col3, col4 = st.columns([0.25, 0.25, 0.25, 0.25])
+    with col1:
+        st.image(images[0])
+        st.image(images[4])
+        st.image(images[8])
+    with col2:
+        st.image(images[1])
+        st.image(images[5])
+        st.image(images[9])
+    with col3:
+        st.image(images[2])
+        st.image(images[6])
+        st.image(images[10])
+    with col4:
+        st.image(images[3])
+        st.image(images[7])
+        st.image(images[11])
 
 # Create the main app
 def main():
