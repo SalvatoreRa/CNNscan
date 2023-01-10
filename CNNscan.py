@@ -1334,11 +1334,12 @@ def main():
             filter_pos = 8
 
         else:
-            with st.expander("select parameters:"):
-                mod = model
-                cnn_layer = st.selectbox('Select layer:', ('0', '3', '6', '8', '10'))
-                cnn_layer = int(cnn_layer)
-                filter_pos = 9
+            mod = model
+            cnn_layer = st.selectbox('Select layer:', ('0', '3', '6', '8', '10'))
+            cnn_layer = int(cnn_layer)
+            filter_pos = 9
+
+                
             
 
         show_DD = st.button('show DeepDream')
