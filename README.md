@@ -15,12 +15,12 @@ A CT-scan of your CNN
 * LayerCAM
 * Grad Times Images
 * Smooth Grad
+* Deep Dream (with alexnet, VGG16, VGG19)
 
 # On their way 
 * enhanced filter visualization
 * Layer activation
 * Inverted image representation
-* Deep Dream
 * Class Specific Image Generation
 * implementation other models (VGG16, VGG19...)
 * download option
