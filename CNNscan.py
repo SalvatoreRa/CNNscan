@@ -981,6 +981,7 @@ def main():
         st.image(img_screen)
 
     with st.expander("Visualize the filters"):
+        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
         conv_layer = st.selectbox(
         'Select the convolution layer',
         ('0', '3', '6', '8','10'))
