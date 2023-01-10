@@ -1009,6 +1009,11 @@ class DeepDream():
                 images.append(im)
         return images
 
+@st.cache(ttl=3600)
+def VGG19():
+    pret_mod =  models.vgg19(pretrained=True)
+    return pret_mod
+
 def dream(model, cnn_layer, filter_pos, image):
     dd = DeepDream(model.features, cnn_layer, filter_pos, image)
     images = dd.dream()
