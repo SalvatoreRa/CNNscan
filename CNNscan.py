@@ -973,6 +973,10 @@ class DeepDream():
                 images.append(im)
         return images
 
+def dream(model, cnn_layer, filter_pos, image):
+    dd = DeepDream(model.features, cnn_layer, filter_pos, image)
+    images = dd.dream()
+    return images
 
 # Create the main app
 def main():
