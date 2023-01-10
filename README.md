@@ -22,7 +22,7 @@ A CT-scan of your CNN
 * Layer activation
 * Inverted image representation
 * Class Specific Image Generation
-* implementation other models (VGG16, VGG19...)
+* implementation other models for different methods (VGG16, VGG19...)
 * download option
 * theoretical description
 
