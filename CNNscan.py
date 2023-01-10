@@ -19,6 +19,7 @@ from matplotlib import cm
 from torch.nn import ReLU
 from torch.autograd import Variable
 import torch.nn.functional as F
+from torch.optim import SGD
 import copy
 from matplotlib.colors import ListedColormap
 from copy import deepcopy
@@ -928,6 +929,49 @@ def outputs_smoothgrad(img, smooths, smooths_bn, desc= 'Vanilla Backprop.'):
         st.image(smooths_bn[1])
         st.write('Grayscale ' + desc + ' sigma: 5')
         st.image(smooths_bn[4])
+
+
+# Visualize DeepDream
+#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
+
+class DeepDream():
+    def __init__(self, model, selected_layer, selected_filter, image):
+        self.model = model
+        self.model.eval()
+        self.selected_layer = selected_layer
+        self.selected_filter = selected_filter
+        self.conv_output = 0
+        self.created_image = image.convert('RGB')        
+        self.hook_layer()
+    def hook_layer(self):
+        def hook_function(module, grad_in, grad_out):
+            self.conv_output = grad_out[0, self.selected_filter]
+
+
+        self.model[self.selected_layer].register_forward_hook(hook_function)
+
+    def dream(self):
+
+        self.processed_image = preprocess_image(self.created_image, True)
+        optimizer = SGD([self.processed_image], lr=12,  weight_decay=1e-4)
+        images = list()
+        for i in range(1, 251):
+            optimizer.zero_grad()
+            x = self.processed_image
+            for index, layer in enumerate(self.model):
+                x = layer(x)
+                if index == self.selected_layer:
+                    break
+            loss = -torch.mean(self.conv_output)
+            print('Iteration:', str(i), 'Loss:', "{0:.2f}".format(loss.data.numpy()))
+            loss.backward()
+            optimizer.step()
+            self.created_image = recreate_image(self.processed_image)
+            if i % 20 == 0:
+                print(self.created_image.shape)
+                im =save_image(self.created_image)
+                images.append(im)
+        return images
 
 
 # Create the main app
