@@ -1365,11 +1365,11 @@ def main():
         else:
             mod_dd = st.selectbox('Select model for DeepDream:',
             ('AlexaNET', 'VGG19'))
-            if mod_dd == 'AlexaNET'
+            if mod_dd == 'AlexaNET':
                 mod_dd = model
                 cnn_layer = st.selectbox('Select layer:', ('0', '3', '6', '8', '10'))
                 cnn_layer = int(cnn_layer)
-            if mod_dd == 'VGG19'
+            if mod_dd == 'VGG19':
                 pret_mod = VGG19()
                 mod_dd = pret_mod
                 cnn_layer = st.selectbox('Select layer:', 
