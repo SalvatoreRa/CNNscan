@@ -1105,6 +1105,7 @@ def main():
             fetch_filters(model, layer = option)
 
     with st.expander("Visualize the feature maps"):
+        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#feature-map-visualization)')
         image_to_use = st.selectbox(
         'Select the image to use',
         ('provided test', 'provide image'))
