@@ -1120,6 +1120,7 @@ def main():
             fetch_feature_maps(model, image_features)
 
     with st.expander("Visualize GradCam"):
+        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#)')
         image_to_cam = st.selectbox(
         'Select an image to use',
         ('provided test', 'provide image'))
