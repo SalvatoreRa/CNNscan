@@ -33,7 +33,7 @@ A CT-scan of your CNN
 
 # GradCam
 
-# Colored Vanilla Backpropagation
+# Vanilla Backpropagation
 
 # Vanilla Backpropagation Saliency
 
