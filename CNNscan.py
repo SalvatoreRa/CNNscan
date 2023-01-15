@@ -1120,7 +1120,7 @@ def main():
             fetch_feature_maps(model, image_features)
 
     with st.expander("Visualize GradCam"):
-        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#)')
+        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#GradCam)')
         image_to_cam = st.selectbox(
         'Select an image to use',
         ('provided test', 'provide image'))
@@ -1136,6 +1136,7 @@ def main():
             outputs_prog(image_cam, heats, sup)
             
     with st.expander("Visualize Vanilla Backpropagation"):
+        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
       
         image_to_backpr = st.selectbox(
         'Select an image for Vanilla Backpropagation:',
