@@ -1136,7 +1136,7 @@ def main():
             outputs_prog(image_cam, heats, sup)
             
     with st.expander("Visualize Vanilla Backpropagation"):
-        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
+        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#Vanilla-Backpropagation)')
       
         image_to_backpr = st.selectbox(
         'Select an image for Vanilla Backpropagation:',
