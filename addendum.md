@@ -28,17 +28,29 @@ A CT-scan of your CNN
 * theoretical description
 
 # filter visualization
+
 # feature map visualization
+
 # GradCam
+
 # Colored Vanilla Backpropagation
+
 # Vanilla Backpropagation Saliency
+
 # Colored Guided Backpropagation and Saliency
+
 # Guided Backpropagation, negative and positive saliency
+
 # Score-Cam
+
 # Guided GradCam
+
 # Layerwise Relevance
+
 # LayerCAM
+
 # Grad Times Images
+
 # Smooth Grad
 
 
