@@ -1100,8 +1100,8 @@ def main():
         VGG16_filt = [0, 2, 5, 7, 10, 12, 14, 17, 19, 21, 24, 26, 28]
         mod_filt = st.selectbox('Select model for filter visualization:',
             ('AlexaNET', 'VGG16', 'VGG19'))
-            if mod_filt == 'AlexaNET':
-                filt_idx =alexa_idx
+        if mod_filt == 'AlexaNET':
+          filt_idx =alexa_idx
         conv_layer = st.selectbox(
         'Select the convolution layer', filt_idx)
         option = int(conv_layer)
