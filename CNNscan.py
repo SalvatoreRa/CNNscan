@@ -86,9 +86,9 @@ def load_model():
 
 
 #Fetch filters
-def fetch_filters(model, layer = 0):
+def fetch_filters(model, idx_conv_layer = [0, 3, 6, 8, 10], layer = 0):
     
-    idx_conv_layer = [0, 3, 6, 8, 10]
+    
     filters = []
     for layer_idx in idx_conv_layer:
         filters.append(model.features[layer_idx].weight.data)
