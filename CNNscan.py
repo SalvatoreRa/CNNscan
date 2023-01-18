@@ -1119,7 +1119,17 @@ def main():
             fetch_filters(pret_mod, filt_idx, layer = option)
 
     with st.expander("Visualize the feature maps"):
+        st.write('Default model is **AlexNet** which is faster, however other models leads to better results')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#feature-map-visualization)')
+        mod_feat_map = st.selectbox('Select model for feature maps visualization:',
+            ('AlexaNET', 'VGG16', 'VGG19'))
+        if mod_feat_map == 'AlexaNET':
+          pret_mod= model
+        if mod_feat_map == 'VGG16':
+          pret_mod= VGG16()
+        if mod_feat_map == 'VGG19':
+          pret_mod= VGG19()
+        
         image_to_use = st.selectbox(
         'Select the image to use',
         ('provided test', 'provide image'))
@@ -1131,7 +1141,7 @@ def main():
 
         show_featuremaps = st.button('show the feature maps')
         if show_featuremaps:
-            fetch_feature_maps(model, image_features)
+            fetch_feature_maps(pret_mod, image_features)
 
     with st.expander("Visualize GradCam"):
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#GradCam)')
