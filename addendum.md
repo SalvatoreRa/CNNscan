@@ -1,4 +1,4 @@
-![CNNscan]('https://github.com/SalvatoreRa/CNNscan/blob/main/img/cnn_scan.png?raw=true')
+![CNNscan](https://github.com/SalvatoreRa/CNNscan/blob/main/img/cnn_scan.png?raw=true)
 # CNNscan
 A CT-scan of your CNN
 
