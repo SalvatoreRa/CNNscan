@@ -1095,14 +1095,22 @@ def main():
         st.image(img_screen)
 
     with st.expander("Visualize the filters"):
+        st.write('Default model is **AlexNet** which is faster, however other models leads to better results')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
         alexa_idx =[0, 3, 6, 8, 10]
         VGG16_filt = [0, 2, 5, 7, 10, 12, 14, 17, 19, 21, 24, 26, 28]
+        VGG19_filt = [0, 2, 5, 7, 10, 12, 14, 16,19, 21, 23, 25, 28, 30, 32, 34]
         mod_filt = st.selectbox('Select model for filter visualization:',
             ('AlexaNET', 'VGG16', 'VGG19'))
         if mod_filt == 'AlexaNET':
           filt_idx =alexa_idx
           pret_mod= model
+        if mod_filt == 'VGG16':
+          filt_idx =VGG16_filt
+          pret_mod= VGG16()
+        if mod_filt == 'VGG19':
+          filt_idx =VGG19_filt
+          pret_mod= VGG19()
         conv_layer = st.selectbox(
         'Select the convolution layer', filt_idx)
         option = int(conv_layer)
