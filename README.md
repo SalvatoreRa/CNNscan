@@ -2,7 +2,7 @@
 A CT-scan of your CNN
 
 # Implemented methods
-* filter visualization
+* filter visualization - implemented with AlexaNet, VGG16, VGG19
 * feature map visualization
 * GradCam
 * Colored Vanilla Backpropagation
