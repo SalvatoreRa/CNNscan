@@ -1102,12 +1102,13 @@ def main():
             ('AlexaNET', 'VGG16', 'VGG19'))
         if mod_filt == 'AlexaNET':
           filt_idx =alexa_idx
+          pret_mod= model
         conv_layer = st.selectbox(
         'Select the convolution layer', filt_idx)
         option = int(conv_layer)
         show_filters = st.button('show the filters')
         if show_filters:
-            fetch_filters(model, filt_idx, layer = option)
+            fetch_filters(pret_mod, filt_idx, layer = option)
 
     with st.expander("Visualize the feature maps"):
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#feature-map-visualization)')
