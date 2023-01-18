@@ -1,5 +1,5 @@
-![CNNscan](https://github.com/SalvatoreRa/CNNscan/blob/main/img/cnn_scan.png?raw=true)
-<img src="https://github.com/SalvatoreRa/CNNscan/blob/main/img/cnn_scan.png?raw=true" width="200" height="200"/>
+
+<img src="https://github.com/SalvatoreRa/CNNscan/blob/main/img/cnn_scan.png?raw=true" width="600" height="600"/>
 
 
 # CNNscan
