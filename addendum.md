@@ -31,7 +31,7 @@ A CT-scan of your CNN
 * theoretical description
 
 # filter visualization
-
+<img src="https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexa_filters.png?raw=true" width="858" height="375"/>
 # feature map visualization
 
 # GradCam
