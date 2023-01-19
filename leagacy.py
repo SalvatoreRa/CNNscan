@@ -84,11 +84,8 @@ def load_model():
   model.load_state_dict(state_dict)
   return model
 
-##########################################################
-###########         Fetch Filters          ###############
-##########################################################
 
-
+#Fetch filters
 def fetch_filters(model, idx_conv_layer = [0, 3, 6, 8, 10], layer = 0):
     
     
@@ -127,10 +124,7 @@ def fetch_filters(model, idx_conv_layer = [0, 3, 6, 8, 10], layer = 0):
       plt.tight_layout()
       st.pyplot(fig)
 
-##########################################################
-###########         Feature maps           ###############
-##########################################################
-
+### Feature Maps
 def load_test_image():
     uploaded_file = st.file_uploader(label='Upload an image for test')
     if uploaded_file is not None:
@@ -182,99 +176,55 @@ def fetch_feature_maps(model, img):
     st.pyplot(fig)
     plt.close()
 
-##########################################################
-###########         Visualize Gradcam      ###############
-##########################################################
+# Visualize GradCam
+def visualize_gradcam(model, img):
+  shapes = (np.array(img).shape[1], np.array(img).shape[0])
 
-class CamExtractor():
-    """
-        Extracts cam features from the model
-    """
-    def __init__(self, model, target_layer):
-        self.model = model
-        self.target_layer = target_layer
-        self.gradients = None
+  norm_mean = [0.485, 0.456, 0.406]
+  norm_std = [0.229, 0.224, 0.225]
 
-    def save_gradient(self, grad):
-        self.gradients = grad
+  data_transform = transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(256),
+            transforms.ToTensor(),
+            transforms.Normalize(norm_mean, norm_std),
+        ])
+  im = data_transform(img)
 
-    def forward_pass_on_convolutions(self, x):
-        """
-            Does a forward pass on convolutions, hooks the function at given layer
-        """
-        conv_output = None
-        for module_pos, module in self.model.features._modules.items():
-            x = module(x)  # Forward
-            if int(module_pos) == self.target_layer:
-                x.register_hook(self.save_gradient)
-                conv_output = x  # Save the convolution output on that layer
-        return conv_output, x
+  output = model(im.unsqueeze(0))
+  _, pred_cls = output.max(dim=1, keepdim=True)
+  def generate_heatmap(output, class_id, model, image):
+    
+    prediction = model(image)
+    prediction = torch.max(prediction)
+    prediction.backward()
+    gradients = model.gradients
+    pooled_gradients = torch.mean(gradients, dim=[0, 2, 3])
+    activations = model.get_activations(image)
+    for i in range(256):
+      activations[:, i, :, :] *= pooled_gradients[i]
+    heatmap = torch.mean(activations, dim=1).squeeze()
+    heatmap = np.maximum(heatmap.detach().numpy(), 0)
+    heatmap = torch.from_numpy(heatmap)
+    heatmap /= torch.max(heatmap)
+    return heatmap
+  heatmap = generate_heatmap(output, pred_cls, model, im.unsqueeze(0))
+  heat = Image.fromarray(np.uint8(cm.jet(heatmap.numpy())*255))
+  heats = heat.resize(shapes, Image.ANTIALIAS)
+  sup =  Image.blend(img.convert("RGBA"), heats, 0.5)
+  return heats, sup
 
-    def forward_pass(self, x):
-        """
-            Does a full forward pass on the model
-        """
-        # Forward pass on the convolutions
-        conv_output, x = self.forward_pass_on_convolutions(x)
-        x = x.view(x.size(0), -1)  # Flatten
-        # Forward pass on the classifier
-        x = self.model.classifier(x)
-        return conv_output, x
-
-
-class GradCam():
-    """
-        Produces class activation map
-    """
-    def __init__(self, model, target_layer):
-        self.model = model
-        self.model.eval()
-        self.extractor = CamExtractor(self.model, target_layer)
-
-    def generate_cam(self, input_image, target_class=None):
-        conv_output, model_output = self.extractor.forward_pass(input_image)
-        if target_class is None:
-            target_class = np.argmax(model_output.data.numpy())
-        one_hot_output = torch.FloatTensor(1, model_output.size()[-1]).zero_()
-        one_hot_output[0][target_class] = 1
-        self.model.features.zero_grad()
-        self.model.classifier.zero_grad()
-        model_output.backward(gradient=one_hot_output, retain_graph=True)
-        guided_gradients = self.extractor.gradients.data.numpy()[0]
-        target = conv_output.data.numpy()[0]
-        weights = np.mean(guided_gradients, axis=(1, 2)) 
-        cam = np.ones(target.shape[1:], dtype=np.float32)
-        for i, w in enumerate(weights):
-            cam += w * target[i, :, :]
-        cam = np.maximum(cam, 0)
-        cam = (cam - np.min(cam)) / (np.max(cam) - np.min(cam))  
-        cam = np.uint8(cam * 255)  # Scale between 0-255 to visualize
-        cam = np.uint8(Image.fromarray(cam).resize((input_image.shape[2],
-                       input_image.shape[3]), Image.ANTIALIAS))/255
-        return cam
-
-
-def GradCam(model, img, target_layer=11):
-  grad_cam = GradCam(model, target_layer)
-  im, pred_cls = process_img(img, model)
-  cam = grad_cam.generate_cam(im, pred_cls)
-  heatmap, heatmap_on_image, activation_map = save_class_activation_images(img, cam)
-  return heatmap, heatmap_on_image, activation_map
-
-def outputs(image_cam, heats, sup, act_map):
-    col1, col2, col3 = st.columns([0.33, 0.33])
+def outputs(image_cam, heats, sup):
+    col1, col2, col3 = st.columns([0.25, 0.25, 0.25])
     with col1:
         st.write('Original image')
         st.image(image_cam)
-        st.write('activation map')
-        st.image(act_map)
     with col2:
         st.write('Correspective heatmap')
         st.image(heats)
+    with col3:
         st.write('Superimposed image')
         st.image(sup)
-    with col3:
-        
 
 
         
