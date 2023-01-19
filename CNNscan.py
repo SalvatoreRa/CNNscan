@@ -1263,6 +1263,7 @@ def main():
             cam_outputs(image_cam, heats, sup, act_map)
             
     with st.expander("Visualize Vanilla Backpropagation"):
+        st.write('Default model is **AlexNet** which is faster, however other models leads to better results')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#Vanilla-Backpropagation)')
       
         image_to_backpr = st.selectbox(
