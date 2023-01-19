@@ -1182,7 +1182,7 @@ def main():
         st.image(img_screen)
 
     with st.expander("Visualize the filters"):
-        st.write('Default model is **AlexNet** which is faster, however other models leads to better results')
+        st.write('Default model is **AlexNet** which is faster')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
         alexa_idx =[0, 3, 6, 8, 10]
         VGG16_filt = [0, 2, 5, 7, 10, 12, 14, 17, 19, 21, 24, 26, 28]
@@ -1206,7 +1206,7 @@ def main():
             fetch_filters(pret_mod, filt_idx, layer = option)
 
     with st.expander("Visualize the feature maps"):
-        st.write('Default model is **AlexNet** which is faster, however other models leads to better results')
+        st.write('Default model is **AlexNet** which is faster')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#feature-map-visualization)')
         mod_feat_map = st.selectbox('Select model for feature maps visualization:',
             ('AlexaNET', 'VGG16', 'VGG19'))
@@ -1263,7 +1263,7 @@ def main():
             cam_outputs(image_cam, heats, sup, act_map)
             
     with st.expander("Visualize Vanilla Backpropagation"):
-        st.write('Default model is **AlexNet** which is faster, however other models leads to better results')
+        st.write('Default model is **AlexNet** which is faster, however other models leads to different results')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#Vanilla-Backpropagation)')
         
         mod_filt = st.selectbox('Select model for Vanilla Backpropagation visualization:',
