@@ -1231,7 +1231,7 @@ def main():
             fetch_feature_maps(pret_mod, image_features)
 
     with st.expander("Visualize GradCam"):
-        st.write('Default model is **AlexNet** which is faster, however other models leads to better results')
+        st.write('Default model is **AlexNet** which is faster')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#GradCam)')
         
         mod_grad_map = st.selectbox('Select model for GradCam visualization:',
