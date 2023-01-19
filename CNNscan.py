@@ -1245,6 +1245,7 @@ def main():
 
         max = len(model.eval().features) -1
         target_layer = st.slider('select target layer', 0, max, 1)
+        t = target_layer
         
         image_to_cam = st.selectbox(
         'Select an image to use',
