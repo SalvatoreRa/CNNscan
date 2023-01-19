@@ -262,7 +262,7 @@ def Visualize_GradCam(model, img, target_layer=11):
   return heatmap, heatmap_on_image, activation_map
 
 def cam_outputs(image_cam, heats, sup, act_map):
-    col1, col2, col3 = st.columns([0.33, 0.33])
+    col1, col2 = st.columns([0.33, 0.33])
     with col1:
         st.write('Original image')
         st.image(image_cam)
