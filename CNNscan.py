@@ -623,6 +623,10 @@ def gradient_gradcam(model, img):
   cam_gs =save_gradient_images(cam_gs)
   return cam_im, cam_gs
 
+
+##########################################################
+###########Visualize Layerwise Relevance LRP##############
+##########################################################
 # Visualize Layerwise Relevance LRP
 #this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
 
