@@ -385,7 +385,10 @@ def outputs_backprop(im1, im2, im3, txt1, txt2, txt3):
         st.write(txt3)
         st.image(im3)
 
-# Visualize vanilla propagation
+##########################################################
+###########  Visualize vanilla propagation ###############
+##########################################################
+
 #this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
 
 class GuidedBackprop():
@@ -446,6 +449,7 @@ def GuidedBackprop_process(model, img):
   pos_sal =save_gradient_images(pos_sal)
   neg_sal =save_gradient_images(neg_sal)
   return grad_im, grad_im_bn, pos_sal, neg_sal
+
 
 # Visualize SCORE-CAM
 #this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
