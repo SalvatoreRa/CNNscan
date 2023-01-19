@@ -1206,7 +1206,8 @@ def main():
 
         show_gradcam = st.button('show GradCam')
         if show_gradcam:
-            heats, sup, act_map = GradCam(model, image_cam, target_layer=11)
+            target_layer=11
+            heats, sup, act_map = GradCam(model, image_cam, target_layer)
             cam_outputs(image_cam, heats, sup, act_map)
             
     with st.expander("Visualize Vanilla Backpropagation"):
