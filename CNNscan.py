@@ -185,6 +185,7 @@ def fetch_feature_maps(model, img):
 ##########################################################
 ###########         Visualize Gradcam      ###############
 ##########################################################
+#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
 
 class CamExtractor():
     """
@@ -279,9 +280,12 @@ def cam_outputs(image_cam, heats, sup, act_map):
 
         
         
-        
-# Visualize vanilla propagation
-#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
+##########################################################
+########### Visualize vanilla propagation  ###############
+##########################################################
+#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations        
+
+
 
 def process_img(img, model):
   norm_mean = [0.485, 0.456, 0.406]
