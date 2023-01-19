@@ -1243,7 +1243,7 @@ def main():
         if mod_grad_map == 'VGG19':
           pret_mod= VGG19()
 
-        max = len(model.eval().features) -1
+        max = len(pret_mod.eval().features) -1
         target_layer = st.slider('select target layer', 0, max, 1)
         t = target_layer
 
