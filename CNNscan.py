@@ -768,8 +768,12 @@ def outputs_LRP(img, heat_list):
         st.image(heat_list[6])
         st.write('Layer 11')
         st.image(heat_list[10])
-          
-# Visualize LayerCAM
+
+
+##########################################################
+###########         Visualize LayerCAM     ###############
+##########################################################
+
 #this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
 
 class CamExtractor():
