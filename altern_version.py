@@ -261,17 +261,20 @@ def GradCam(model, img, target_layer=11):
   heatmap, heatmap_on_image, activation_map = save_class_activation_images(img, cam)
   return heatmap, heatmap_on_image, activation_map
 
-def outputs(image_cam, heats, sup):
+def outputs(image_cam, heats, sup, act_map):
     col1, col2, col3 = st.columns([0.33, 0.33])
     with col1:
         st.write('Original image')
         st.image(image_cam)
+        st.write('activation map')
+        st.image(act_map)
     with col2:
         st.write('Correspective heatmap')
         st.image(heats)
-    with col3:
         st.write('Superimposed image')
         st.image(sup)
+    with col3:
+        
 
 
         
