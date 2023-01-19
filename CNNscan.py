@@ -545,7 +545,10 @@ def outputs_scorecam(im1, im2, im3, im4, txt1, txt2, txt3, txt4):
         st.write(txt4)
         st.image(im4)
 
-# Visualize Guided SCORE-CAM
+##########################################################
+###########  Visualize Guided SCORE-CAM    ###############
+##########################################################
+
 #this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
 
 def guided_grad_cam(grad_cam_mask, guided_backprop_mask):
