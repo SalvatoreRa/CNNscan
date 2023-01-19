@@ -273,7 +273,7 @@ def outputs(image_cam, heats, sup, act_map):
         st.image(heats)
         st.write('Superimposed image')
         st.image(sup)
-    with col3:
+
         
 
 
