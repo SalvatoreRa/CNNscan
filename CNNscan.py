@@ -1234,7 +1234,7 @@ def main():
         st.write('Default model is **AlexNet** which is faster, however other models leads to better results')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#GradCam)')
         
-        mod_grad_map = st.selectbox('Select model for feature maps visualization:',
+        mod_grad_map = st.selectbox('Select model for GradCam visualization:',
             ('AlexaNET', 'VGG16', 'VGG19'))
         if mod_grad_map == 'AlexaNET':
           pret_mod= model
@@ -1246,7 +1246,7 @@ def main():
         max = len(model.eval().features) -1
         target_layer = st.slider('select target layer', 0, max, 1)
         t = target_layer
-        
+
         image_to_cam = st.selectbox(
         'Select an image to use',
         ('provided test', 'provide image'))
