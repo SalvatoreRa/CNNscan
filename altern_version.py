@@ -84,8 +84,11 @@ def load_model():
   model.load_state_dict(state_dict)
   return model
 
+##########################################################
+###########         Fetch Filters          ###############
+##########################################################
 
-#Fetch filters
+
 def fetch_filters(model, idx_conv_layer = [0, 3, 6, 8, 10], layer = 0):
     
     
