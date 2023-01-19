@@ -182,7 +182,11 @@ def fetch_feature_maps(model, img):
     st.pyplot(fig)
     plt.close()
 
-# Visualize GradCam
+##########################################################
+###########         Visualize Gradcam      ###############
+##########################################################
+
+
 def visualize_gradcam(model, img):
   shapes = (np.array(img).shape[1], np.array(img).shape[0])
 
