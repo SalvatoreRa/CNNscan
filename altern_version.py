@@ -127,7 +127,10 @@ def fetch_filters(model, idx_conv_layer = [0, 3, 6, 8, 10], layer = 0):
       plt.tight_layout()
       st.pyplot(fig)
 
-### Feature Maps
+##########################################################
+###########         Feature maps           ###############
+##########################################################
+
 def load_test_image():
     uploaded_file = st.file_uploader(label='Upload an image for test')
     if uploaded_file is not None:
