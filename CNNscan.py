@@ -261,7 +261,7 @@ def GradCam(model, img, target_layer=11):
   heatmap, heatmap_on_image, activation_map = save_class_activation_images(img, cam)
   return heatmap, heatmap_on_image, activation_map
 
-def outputs(image_cam, heats, sup, act_map):
+def cam_outputs(image_cam, heats, sup, act_map):
     col1, col2, col3 = st.columns([0.33, 0.33])
     with col1:
         st.write('Original image')
@@ -1206,8 +1206,8 @@ def main():
 
         show_gradcam = st.button('show GradCam')
         if show_gradcam:
-            heats, sup, act_map =GradCam(model, image_cam, target_layer=11)
-            outputs(image_cam, heats, sup, act_map)
+            heats, sup, act_map = GradCam(model, image_cam, target_layer=11)
+            cam_outputs(image_cam, heats, sup, act_map)
             
     with st.expander("Visualize Vanilla Backpropagation"):
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#Vanilla-Backpropagation)')
