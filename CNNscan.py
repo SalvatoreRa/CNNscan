@@ -1290,7 +1290,7 @@ def main():
         show_backprop = st.button('show Vanilla Backpropagation')
         if show_backprop:
             
-            backprop_im, backprop_bn =VanillaBackprop_process(model, image_to_backpr)
+            backprop_im, backprop_bn =VanillaBackprop_process(pret_mod, image_to_backpr)
             
             txt1 = 'Original image' 
             txt2 = 'Colored Vanilla Backpropagation'
