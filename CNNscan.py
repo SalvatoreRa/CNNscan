@@ -254,7 +254,7 @@ class GradCam():
         return cam
 
 
-def GradCam(model, img, target_layer=11):
+def Visualize_GradCam(model, img, target_layer=11):
   grad_cam = GradCam(model, target_layer)
   im, pred_cls = process_img(img, model)
   cam = grad_cam.generate_cam(im, pred_cls)
@@ -1207,7 +1207,7 @@ def main():
         show_gradcam = st.button('show GradCam')
         if show_gradcam:
             t=11
-            heats, sup, act_map = GradCam(model, image_cam, target_layer=t)
+            heats, sup, act_map = Visualize_GradCam(model, image_cam, target_layer=t)
             cam_outputs(image_cam, heats, sup, act_map)
             
     with st.expander("Visualize Vanilla Backpropagation"):
