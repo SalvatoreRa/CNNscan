@@ -896,7 +896,11 @@ def integrated_gradient_process(img, model):
     im_bn = save_gradient_images(grayscale_integrated_grads)
     return im, im_bn
 
-# Visualize Grad Times images
+
+##########################################################
+###########  Visualize Grad Times images   ###############
+##########################################################
+
 #this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
 
 @st.cache(ttl=12*3600)    
@@ -924,7 +928,11 @@ def Grad_times_process(img, model):
   grayscale_int_grads_times = save_gradient_images(grayscale_int_grads_times)
   return grad_times_image, grayscale_vanilla_grads, BackProg_times_image, grayscale_BackProg_grads, integrated_grads_times, grayscale_int_grads_times
 
-# Visualize Smooth Grad
+
+##########################################################
+###########     Visualize Smooth Grad      ###############
+##########################################################
+
 #this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
 
 def generate_smooth_grad(Backprop, prep_img, target_class, param_n, param_sigma_multiplier):
@@ -1006,8 +1014,10 @@ def outputs_smoothgrad(img, smooths, smooths_bn, desc= 'Vanilla Backprop.'):
         st.write('Grayscale ' + desc + ' sigma: 5')
         st.image(smooths_bn[4])
 
+##########################################################
+###########         Visualize DeepDream    ###############
+##########################################################
 
-# Visualize DeepDream
 #this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
 def recreate_image(im_as_var):
     reverse_mean = [-0.485, -0.456, -0.406]
