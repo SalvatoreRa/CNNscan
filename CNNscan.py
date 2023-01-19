@@ -1014,6 +1014,8 @@ def outputs_smoothgrad(img, smooths, smooths_bn, desc= 'Vanilla Backprop.'):
         st.write('Grayscale ' + desc + ' sigma: 5')
         st.image(smooths_bn[4])
 
+
+
 ##########################################################
 ###########         Visualize DeepDream    ###############
 ##########################################################
@@ -1229,7 +1231,18 @@ def main():
             fetch_feature_maps(pret_mod, image_features)
 
     with st.expander("Visualize GradCam"):
+        st.write('Default model is **AlexNet** which is faster, however other models leads to better results')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#GradCam)')
+        
+        mod_grad_map = st.selectbox('Select model for feature maps visualization:',
+            ('AlexaNET', 'VGG16', 'VGG19'))
+        if mod_grad_map == 'AlexaNET':
+          pret_mod= model
+        if mod_grad_map == 'VGG16':
+          pret_mod= VGG16()
+        if mod_grad_map == 'VGG19':
+          pret_mod= VGG19()
+        
         image_to_cam = st.selectbox(
         'Select an image to use',
         ('provided test', 'provide image'))
