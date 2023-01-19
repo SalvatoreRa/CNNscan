@@ -1242,6 +1242,9 @@ def main():
           pret_mod= VGG16()
         if mod_grad_map == 'VGG19':
           pret_mod= VGG19()
+
+        max = len(model.eval().features) -1
+        target_layer = st.slider('select target layer', 0, max, 1)
         
         image_to_cam = st.selectbox(
         'Select an image to use',
@@ -1254,7 +1257,7 @@ def main():
 
         show_gradcam = st.button('show GradCam')
         if show_gradcam:
-            t=11
+            
             heats, sup, act_map = Visualize_GradCam(model, image_cam, target_layer=t)
             cam_outputs(image_cam, heats, sup, act_map)
             
@@ -1515,7 +1518,7 @@ def main():
             x = mod_dd.eval()
             max = x.features[cnn_layer].out_channels -1
             filter_pos = st.slider('select filter', 0, max, 1)
-            filter_pos = 9
+            
 
                 
             
