@@ -1175,7 +1175,7 @@ def main():
     
     st.sidebar.markdown("---")
     st.sidebar.header("Settings")
-    mod_app = st.selectbox('Select model for the app:',
+    mod_app = st.sidebar.selectbox('Select model for the app:',
             ('AlexaNET', 'VGG16', 'VGG19'))
     alexa_idx =[0, 3, 6, 8, 10]
     VGG16_filt = [0, 2, 5, 7, 10, 12, 14, 17, 19, 21, 24, 26, 28]
