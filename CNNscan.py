@@ -1241,7 +1241,8 @@ def main():
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#GradCam)')
         
         max = len(pret_mod.eval().features) -1
-        target_layer = st.slider('select target layer', 0, max, 1)
+        target_layer = st.slider('select target layer', 0, max, 1,
+                        help= 'select target layer of the model')
         t = target_layer
 
         image_to_cam = st.selectbox(
@@ -1413,14 +1414,13 @@ def main():
         else:
             image_to_layerCAM = load_baseline()
                 
-        Layer = st.selectbox(
-        'Select the layer',
-        ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10' '11'),
-        help = 'select the layer')
-        Layer = int(Layer)
+        max = len(pret_mod.eval().features) -1
+        layer = st.slider('select taret layer', 0, max, 1,
+                        help= 'select target layer of the model')
+        t = layer
         show_LayerCAM = st.button('show LayerCAM')
         if show_LayerCAM:
-            heatmap, heatmap_on_image, activation_map = LayerCAM_process(image_to_layerCAM, model, layer =Layer)
+            heatmap, heatmap_on_image, activation_map = LayerCAM_process(image_to_layerCAM, pret_mod, layer =Layer)
             txt1 = 'Original image' 
             txt2 = 'Class Activation Map - layerCAM, layer: ' + str(Layer)
             txt3 = 'Class Activation HeatMap - layerCAM, layer: ' + str(Layer)
