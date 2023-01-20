@@ -1473,7 +1473,7 @@ def main():
 
         show_VSGI = st.button('show Vanilla Smooth Grad Images')
         if show_VSGI:
-            smooths, smooths_bn = smooth_grad_process(image_to_SGI, model)
+            smooths, smooths_bn = smooth_grad_process(image_to_SGI, pret_mod)
             outputs_smoothgrad(image_to_SGI, smooths, smooths_bn, desc= 'Vanilla Backprop.')
         
         show_GSGI = st.button('show Guided Smooth Grad Images')
