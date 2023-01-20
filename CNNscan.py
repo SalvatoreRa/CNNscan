@@ -1224,7 +1224,7 @@ def main():
         
         image_to_use = st.selectbox(
         'Select the image to use',
-        ('provided test', 'provide image')
+        ('provided test', 'provide image'),
         help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
 
         if image_to_use == 'provide image':
