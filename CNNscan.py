@@ -1420,7 +1420,7 @@ def main():
         t = layer
         show_LayerCAM = st.button('show LayerCAM')
         if show_LayerCAM:
-            heatmap, heatmap_on_image, activation_map = LayerCAM_process(image_to_layerCAM, pret_mod, layer =Layer)
+            heatmap, heatmap_on_image, activation_map = LayerCAM_process(image_to_layerCAM, pret_mod, layer =t)
             txt1 = 'Original image' 
             txt2 = 'Class Activation Map - layerCAM, layer: ' + str(Layer)
             txt3 = 'Class Activation HeatMap - layerCAM, layer: ' + str(Layer)
