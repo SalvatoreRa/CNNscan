@@ -1211,7 +1211,8 @@ def main():
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
         
         conv_layer = st.selectbox(
-        'Select the convolution layer', filt_idx)
+        'Select the convolution layer', filt_idx,
+        help = 'select convolutional filter layer')
         option = int(conv_layer)
         show_filters = st.button('show the filters')
         if show_filters:
@@ -1223,7 +1224,8 @@ def main():
         
         image_to_use = st.selectbox(
         'Select the image to use',
-        ('provided test', 'provide image'))
+        ('provided test', 'provide image')
+        help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
 
         if image_to_use == 'provide image':
             image_features = load_test_image()
