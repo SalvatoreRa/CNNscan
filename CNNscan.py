@@ -1479,7 +1479,7 @@ def main():
         show_GSGI = st.button('show Guided Smooth Grad Images')
         
         if show_GSGI:
-            smooths, smooths_bn = smooth_grad_process_guidBackprop(image_to_SGI, model)
+            smooths, smooths_bn = smooth_grad_process_guidBackprop(image_to_SGI, pret_mod)
             outputs_smoothgrad(image_to_SGI, smooths, smooths_bn, desc= 'Guided Backprop.')
 
     with st.expander("DeepDream"):
