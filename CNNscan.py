@@ -29,9 +29,9 @@ import sys
 import pathlib
 
 
-
+#this to import modules
 sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
-from utils import load_test_image
+from utils import load_test_image, load_baseline
 
 @st.cache(ttl=12*3600)
 def load_model():
@@ -141,12 +141,7 @@ def fetch_filters(model, idx_conv_layer = [0, 3, 6, 8, 10], layer = 0):
 
 
 
-def load_baseline():
-    img_path = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/manja-vitolic-gKXKBY-C-Dk-unsplash.jpg?raw=true"
-    response = requests.get(img_path)
-    img_screen = Image.open(BytesIO(response.content))
-    st.image(img_screen)
-    return img_screen
+
 
 def fetch_feature_maps(model, img):
   norm_mean = [0.485, 0.456, 0.406]
