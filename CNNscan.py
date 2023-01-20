@@ -29,7 +29,7 @@ import sys
 import pathlib
 
 
-sys.path.insert(0, ".")
+
 sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
 from utils import load_test_image
 
