@@ -28,6 +28,9 @@ import os
 import sys
 
 def load_test_image():
+    '''
+    load a test image
+    '''
     uploaded_file = st.file_uploader(label='Upload an image for test')
     if uploaded_file is not None:
         image_data = uploaded_file.getvalue()
@@ -35,3 +38,13 @@ def load_test_image():
         return Image.open(io.BytesIO(image_data))
     else:
         return None
+
+def load_baseline():
+    '''
+    load the baseline image: our beloved and judgemental cat
+    '''
+    img_path = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/manja-vitolic-gKXKBY-C-Dk-unsplash.jpg?raw=true"
+    response = requests.get(img_path)
+    img_screen = Image.open(BytesIO(response.content))
+    st.image(img_screen)
+    return img_screen
