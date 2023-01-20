@@ -26,9 +26,12 @@ from matplotlib.colors import ListedColormap
 from copy import deepcopy
 import os
 import sys
+import pathlib
+
 
 sys.path.insert(0, ".")
-from CNNscan.utils import load_test_image
+sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
+from utils import load_test_image
 
 @st.cache(ttl=12*3600)
 def load_model():
