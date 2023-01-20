@@ -1537,6 +1537,7 @@ def main():
             max = x.features[cnn_layer].out_channels -1
             filter_pos = st.slider('select filter', 0, max, 1)
             
+            
 
                 
             
