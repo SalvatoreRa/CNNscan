@@ -1301,7 +1301,7 @@ def main():
         show_Gbackprop = st.button('show Guided Backpropagation')
         if show_Gbackprop:
             
-            Gbackprop_im, Gbackprop_bn, pos_sal_bp, neg_sal_bp =GuidedBackprop_process(model, image_to_Gbackpr)
+            Gbackprop_im, Gbackprop_bn, pos_sal_bp, neg_sal_bp =GuidedBackprop_process(pret_mod, image_to_Gbackpr)
             
             txt1 = 'Original image' 
             txt2 = 'Guided Backpropagation Negative Saliency'
@@ -1329,7 +1329,7 @@ def main():
 
         show_scorecam = st.button('show ScoreCam')
         if show_scorecam:
-          scorecam = scorecam_process(model, image_to_scorecam)
+          scorecam = scorecam_process(pret_mod, image_to_scorecam)
           heatmap, heatmap_on_image, activation_map = save_class_activation_images(image_to_scorecam, scorecam)
           txt1 = 'Original image' 
           txt2 = 'Score-weighted Class Activation Map colored'
@@ -1352,7 +1352,7 @@ def main():
         show_int_grad = st.button('show Integrated Gradient')
         if show_int_grad:
             
-            im, im_bn = integrated_gradient_process(image_to_grad, model)
+            im, im_bn = integrated_gradient_process(image_to_grad, pret_mod)
             
             txt1 = 'Original image' 
             txt2 = 'Colored Integrated Gradient'
@@ -1497,7 +1497,8 @@ def main():
 
         DD_par = st.selectbox(
         'Select parameters for DD:',
-        ('default', 'customize'))
+        ('default', 'customize'),
+        help = 'you can use the default parameters (model, layer, filter) or set the parameter you prefer')
 
         if DD_par == 'default':
             mod_dd = model
