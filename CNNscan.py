@@ -1442,7 +1442,7 @@ def main():
 
         show_GTI = st.button('show Grad Times Images')
         if show_GTI:
-            grad_times_image, grayscale_vanilla_grads, BackProg_times_image, grayscale_BackProg_grads, integrated_grads_times, grayscale_int_grads_times = Grad_times_process(image_to_GTI, model)
+            grad_times_image, grayscale_vanilla_grads, BackProg_times_image, grayscale_BackProg_grads, integrated_grads_times, grayscale_int_grads_times = Grad_times_process(image_to_GTI, pret_mod)
             txt1 = 'Original image' 
             txt2 = 'Colored Vanilla x Gradient image'
             txt3 = 'gray-scale Vanilla x Gradient image'
