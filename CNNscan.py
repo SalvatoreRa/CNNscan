@@ -28,6 +28,7 @@ import os
 import sys
 
 sys.path.insert(0, ".")
+from CNNscan.utils import load_test_image
 
 @st.cache(ttl=12*3600)
 def load_model():
