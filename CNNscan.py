@@ -1415,12 +1415,13 @@ def main():
             image_to_layerCAM = load_baseline()
                 
         max = len(pret_mod.eval().features) -1
-        layer = st.slider('select taret layer', 0, max, 1,
+        Layer = st.slider('select taret layer', 0, max, 1,
                         help= 'select target layer of the model')
-        t = layer
+        
         show_LayerCAM = st.button('show LayerCAM')
         if show_LayerCAM:
-            heatmap, heatmap_on_image, activation_map = LayerCAM_process(image_to_layerCAM, pret_mod, layer =t)
+            heatmap, heatmap_on_image, activation_map = LayerCAM_process(image_to_layerCAM, 
+                                                                    pret_mod, layer =Layer)
             txt1 = 'Original image' 
             txt2 = 'Class Activation Map - layerCAM, layer: ' + str(Layer)
             txt3 = 'Class Activation HeatMap - layerCAM, layer: ' + str(Layer)
