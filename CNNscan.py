@@ -1375,7 +1375,7 @@ def main():
         show_GGradCam = st.button('show Guided GradCam')
         if show_GGradCam:
             
-            cam_im, cam_gs = gradient_gradcam(model, image_to_GGradCam)
+            cam_im, cam_gs = gradient_gradcam(pret_mod, image_to_GGradCam)
             
             txt1 = 'Original image' 
             txt2 = 'Guided GradCam Colors'
@@ -1397,7 +1397,7 @@ def main():
 
         show_LRP = st.button('show Layerwise Relevance')
         if show_LRP:
-            heat_list =LRP_process(model, image_to_LRP)
+            heat_list =LRP_process(pret_mod, image_to_LRP)
             outputs_LRP(image_to_LRP, heat_list)
             
     with st.expander("Visualize LayerCAM"):
@@ -1537,7 +1537,7 @@ def main():
             max = x.features[cnn_layer].out_channels -1
             filter_pos = st.slider('select filter', 0, max, 1)
             
-            
+
 
                 
             
