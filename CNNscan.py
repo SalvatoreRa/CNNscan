@@ -1157,6 +1157,9 @@ def main():
     st.subheader('Visualize what happening inside a convolutional neural network (CNN)')
 
     st.sidebar.image(logo,  width=150)
+    st.sidebar.markdown("Made by [Salvatore Raieli](https://www.linkedin.com/in/salvatore-raieli/)")
+    st.sidebar.markdown("---")
+    
     with st.sidebar.expander("About this App"):
      st.write("""
         This simple app is showing how to "do a radiography to a CNN".
