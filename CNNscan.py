@@ -1173,6 +1173,26 @@ def main():
      st.write("""
      """)
     
+    st.sidebar.markdown("---")
+    st.sidebar.header("Settings")
+    mod_app = st.selectbox('Select model for the app:',
+            ('AlexaNET', 'VGG16', 'VGG19'))
+    alexa_idx =[0, 3, 6, 8, 10]
+    VGG16_filt = [0, 2, 5, 7, 10, 12, 14, 17, 19, 21, 24, 26, 28]
+    VGG19_filt = [0, 2, 5, 7, 10, 12, 14, 16,19, 21, 23, 25, 28, 30, 32, 34]
+    if mod_app == 'AlexaNET':
+          filt_idx =alexa_idx
+          pret_mod= model
+    if mod_app == 'VGG16':
+          filt_idx =VGG16_filt
+          pret_mod= VGG16()
+    if mod_app == 'VGG19':
+          filt_idx =VGG19_filt
+          pret_mod= VGG19()
+    
+        
+        
+    
 
     with st.expander("Visualize the structure"):
         url1 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet.png?raw=true"
