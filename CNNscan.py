@@ -131,14 +131,7 @@ def fetch_filters(model, idx_conv_layer = [0, 3, 6, 8, 10], layer = 0):
 ###########         Feature maps           ###############
 ##########################################################
 
-def load_test_image():
-    uploaded_file = st.file_uploader(label='Upload an image for test')
-    if uploaded_file is not None:
-        image_data = uploaded_file.getvalue()
-        st.image(image_data)
-        return Image.open(io.BytesIO(image_data))
-    else:
-        return None
+
 
 def load_baseline():
     img_path = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/manja-vitolic-gKXKBY-C-Dk-unsplash.jpg?raw=true"
