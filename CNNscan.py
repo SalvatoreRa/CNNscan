@@ -1246,7 +1246,8 @@ def main():
 
         image_to_cam = st.selectbox(
         'Select an image to use',
-        ('provided test', 'provide image'))
+        ('provided test', 'provide image'),
+        help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
 
         if image_to_cam == 'provide image':
             image_cam = load_test_image()
@@ -1266,7 +1267,8 @@ def main():
 
         image_to_backpr = st.selectbox(
         'Select an image for Vanilla Backpropagation:',
-        ('provided test', 'provide image'))
+        ('provided test', 'provide image'),
+        help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
 
         if image_to_backpr == 'provide image':
             image_to_backpr = load_test_image()
@@ -1288,7 +1290,8 @@ def main():
       
         image_to_Gbackpr = st.selectbox(
         'Select an image for Guided Backpropagation:',
-        ('provided test', 'provide image'))
+        ('provided test', 'provide image'),
+        help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
 
         if image_to_Gbackpr == 'provide image':
             image_to_Gbackpr = load_test_image()
@@ -1316,7 +1319,8 @@ def main():
       
         image_to_scorecam = st.selectbox(
         'Select an image for ScoreCam:',
-        ('provided test', 'provide image'))
+        ('provided test', 'provide image'),
+        help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
 
         if image_to_scorecam == 'provide image':
             image_to_scorecam = load_test_image()
@@ -1337,7 +1341,8 @@ def main():
       
         image_to_grad = st.selectbox(
         'Select an image for Integrated Gradients:',
-        ('provided test', 'provide image'))
+        ('provided test', 'provide image'),
+        help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
 
         if image_to_grad == 'provide image':
             image_to_grad = load_test_image()
@@ -1359,7 +1364,8 @@ def main():
       
         image_to_GGradCam = st.selectbox(
         'Select an image for Guided GradCam:',
-        ('provided test', 'provide image'))
+        ('provided test', 'provide image'),
+        help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
 
         if image_to_GGradCam == 'provide image':
             image_to_GGradCam = load_test_image()
@@ -1381,7 +1387,8 @@ def main():
       
         image_to_LRP = st.selectbox(
         'Select an image for Layerwise Relevance:',
-        ('provided test', 'provide image'))
+        ('provided test', 'provide image'),
+        help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
 
         if image_to_LRP == 'provide image':
             image_to_LRP = load_test_image()
@@ -1397,7 +1404,8 @@ def main():
         
         image_to_layerCAM = st.selectbox(
         'Select an image for LayerCAM:',
-        ('provided test', 'provide image'))
+        ('provided test', 'provide image'),
+        help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
         
         
         if image_to_layerCAM == 'provide image':
@@ -1407,7 +1415,8 @@ def main():
                 
         Layer = st.selectbox(
         'Select the layer',
-        ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10' '11'))
+        ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10' '11'),
+        help = 'select the layer')
         Layer = int(Layer)
         show_LayerCAM = st.button('show LayerCAM')
         if show_LayerCAM:
@@ -1422,7 +1431,8 @@ def main():
       
         image_to_GTI = st.selectbox(
         'Select an image for Grad Times Imagee:',
-        ('provided test', 'provide image'))
+        ('provided test', 'provide image'),
+        help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
 
         if image_to_GTI == 'provide image':
             image_to_GTI = load_test_image()
@@ -1452,7 +1462,8 @@ def main():
       
         image_to_SGI = st.selectbox(
         'Select an image for Smooth Grad Imagee:',
-        ('provided test', 'provide image'))
+        ('provided test', 'provide image'),
+        help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
 
         if image_to_SGI == 'provide image':
             image_to_SGI = load_test_image()
@@ -1476,7 +1487,8 @@ def main():
       
         image_to_DD = st.selectbox(
         'Select an image for DeepDream:',
-        ('provided test', 'provide image'))
+        ('provided test', 'provide image'),
+        help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
 
         if image_to_DD == 'provide image':
             image_to_DD = load_test_image()
@@ -1494,17 +1506,21 @@ def main():
 
         else:
             mod_dd = st.selectbox('Select model for DeepDream:',
-            ('AlexaNET', 'VGG16', 'VGG19'))
+            ('AlexaNET', 'VGG16', 'VGG19'),
+             help = 'select the model you want to use. VGG16 and VGG19 are computationally expensive and they will take time')
             if mod_dd == 'AlexaNET':
                 mod_dd = model
-                cnn_layer = st.selectbox('Select layer:', ('0', '3', '6', '8', '10'))
+                cnn_layer = st.selectbox('Select layer:', 
+                                         ('0', '3', '6', '8', '10'),
+                                        help = 'select the convolutional layer')
                 cnn_layer = int(cnn_layer)
             if mod_dd == 'VGG16':
                 pret_mod = VGG16()
                 mod_dd = pret_mod
                 cnn_layer = st.selectbox('Select layer:', 
                 ('0', '2', '5', '7', '10', '12', '14', '17',
-                '19', '21', '24', '26', '28' ))
+                '19', '21', '24', '26', '28' ),
+                 help = 'select the convolutional layer')
                 cnn_layer = int(cnn_layer)
             if mod_dd == 'VGG19':
                 pret_mod = VGG19()
@@ -1512,7 +1528,8 @@ def main():
                 cnn_layer = st.selectbox('Select layer:', 
                 ('0', '2', '5', '7', '10', '12', '14', '16',
                 '19', '21', '23', '25', '28', '30',
-                '32', '34'))
+                '32', '34'),
+                help = 'select the convolutional layer')
                 cnn_layer = int(cnn_layer)
             
             x = mod_dd.eval()
