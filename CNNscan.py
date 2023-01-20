@@ -24,6 +24,10 @@ from torch.optim import SGD
 import copy
 from matplotlib.colors import ListedColormap
 from copy import deepcopy
+import os
+import sys
+
+sys.path.insert(0, ".")
 
 @st.cache(ttl=12*3600)
 def load_model():
