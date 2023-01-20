@@ -1218,14 +1218,6 @@ def main():
     with st.expander("Visualize the feature maps"):
         st.write('Default model is **AlexNet** which is faster')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#feature-map-visualization)')
-        mod_feat_map = st.selectbox('Select model for feature maps visualization:',
-            ('AlexaNET', 'VGG16', 'VGG19'))
-        if mod_feat_map == 'AlexaNET':
-          pret_mod= model
-        if mod_feat_map == 'VGG16':
-          pret_mod= VGG16()
-        if mod_feat_map == 'VGG19':
-          pret_mod= VGG19()
         
         image_to_use = st.selectbox(
         'Select the image to use',
@@ -1244,15 +1236,6 @@ def main():
         st.write('Default model is **AlexNet** which is faster')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#GradCam)')
         
-        mod_grad_map = st.selectbox('Select model for GradCam visualization:',
-            ('AlexaNET', 'VGG16', 'VGG19'))
-        if mod_grad_map == 'AlexaNET':
-          pret_mod= model
-        if mod_grad_map == 'VGG16':
-          pret_mod= VGG16()
-        if mod_grad_map == 'VGG19':
-          pret_mod= VGG19()
-
         max = len(pret_mod.eval().features) -1
         target_layer = st.slider('select target layer', 0, max, 1)
         t = target_layer
@@ -1276,17 +1259,6 @@ def main():
         st.write('Default model is **AlexNet** which is faster, however other models leads to different results')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#Vanilla-Backpropagation)')
         
-        mod_filt = st.selectbox('Select model for Vanilla Backpropagation visualization:',
-            ('AlexaNET', 'VGG16', 'VGG19'))
-        if mod_filt == 'AlexaNET':
-          filt_idx =alexa_idx
-          pret_mod= model
-        if mod_filt == 'VGG16':
-          filt_idx =VGG16_filt
-          pret_mod= VGG16()
-        if mod_filt == 'VGG19':
-          filt_idx =VGG19_filt
-          pret_mod= VGG19()
 
         image_to_backpr = st.selectbox(
         'Select an image for Vanilla Backpropagation:',
