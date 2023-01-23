@@ -102,3 +102,44 @@ def convert_to_grayscale(im_as_arr):
     grayscale_im = (np.clip((grayscale_im - im_min) / (im_max - im_min), 0, 1))
     grayscale_im = np.expand_dims(grayscale_im, axis=0)
     return grayscale_im
+
+def save_class_activation_images(org_img, activation_map):
+    heatmap, heatmap_on_image = apply_colormap_on_image(org_img, activation_map, 'hsv')
+    activation_map = save_image(activation_map )
+    return heatmap, heatmap_on_image, activation_map
+
+def scorecam_process(model, img):
+  im, pred_cls = process_img(img, model)
+  score_cam = ScoreCam(model, target_layer=11)
+  cam = score_cam.generate_cam(im, pred_cls)
+  return cam
+
+def apply_colormap_on_image(org_im, activation, colormap_name):
+    color_map = cm.get_cmap(colormap_name)
+    no_trans_heatmap = color_map(activation)
+
+    heatmap = copy.copy(no_trans_heatmap)
+    heatmap[:, :, 3] = 0.4
+    heatmap = Image.fromarray((heatmap*255).astype(np.uint8))
+    no_trans_heatmap = Image.fromarray((no_trans_heatmap*255).astype(np.uint8))
+
+    shapes = (np.array(org_im).shape[1], np.array(org_im).shape[0])
+    heatmap_on_image = heatmap.resize(shapes, Image.ANTIALIAS)
+    heatmap_on_image =  Image.blend(org_im.convert("RGBA"), heatmap_on_image, 0.5)
+    return no_trans_heatmap, heatmap_on_image
+
+def apply_heatmap(R, sx, sy):
+    b = 10*((np.abs(R)**3.0).mean()**(1.0/3))
+    my_cmap = plt.cm.seismic(np.arange(plt.cm.seismic.N))
+    my_cmap[:, 0:3] *= 0.85
+    my_cmap = ListedColormap(my_cmap)
+    plt.figure(figsize=(sx, sy))
+    plt.subplots_adjust(left=0, right=1, bottom=0, top=1)
+    plt.axis('off')
+    plt.imshow(R, cmap=my_cmap, vmin=-b, vmax=b, interpolation='nearest')
+    with BytesIO() as buffer:
+      plt.savefig(buffer, format = "png")
+      buffer.seek(0)
+      image = Image.open(buffer)
+      ar = np.asarray(image)
+    return image
