@@ -20,7 +20,7 @@ from matplotlib import cm
 from torch.nn import ReLU
 from torch.autograd import Variable
 import torch.nn.functional as F
-from torch.optim import SGD
+from torch.optim import SGD, Adam
 import copy
 from matplotlib.colors import ListedColormap
 from copy import deepcopy
