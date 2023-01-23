@@ -97,19 +97,23 @@ def load_model():
   return model
 
 
+def process_img(img, model):
+  norm_mean = [0.485, 0.456, 0.406]
+  norm_std = [0.229, 0.224, 0.225]
 
+  data_transform = transforms.Compose([
+              transforms.Resize(224),
+              transforms.CenterCrop(224),
+              transforms.ToTensor(),
+              transforms.Normalize(norm_mean, norm_std),
+          ])
+  im = data_transform(img)
+  
+  output = model( im.unsqueeze(0))
+  _, pred_cls = output.max(dim=1, keepdim=True)
+  im_proc = Variable( im.unsqueeze(0), requires_grad=True)
+  return im_proc, pred_cls
 
-
-
-
-
-        
-
-
-        
-        
-
-#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations        
 
 
 
