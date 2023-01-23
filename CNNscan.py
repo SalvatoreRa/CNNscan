@@ -98,7 +98,27 @@ def load_model():
 
 
 
+def process_img(img, model):
+    norm_mean = [0.485, 0.456, 0.406]
+    norm_std = [0.229, 0.224, 0.225]
 
+    data_transform = transforms.Compose([
+                transforms.Resize(224),
+                transforms.CenterCrop(224),
+                transforms.ToTensor(),
+                transforms.Normalize(norm_mean, norm_std),
+            ])
+    im = data_transform(img)
+    print('transform')
+    im = im.unsqueeze(0)
+    print('squezze')
+    output = model(im)
+    print('model(im)')
+    _, pred_cls = output.max(dim=1, keepdim=True)
+    print('output.max(dim=1, keepdim=True)')
+    im = Variable(im, requires_grad=True)
+    print('Variable(im, requires_grad=True)')
+    return im, pred_cls
 
 
 
