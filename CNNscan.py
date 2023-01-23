@@ -33,7 +33,8 @@ import pathlib
 sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
 from utils import load_test_image, load_baseline,  \
     format_np_output, save_image, save_gradient_images, convert_to_grayscale, \
-    process_img
+    process_img, save_class_activation_images, scorecam_process, \
+    apply_colormap_on_image, apply_heatmap
 from methods import fetch_filters, fetch_feature_maps, CamExtractor, \
     GradCam, Visualize_GradCam, VanillaBackprop, VanillaBackprop_process
 from outputs import cam_outputs, outputs_backprop
@@ -99,27 +100,7 @@ def load_model():
 
 
 
-def process_img(img, model):
-    norm_mean = [0.485, 0.456, 0.406]
-    norm_std = [0.229, 0.224, 0.225]
 
-    data_transform = transforms.Compose([
-                transforms.Resize(224),
-                transforms.CenterCrop(224),
-                transforms.ToTensor(),
-                transforms.Normalize(norm_mean, norm_std),
-            ])
-    im = data_transform(img)
-    st.write('transform')
-    im = im.unsqueeze(0)
-    st.write('squezze')
-    output = model(im)
-    st.write('model(im)')
-    _, pred_cls = output.max(dim=1, keepdim=True)
-    st.write('output.max(dim=1, keepdim=True)')
-    im = Variable(im, requires_grad=True)
-    st.write('Variable(im, requires_grad=True)')
-    return im, pred_cls
 
 
 
@@ -254,30 +235,9 @@ class ScoreCam():
                        input_image.shape[3]), Image.ANTIALIAS))/255
         return cam
 
-def apply_colormap_on_image(org_im, activation, colormap_name):
-    color_map = cm.get_cmap(colormap_name)
-    no_trans_heatmap = color_map(activation)
 
-    heatmap = copy.copy(no_trans_heatmap)
-    heatmap[:, :, 3] = 0.4
-    heatmap = Image.fromarray((heatmap*255).astype(np.uint8))
-    no_trans_heatmap = Image.fromarray((no_trans_heatmap*255).astype(np.uint8))
 
-    shapes = (np.array(org_im).shape[1], np.array(org_im).shape[0])
-    heatmap_on_image = heatmap.resize(shapes, Image.ANTIALIAS)
-    heatmap_on_image =  Image.blend(org_im.convert("RGBA"), heatmap_on_image, 0.5)
-    return no_trans_heatmap, heatmap_on_image
 
-def save_class_activation_images(org_img, activation_map):
-    heatmap, heatmap_on_image = apply_colormap_on_image(org_img, activation_map, 'hsv')
-    activation_map = save_image(activation_map )
-    return heatmap, heatmap_on_image, activation_map
-
-def scorecam_process(model, img):
-  im, pred_cls = process_img(img, model)
-  score_cam = ScoreCam(model, target_layer=11)
-  cam = score_cam.generate_cam(im, pred_cls)
-  return cam
 
 def outputs_scorecam(im1, im2, im3, im4, txt1, txt2, txt3, txt4):
     col1, col2 = st.columns([0.25, 0.25])
@@ -454,21 +414,7 @@ class LRP():
         return LRP_per_layer
 
 
-def apply_heatmap(R, sx, sy):
-    b = 10*((np.abs(R)**3.0).mean()**(1.0/3))
-    my_cmap = plt.cm.seismic(np.arange(plt.cm.seismic.N))
-    my_cmap[:, 0:3] *= 0.85
-    my_cmap = ListedColormap(my_cmap)
-    plt.figure(figsize=(sx, sy))
-    plt.subplots_adjust(left=0, right=1, bottom=0, top=1)
-    plt.axis('off')
-    plt.imshow(R, cmap=my_cmap, vmin=-b, vmax=b, interpolation='nearest')
-    with BytesIO() as buffer:
-      plt.savefig(buffer, format = "png")
-      buffer.seek(0)
-      image = Image.open(buffer)
-      ar = np.asarray(image)
-    return image
+
 
 def LRP_process(model, img):
   layerwise_relevance = LRP(model)
