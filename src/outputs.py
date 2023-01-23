@@ -46,3 +46,18 @@ def cam_outputs(image_cam, heats, sup, act_map):
         st.write('Superimposed image')
         st.image(sup)
 
+##########################################################
+########### Visualize vanilla propagation  ###############
+##########################################################
+
+def outputs_backprop(im1, im2, im3, txt1, txt2, txt3):
+    col1, col2, col3 = st.columns([0.25, 0.25, 0.25])
+    with col1:
+        st.write(txt1)
+        st.image(im1)
+    with col2:
+        st.write(txt2)
+        st.image(im2)
+    with col3:
+        st.write(txt3)
+        st.image(im3)
