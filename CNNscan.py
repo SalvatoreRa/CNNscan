@@ -109,15 +109,15 @@ def process_img(img, model):
                 transforms.Normalize(norm_mean, norm_std),
             ])
     im = data_transform(img)
-    print('transform')
+    st.write('transform')
     im = im.unsqueeze(0)
-    print('squezze')
+    st.write('squezze')
     output = model(im)
-    print('model(im)')
+    st.write('model(im)')
     _, pred_cls = output.max(dim=1, keepdim=True)
-    print('output.max(dim=1, keepdim=True)')
+    st.write('output.max(dim=1, keepdim=True)')
     im = Variable(im, requires_grad=True)
-    print('Variable(im, requires_grad=True)')
+    st.write('Variable(im, requires_grad=True)')
     return im, pred_cls
 
 
