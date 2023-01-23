@@ -1345,7 +1345,8 @@ def main():
         filter_pos_alt = st.slider('select filter', 0, max, 1)
         show_alt_filters = st.button('visualize the filter')
         if show_alt_filters:
-            advance_filt(pret_mod, option, filter_pos_alt )
+            imgs_filt =advance_filt(pret_mod, option, filter_pos_alt )
+            output_adv_filt(imgs_filt)
 
     with st.expander("Visualize the feature maps"):
         st.write('Default model is **AlexNet** which is faster')
