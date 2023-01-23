@@ -1115,7 +1115,7 @@ def advance_filt(mod, cnn_layer, filter_pos ):
   return images
 
 def output_adv_filt(images):
-  col1, col2, col3= st.columns([0.33, 0.33, 0.33])
+    col1, col2, col3= st.columns([0.33, 0.33, 0.33])
     with col1:
         st.image(images[0])
         st.image(images[3])
