@@ -55,21 +55,21 @@ def load_baseline():
 
 
 def process_img(img, model):
-    norm_mean = [0.485, 0.456, 0.406]
-    norm_std = [0.229, 0.224, 0.225]
+  norm_mean = [0.485, 0.456, 0.406]
+  norm_std = [0.229, 0.224, 0.225]
 
-    data_transform = transforms.Compose([
-                transforms.Resize(224),
-                transforms.CenterCrop(224),
-                transforms.ToTensor(),
-                transforms.Normalize(norm_mean, norm_std),
-            ])
-    im = data_transform(img)
-    
-    output = model( im.unsqueeze(0))
-    _, pred_cls = output.max(dim=1, keepdim=True)
-    im_proc = Variable( im.unsqueeze(0), requires_grad=True)
-    return im_proc, pred_cls
+  data_transform = transforms.Compose([
+              transforms.Resize(224),
+              transforms.CenterCrop(224),
+              transforms.ToTensor(),
+              transforms.Normalize(norm_mean, norm_std),
+          ])
+  im = data_transform(img)
+  im = im.unsqueeze(0)
+  output = model(im)
+  _, pred_cls = output.max(dim=1, keepdim=True)
+  im = Variable(im, requires_grad=True)
+  return im, pred_cls
 
 def format_np_output(np_arr):
     if len(np_arr.shape) == 2:
