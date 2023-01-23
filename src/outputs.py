@@ -28,3 +28,21 @@ import os
 import sys
 import pathlib
 
+##########################################################
+###########         Visualize Gradcam      ###############
+##########################################################
+
+
+def cam_outputs(image_cam, heats, sup, act_map):
+    col1, col2 = st.columns([0.33, 0.33])
+    with col1:
+        st.write('Original image')
+        st.image(image_cam)
+        st.write('activation map')
+        st.image(act_map)
+    with col2:
+        st.write('Correspective heatmap')
+        st.image(heats)
+        st.write('Superimposed image')
+        st.image(sup)
+
