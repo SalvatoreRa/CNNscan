@@ -28,6 +28,12 @@ import os
 import sys
 import pathlib
 
+
+sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
+from utils import load_test_image, load_baseline,  \
+    format_np_output, save_image, save_gradient_images, convert_to_grayscale \
+        process_img
+
 #part of this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations        
 # check his amazing repository
 
