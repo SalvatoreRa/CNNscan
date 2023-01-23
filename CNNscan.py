@@ -33,7 +33,7 @@ import pathlib
 sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
 from utils import load_test_image, load_baseline
 from methods import fetch_filters, fetch_feature_maps, CamExtractor, \
-    GradCam
+    GradCam, Visualize_GradCam
 
 @st.cache(ttl=12*3600)
 def load_model():
@@ -100,18 +100,6 @@ def load_model():
 
 
 
-def cam_outputs(image_cam, heats, sup, act_map):
-    col1, col2 = st.columns([0.33, 0.33])
-    with col1:
-        st.write('Original image')
-        st.image(image_cam)
-        st.write('activation map')
-        st.image(act_map)
-    with col2:
-        st.write('Correspective heatmap')
-        st.image(heats)
-        st.write('Superimposed image')
-        st.image(sup)
 
         
 
