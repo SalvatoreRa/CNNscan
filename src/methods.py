@@ -32,7 +32,9 @@ import pathlib
 sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
 from utils import load_test_image, load_baseline,  \
     format_np_output, save_image, save_gradient_images, convert_to_grayscale, \
-    process_img
+    process_img, save_class_activation_images, scorecam_process, \
+    apply_colormap_on_image, apply_heatmap, recreate_image, \
+    preprocess_image
 
 #part of this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations        
 # check his amazing repository
