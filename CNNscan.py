@@ -1343,7 +1343,7 @@ def main():
         x = pret_mod.eval()
         max = x.features[option].out_channels -1
         filter_pos_alt = st.slider('select filter', 0, max, 1)
-        show_alt_filters = st.button('show the filters')
+        show_alt_filters = st.button('visualize the filter')
         if show_alt_filters:
             advance_filt(pret_mod, option, filter_pos_alt )
 
