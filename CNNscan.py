@@ -100,25 +100,10 @@ def load_model():
   return model
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ##########################################################
 ###########  Visualize vanilla propagation ###############
 ##########################################################
 
-#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
 
 class GuidedBackprop():
     """
