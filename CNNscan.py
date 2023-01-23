@@ -31,8 +31,9 @@ import pathlib
 
 #this to import modules
 sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
-from utils import load_test_image, load_baseline, process_img, \
-    format_np_output, save_image, save_gradient_images, convert_to_grayscale
+from utils import load_test_image, load_baseline,  \
+    format_np_output, save_image, save_gradient_images, convert_to_grayscale, \
+        #process_img,
 from methods import fetch_filters, fetch_feature_maps, CamExtractor, \
     GradCam, Visualize_GradCam, VanillaBackprop, VanillaBackprop_process
 from outputs import cam_outputs, outputs_backprop
