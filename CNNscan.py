@@ -1341,11 +1341,11 @@ def main():
         help = 'select convolutional filter layer')
         option = int(conv_layer)
         x = pret_mod.eval()
-        max = x.features[cnn_layer].out_channels -1
+        max = x.features[option].out_channels -1
         filter_pos_alt = st.slider('select filter', 0, max, 1)
         show_alt_filters = st.button('show the filters')
         if show_alt_filters:
-            advance_filt(pret_mod, conv_layer_alt, filter_pos_alt )
+            advance_filt(pret_mod, option, filter_pos_alt )
 
     with st.expander("Visualize the feature maps"):
         st.write('Default model is **AlexNet** which is faster')
