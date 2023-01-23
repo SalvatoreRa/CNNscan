@@ -1010,6 +1010,124 @@ def outputs_smoothgrad(img, smooths, smooths_bn, desc= 'Vanilla Backprop.'):
         st.write('Grayscale ' + desc + ' sigma: 5')
         st.image(smooths_bn[4])
 
+##########################################################
+###########  Visualize advanced Filters    ###############
+##########################################################
+class CNNLayerVisualization():
+    def __init__(self, model, selected_layer, selected_filter):
+        self.model = model
+        self.model.eval()
+        self.selected_layer = selected_layer
+        self.selected_filter = selected_filter
+        self.conv_output = 0
+      
+
+    def hook_layer(self):
+        def hook_function(module, grad_in, grad_out):
+            self.conv_output = grad_out[0, self.selected_filter]
+        self.model[self.selected_layer].register_forward_hook(hook_function)
+
+    def visualise_layer_with_hooks(self):
+        self.hook_layer()
+        random_image = np.uint8(np.random.uniform(150, 180, (224, 224, 3)))
+        processed_image = preprocess_image(random_image, False)
+        optimizer = Adam([processed_image], lr=0.1, weight_decay=1e-6)
+        images = list()
+        for i in range(1, 31):
+            optimizer.zero_grad()
+            x = processed_image
+            for index, layer in enumerate(self.model):
+                x = layer(x)
+                if index == self.selected_layer:
+                    break
+            loss = -torch.mean(self.conv_output)
+            print('Iteration:', str(i), 'Loss:', "{0:.2f}".format(loss.data.numpy()))
+            loss.backward()
+            optimizer.step()
+            self.created_image = recreate_image(processed_image)
+            if i % 5 == 0:
+                im = save_image(self.created_image)
+                images.append(im)
+        return images
+        
+    def visualise_layer_without_hooks(self):
+        random_image = np.uint8(np.random.uniform(150, 180, (224, 224, 3)))
+        processed_image = preprocess_image(random_image, False)
+        optimizer = Adam([processed_image], lr=0.1, weight_decay=1e-6)
+        images = list()
+        for i in range(1, 31):
+            optimizer.zero_grad()
+            x = processed_image
+            for index, layer in enumerate(self.model):
+                x = layer(x)
+                if index == self.selected_layer:
+                    break
+            self.conv_output = x[0, self.selected_filter]
+            loss = -torch.mean(self.conv_output)
+            print('Iteration:', str(i), 'Loss:', "{0:.2f}".format(loss.data.numpy()))
+            loss.backward()
+            optimizer.step()
+            self.created_image = recreate_image(processed_image)
+            if i % 5 == 0:
+                im =save_image(self.created_image)
+                images.append(im)
+        return images
+
+def recreate_image(im_as_var):
+    reverse_mean = [-0.485, -0.456, -0.406]
+    reverse_std = [1/0.229, 1/0.224, 1/0.225]
+    recreated_im = copy.copy(im_as_var.data.numpy()[0])
+    for c in range(3):
+        recreated_im[c] /= reverse_std[c]
+        recreated_im[c] -= reverse_mean[c]
+    recreated_im[recreated_im > 1] = 1
+    recreated_im[recreated_im < 0] = 0
+    recreated_im = np.round(recreated_im * 255)
+
+    recreated_im = np.uint8(recreated_im).transpose(1, 2, 0)
+    return recreated_im
+
+def preprocess_image(pil_im, resize_im=True):
+    mean = [0.485, 0.456, 0.406]
+    std = [0.229, 0.224, 0.225]
+    if type(pil_im) != Image.Image:
+        try:
+            pil_im = Image.fromarray(pil_im)
+        except Exception as e:
+            print("could not transform PIL_img to a PIL Image object. Please check input.")
+    if resize_im:
+        pil_im = pil_im.resize((224, 224), Image.ANTIALIAS)
+
+    im_as_arr = np.float32(pil_im)
+    im_as_arr = im_as_arr.transpose(2, 0, 1)  # Convert array to D,W,H
+    for channel, _ in enumerate(im_as_arr):
+        im_as_arr[channel] /= 255
+        im_as_arr[channel] -= mean[channel]
+        im_as_arr[channel] /= std[channel]
+    im_as_ten = torch.from_numpy(im_as_arr).float()
+    im_as_ten.unsqueeze_(0)
+    im_as_var = Variable(im_as_ten, requires_grad=True)
+    return im_as_var
+
+def advance_filt(mod, cnn_layer, filter_pos ):
+  layer_vis = CNNLayerVisualization(mod.features, cnn_layer, filter_pos)
+  images = layer_vis.visualise_layer_with_hooks()
+  return images
+
+def output_adv_filt(images):
+  col1, col2, col3= st.columns([0.33, 0.33, 0.33])
+    with col1:
+        st.image(images[0])
+        st.image(images[3])
+        
+    with col2:
+        st.image(images[1])
+        st.image(images[4])
+
+    with col3:
+        st.image(images[2])
+        st.image(images[5])
+
 
 
 ##########################################################
