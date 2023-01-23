@@ -28,6 +28,8 @@ import os
 import sys
 import pathlib
 
+#part of this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations        
+# check his amazing repository
 
 ##########################################################
 ###########         Fetch Filters          ###############
@@ -192,3 +194,44 @@ def Visualize_GradCam(model, img, target_layer=11):
   cam = grad_cam.generate_cam(im, pred_cls)
   heatmap, heatmap_on_image, activation_map = save_class_activation_images(img, cam)
   return heatmap, heatmap_on_image, activation_map
+
+
+##########################################################
+########### Visualize vanilla propagation  ###############
+##########################################################
+
+class VanillaBackprop():
+    """
+        Produces gradients generated with vanilla back propagation from the image
+    """
+    def __init__(self, model):
+        self.model = model
+        self.gradients = None
+
+        self.model.eval()
+        self.hook_layers()
+
+    def hook_layers(self):
+        def hook_function(module, grad_in, grad_out):
+            self.gradients = grad_in[0]
+
+        first_layer = list(self.model.features._modules.items())[0][1]
+        first_layer.register_backward_hook(hook_function)
+
+    def generate_gradients(self, input_image, target_class):
+        model_output = self.model(input_image)
+        self.model.zero_grad()
+        one_hot_output = torch.FloatTensor(1, model_output.size()[-1]).zero_()
+        one_hot_output[0][target_class] = 1
+        model_output.backward(gradient=one_hot_output)
+        gradients_as_arr = self.gradients.data.numpy()[0]
+        return gradients_as_arr
+
+def VanillaBackprop_process(model, img):
+  VBP = VanillaBackprop(model)
+  im, pred_cls = process_img(img, model)
+  gradient = VBP.generate_gradients(im, pred_cls)
+  grad_im =save_gradient_images(gradient)
+  grad_bn= convert_to_grayscale(gradient)
+  grad_im_bn =save_gradient_images(grad_bn)
+  return grad_im, grad_im_bn
