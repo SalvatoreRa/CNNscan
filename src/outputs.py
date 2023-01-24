@@ -118,3 +118,7 @@ def outputs_LRP(img, heat_list):
         st.image(heat_list[6])
         st.write('Layer 11')
         st.image(heat_list[10])
+
+##########################################################
+###########     Visualize Smooth Grad      ###############
+##########################################################
