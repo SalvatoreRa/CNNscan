@@ -179,3 +179,8 @@ def preprocess_image(pil_im, resize_im=True):
     im_as_ten.unsqueeze_(0)
     im_as_var = Variable(im_as_ten, requires_grad=True)
     return im_as_var
+
+def get_positive_negative_saliency(gradient):
+    pos_saliency = (np.maximum(0, gradient) / gradient.max())
+    neg_saliency = (np.maximum(0, -gradient) / -gradient.min())
+    return pos_saliency, neg_saliency
