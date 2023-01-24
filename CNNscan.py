@@ -943,7 +943,7 @@ def main():
         help = 'select convolutional filter layer')    
     conv_layer_app = int(conv_layer_app)
     x = pret_mod.eval()
-    max = x.features[option].out_channels -1
+    max = x.features[conv_layer_app].out_channels -1
     filter_app = st.slider('select one filter', 0, max, 1)
     st.sidebar.markdown("---")
     max = len(pret_mod.eval().features) -1
