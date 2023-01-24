@@ -41,7 +41,8 @@ from methods import fetch_filters, fetch_feature_maps, CamExtractor, \
     GradCam, Visualize_GradCam, VanillaBackprop, VanillaBackprop_process, \
     GuidedBackprop, GuidedBackprop_process, CamExtractor, \
     ScoreCam, CamExtractor2, GuidedGradCam, gradient_gradcam, \
-    LRP, LRP_process, LayerCam, LayerCAM_process
+    LRP, LRP_process, LayerCam, LayerCAM_process, IntegratedGradients, \
+    integrated_gradient_process, Grad_times_process
 from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
     outputs_LRP
 
@@ -106,119 +107,6 @@ def load_model():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-##########################################################
-########### Visualize Integrated Gradients ###############
-##########################################################
-
-#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
-
-class IntegratedGradients():
-    """
-        Produces gradients generated with integrated gradients from the image
-    """
-    def __init__(self, model):
-        self.model = model
-        self.gradients = None
-        self.model.eval()
-        self.hook_layers()
-
-    def hook_layers(self):
-        def hook_function(module, grad_in, grad_out):
-            self.gradients = grad_in[0]
-
-        first_layer = list(self.model.features._modules.items())[0][1]
-        first_layer.register_backward_hook(hook_function)
-
-    def generate_images_on_linear_path(self, input_image, steps):
-        step_list = np.arange(steps+1)/steps
-        xbar_list = [input_image*step for step in step_list]
-        return xbar_list
-
-    def generate_gradients(self, input_image, target_class):
-        model_output = self.model(input_image)
-        self.model.zero_grad()
-        one_hot_output = torch.FloatTensor(1, model_output.size()[-1]).zero_()
-        one_hot_output[0][target_class] = 1
-        model_output.backward(gradient=one_hot_output)
-        gradients_as_arr = self.gradients.data.numpy()[0]
-        return gradients_as_arr
-
-    def generate_integrated_gradients(self, input_image, target_class, steps):
-        xbar_list = self.generate_images_on_linear_path(input_image, steps)
-        integrated_grads = np.zeros(input_image.size())
-        for xbar_image in xbar_list:
-            single_integrated_grad = self.generate_gradients(xbar_image, target_class)
-            integrated_grads = integrated_grads + single_integrated_grad/steps
-        return integrated_grads[0]
-
-@st.cache(ttl=12*3600)
-def integrated_gradient_process(img, model):
-    im, pred_cls = process_img(img, model)
-    IG = IntegratedGradients(model)
-    integrated_grads = IG.generate_integrated_gradients(im, pred_cls, 100)
-    grayscale_integrated_grads = convert_to_grayscale(integrated_grads)
-    im = save_gradient_images(integrated_grads)
-    im_bn = save_gradient_images(grayscale_integrated_grads)
-    return im, im_bn
-
-
-##########################################################
-###########  Visualize Grad Times images   ###############
-##########################################################
-
-#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
-
-@st.cache(ttl=12*3600)    
-def Grad_times_process(img, model):
-  im, pred_cls = process_img(img, model)
-  VBP = VanillaBackprop(model)
-  vanilla_grads = VBP.generate_gradients(im, pred_cls)
-  grad_times_image = vanilla_grads * im.detach().numpy()[0]
-  grayscale_vanilla_grads = convert_to_grayscale(grad_times_image)
-  grad_times_image = save_gradient_images(grad_times_image)
-  grayscale_vanilla_grads = save_gradient_images(grayscale_vanilla_grads)
-
-  GuideProg = GuidedBackprop(model)
-  BackProg_grads = GuideProg.generate_gradients(im, pred_cls)
-  BackProg_times_image = BackProg_grads * im.detach().numpy()[0]
-  grayscale_BackProg_grads = convert_to_grayscale(BackProg_times_image)
-  BackProg_times_image = save_gradient_images(BackProg_times_image)
-  grayscale_BackProg_grads = save_gradient_images(grayscale_BackProg_grads)
-
-  IG = IntegratedGradients(model)
-  integrated_gradient = IG.generate_integrated_gradients(im, pred_cls, 100)
-  integrated_grads_times = integrated_gradient * im.detach().numpy()[0]
-  grayscale_int_grads_times = convert_to_grayscale(integrated_grads_times)
-  integrated_grads_times = save_gradient_images(integrated_grads_times)
-  grayscale_int_grads_times = save_gradient_images(grayscale_int_grads_times)
-  return grad_times_image, grayscale_vanilla_grads, BackProg_times_image, grayscale_BackProg_grads, integrated_grads_times, grayscale_int_grads_times
 
 
 ##########################################################
