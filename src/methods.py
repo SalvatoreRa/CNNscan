@@ -243,3 +243,65 @@ def VanillaBackprop_process(model, img):
   grad_bn= convert_to_grayscale(gradient)
   grad_im_bn =save_gradient_images(grad_bn)
   return grad_im, grad_im_bn
+
+
+##########################################################
+###########  Visualize vanilla propagation ###############
+##########################################################
+
+
+class GuidedBackprop():
+    """
+       Produces gradients generated with guided back propagation from the given image
+    """
+    def __init__(self, model):
+        self.model = model
+        self.gradients = None
+        self.forward_relu_outputs = []
+        self.model.eval()
+        self.update_relus()
+        self.hook_layers()
+
+    def hook_layers(self):
+        def hook_function(module, grad_in, grad_out):
+            self.gradients = grad_in[0]
+        first_layer = list(self.model.features._modules.items())[0][1]
+        first_layer.register_backward_hook(hook_function)
+
+    def update_relus(self):
+        def relu_backward_hook_function(module, grad_in, grad_out):
+            corresponding_forward_output = self.forward_relu_outputs[-1]
+            corresponding_forward_output[corresponding_forward_output > 0] = 1
+            modified_grad_out = corresponding_forward_output * torch.clamp(grad_in[0], min=0.0)
+            del self.forward_relu_outputs[-1]  
+            return (modified_grad_out,)
+
+        def relu_forward_hook_function(module, ten_in, ten_out):
+            self.forward_relu_outputs.append(ten_out)
+        for pos, module in self.model.features._modules.items():
+            if isinstance(module, ReLU):
+                module.register_backward_hook(relu_backward_hook_function)
+                module.register_forward_hook(relu_forward_hook_function)
+
+    def generate_gradients(self, input_image, target_class):
+        model_output = self.model(input_image)
+        self.model.zero_grad()
+        one_hot_output = torch.FloatTensor(1, model_output.size()[-1]).zero_()
+        one_hot_output[0][target_class] = 1
+        model_output.backward(gradient=one_hot_output)
+        gradients_as_arr = self.gradients.data.numpy()[0]
+        return gradients_as_arr
+
+
+ 
+def GuidedBackprop_process(model, img):
+  GuideProg = GuidedBackprop(model)
+  im, pred_cls = process_img(img, model)
+  gradient = GuideProg.generate_gradients(im, pred_cls)
+  grad_im =save_gradient_images(gradient)
+  grad_bn= convert_to_grayscale(gradient)
+  grad_im_bn =save_gradient_images(grad_bn)
+  pos_sal, neg_sal = get_positive_negative_saliency(gradient)
+  pos_sal =save_gradient_images(pos_sal)
+  neg_sal =save_gradient_images(neg_sal)
+  return grad_im, grad_im_bn, pos_sal, neg_sal
