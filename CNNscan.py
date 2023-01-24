@@ -850,7 +850,8 @@ def layer_act_guid_bp(img, model, cnn_layer, filter_pos):
   pos_sal, neg_sal = get_positive_negative_saliency(guided_grads)
   pos_sal =save_gradient_images(pos_sal)
   neg_sal =save_gradient_images(neg_sal)
-  return [col_grad_img, grayscale_guided_grads, pos_sal, neg_sal]
+  images = [col_grad_img, grayscale_guided_grads, pos_sal, neg_sal]
+  return images
 
 def output_layer_act_guid_bp(imgs_layr, img):
     col1, col2, col3= st.columns([0.33, 0.33, 0.33])
