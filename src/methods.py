@@ -34,7 +34,8 @@ from utils import load_test_image, load_baseline,  \
     format_np_output, save_image, save_gradient_images, convert_to_grayscale, \
     process_img, save_class_activation_images, scorecam_process, \
     apply_colormap_on_image, apply_heatmap, recreate_image, \
-    preprocess_image, get_positive_negative_saliency
+    preprocess_image, get_positive_negative_saliency,\
+    guided_grad_cam
 
 #part of this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations        
 # check his amazing repository
@@ -363,3 +364,77 @@ class ScoreCam():
         cam = np.uint8(Image.fromarray(cam).resize((input_image.shape[2],
                        input_image.shape[3]), Image.ANTIALIAS))/255
         return cam
+
+##########################################################
+###########  Visualize Guided SCORE-CAM    ###############
+##########################################################
+
+
+
+class CamExtractor2():
+
+    def __init__(self, model, target_layer):
+        self.model = model
+        self.target_layer = target_layer
+        self.gradients = None
+
+    def save_gradient(self, grad):
+        self.gradients = grad
+
+    def forward_pass_on_convolutions(self, x):
+        conv_output = None
+        for module_pos, module in self.model.features._modules.items():
+            x = module(x)  # Forward
+            if int(module_pos) == self.target_layer:
+                x.register_hook(self.save_gradient)
+                conv_output = x  # Save the convolution output on that layer
+        return conv_output, x
+
+    def forward_pass(self, x):
+        conv_output, x = self.forward_pass_on_convolutions(x)
+        x = x.view(x.size(0), -1)  # Flatten
+        x = self.model.classifier(x)
+        return conv_output, x
+
+
+class GuidedGradCam():
+    def __init__(self, model, target_layer):
+        self.model = model
+        self.model.eval()
+        self.extractor = CamExtractor2(self.model, target_layer)
+
+    def generate_cam(self, input_image, target_class=None):
+        conv_output, model_output = self.extractor.forward_pass(input_image)
+        if target_class is None:
+            target_class = np.argmax(model_output.data.numpy())
+        one_hot_output = torch.FloatTensor(1, model_output.size()[-1]).zero_()
+        one_hot_output[0][target_class] = 1
+        self.model.features.zero_grad()
+        self.model.classifier.zero_grad()
+        model_output.backward(gradient=one_hot_output, retain_graph=True)
+        guided_gradients = self.extractor.gradients.data.numpy()[0]
+        target = conv_output.data.numpy()[0]
+        weights = np.mean(guided_gradients, axis=(1, 2))  # Take averages for each gradient
+        # Create empty numpy array for cam
+        cam = np.ones(target.shape[1:], dtype=np.float32)
+        for i, w in enumerate(weights):
+            cam += w * target[i, :, :]
+        cam = np.maximum(cam, 0)
+        cam = (cam - np.min(cam)) / (np.max(cam) - np.min(cam))  # Normalize between 0-1
+        cam = np.uint8(cam * 255)  # Scale between 0-255 to visualize
+        cam = np.uint8(Image.fromarray(cam).resize((input_image.shape[2],
+                       input_image.shape[3]), Image.ANTIALIAS))/255
+        return cam
+
+@st.cache(ttl=12*3600)      
+def gradient_gradcam(model, img):
+  gcv2 = GuidedGradCam(model, target_layer=11)
+  im, pred_cls = process_img(img, model)
+  cam = gcv2.generate_cam(im, pred_cls)
+  GBP = GuidedBackprop(model)
+  guided_grads = GBP.generate_gradients(im, pred_cls)
+  cam_gb = guided_grad_cam(cam, guided_grads)
+  cam_im =save_gradient_images(cam_gb)
+  cam_gs = convert_to_grayscale(cam_gb)
+  cam_gs =save_gradient_images(cam_gs)
+  return cam_im, cam_gs
