@@ -38,8 +38,9 @@ from utils import load_test_image, load_baseline, \
     preprocess_image, get_positive_negative_saliency
 from methods import fetch_filters, fetch_feature_maps, CamExtractor, \
     GradCam, Visualize_GradCam, VanillaBackprop, VanillaBackprop_process, \
-    GuidedBackprop, GuidedBackprop_process
-from outputs import cam_outputs, outputs_backprop
+    GuidedBackprop, GuidedBackprop_process, CamExtractor, \
+    ScoreCam
+from outputs import cam_outputs, outputs_backprop, outputs_scorecam
 
 @st.cache(ttl=12*3600)
 def load_model():
@@ -103,79 +104,13 @@ def load_model():
 
 
 
-##########################################################
-###########         Visualize SCORE-CAM    ###############
-##########################################################
-
-#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
-
-class CamExtractor():
-    """
-        Extracts cam features from the model
-    """
-    def __init__(self, model, target_layer):
-        self.model = model
-        self.target_layer = target_layer
-
-    def forward_pass_on_convolutions(self, x):
-        conv_output = None
-        for module_pos, module in self.model.features._modules.items():
-            x = module(x)  # Forward
-            if int(module_pos) == self.target_layer:
-                conv_output = x  # Save the convolution output on that layer
-        return conv_output, x
-
-    def forward_pass(self, x):
-        conv_output, x = self.forward_pass_on_convolutions(x)
-        x = x.view(x.size(0), -1)  # Flatten
-        x = self.model.classifier(x)
-        return conv_output, x
-
-
-class ScoreCam():
-    def __init__(self, model, target_layer):
-        self.model = model
-        self.model.eval()
-        # Define extractor
-        self.extractor = CamExtractor(self.model, target_layer)
-
-    def generate_cam(self, input_image, target_class=None):
-        conv_output, model_output = self.extractor.forward_pass(input_image)
-        if target_class is None:
-            target_class = np.argmax(model_output.data.numpy())
-        target = conv_output[0]
-        cam = np.ones(target.shape[1:], dtype=np.float32)
-        for i in range(len(target)):
-            saliency_map = torch.unsqueeze(torch.unsqueeze(target[i, :, :],0),0)
-            saliency_map = F.interpolate(saliency_map, size=(224, 224), mode='bilinear', align_corners=False)
-            if saliency_map.max() == saliency_map.min():
-                continue
-            norm_saliency_map = (saliency_map - saliency_map.min()) / (saliency_map.max() - saliency_map.min())
-            w = F.softmax(self.extractor.forward_pass(input_image*norm_saliency_map)[1],dim=1)[0][target_class]
-            cam += w.data.numpy() * target[i, :, :].data.numpy()
-        cam = np.maximum(cam, 0)
-        cam = (cam - np.min(cam)) / (np.max(cam) - np.min(cam))  # Normalize between 0-1
-        cam = np.uint8(cam * 255)  # Scale between 0-255 to visualize
-        cam = np.uint8(Image.fromarray(cam).resize((input_image.shape[2],
-                       input_image.shape[3]), Image.ANTIALIAS))/255
-        return cam
 
 
 
 
 
-def outputs_scorecam(im1, im2, im3, im4, txt1, txt2, txt3, txt4):
-    col1, col2 = st.columns([0.25, 0.25])
-    with col1:
-        st.write(txt1)
-        st.image(im1)
-        st.write(txt3)
-        st.image(im3)
-    with col2:
-        st.write(txt2)
-        st.image(im2)
-        st.write(txt4)
-        st.image(im4)
+
+
 
 ##########################################################
 ###########  Visualize Guided SCORE-CAM    ###############
