@@ -1045,7 +1045,7 @@ def main():
         conv_layer_alt = st.selectbox(
         'Select a convolution layer', filt_idx,
         help = 'select convolutional filter layer')
-        option = int(conv_layer)
+        option = int(conv_layer_alt)
         x = pret_mod.eval()
         max = x.features[option].out_channels -1
         filter_pos_alt = st.slider('select filter', 0, max, 1)
@@ -1317,6 +1317,34 @@ def main():
         if show_GSGI:
             smooths, smooths_bn = smooth_grad_process_guidBackprop(image_to_SGI, pret_mod)
             outputs_smoothgrad(image_to_SGI, smooths, smooths_bn, desc= 'Guided Backprop.')
+     
+    
+    with st.expander("Layer activation with guided backpropagation"):
+        st.write('Default model is **AlexNet** which is faster')
+        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
+        
+        conv_layer_gb = st.selectbox(
+        'Select  a convolution layer', filt_idx,
+        help = 'select convolutional filter layer')
+        option = int(conv_layer_gb)
+        x = pret_mod.eval()
+        max = x.features[option].out_channels -1
+        filter_pos_gb = st.slider('select filter', 0, max, 1)
+        image_to_LAGB = st.selectbox(
+        'Select an image for layer activation:',
+        ('provided test', 'provide image'),
+        help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
+
+        if image_to_LAGB == 'provide image':
+            image_to_LAGB = load_test_image()
+        else:
+            image_to_LAGB = load_baseline()
+            
+            
+        show_layer_act_guid_bp = st.button('visualize the Layer activation')
+        if show_layer_act_guid_bp:
+            imgs_layr =layer_act_guid_bp(image_to_LAGB, pret_mod, option, filter_pos_gb)
+            output_layer_act_guid_bp(imgs_layr, image_to_LAGB)
 
     with st.expander("DeepDream"):
 
