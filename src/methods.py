@@ -662,3 +662,75 @@ def Grad_times_process(img, model):
   integrated_grads_times = save_gradient_images(integrated_grads_times)
   grayscale_int_grads_times = save_gradient_images(grayscale_int_grads_times)
   return grad_times_image, grayscale_vanilla_grads, BackProg_times_image, grayscale_BackProg_grads, integrated_grads_times, grayscale_int_grads_times
+
+##########################################################
+###########  Visualize advanced Filters    ###############
+##########################################################
+class CNNLayerVisualization():
+    def __init__(self, model, selected_layer, selected_filter):
+        self.model = model
+        self.model.eval()
+        self.selected_layer = selected_layer
+        self.selected_filter = selected_filter
+        self.conv_output = 0
+      
+
+    def hook_layer(self):
+        def hook_function(module, grad_in, grad_out):
+            self.conv_output = grad_out[0, self.selected_filter]
+        self.model[self.selected_layer].register_forward_hook(hook_function)
+
+    def visualise_layer_with_hooks(self):
+        self.hook_layer()
+        random_image = np.uint8(np.random.uniform(150, 180, (224, 224, 3)))
+        processed_image = preprocess_image(random_image, False)
+        optimizer = Adam([processed_image], lr=0.1, weight_decay=1e-6)
+        images = list()
+        for i in range(1, 31):
+            optimizer.zero_grad()
+            x = processed_image
+            for index, layer in enumerate(self.model):
+                x = layer(x)
+                if index == self.selected_layer:
+                    break
+            loss = -torch.mean(self.conv_output)
+            print('Iteration:', str(i), 'Loss:', "{0:.2f}".format(loss.data.numpy()))
+            loss.backward()
+            optimizer.step()
+            self.created_image = recreate_image(processed_image)
+            if i % 5 == 0:
+                im = save_image(self.created_image)
+                images.append(im)
+        return images
+        
+    def visualise_layer_without_hooks(self):
+        random_image = np.uint8(np.random.uniform(150, 180, (224, 224, 3)))
+        processed_image = preprocess_image(random_image, False)
+        optimizer = Adam([processed_image], lr=0.1, weight_decay=1e-6)
+        images = list()
+        for i in range(1, 31):
+            optimizer.zero_grad()
+            x = processed_image
+            for index, layer in enumerate(self.model):
+                x = layer(x)
+                if index == self.selected_layer:
+                    break
+            self.conv_output = x[0, self.selected_filter]
+            loss = -torch.mean(self.conv_output)
+            print('Iteration:', str(i), 'Loss:', "{0:.2f}".format(loss.data.numpy()))
+            loss.backward()
+            optimizer.step()
+            self.created_image = recreate_image(processed_image)
+            if i % 5 == 0:
+                im =save_image(self.created_image)
+                images.append(im)
+        return images
+
+
+
+def advance_filt(mod, cnn_layer, filter_pos ):
+  layer_vis = CNNLayerVisualization(mod.features, cnn_layer, filter_pos)
+  images = layer_vis.visualise_layer_with_hooks()
+  return images
+
+
