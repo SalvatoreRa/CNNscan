@@ -40,8 +40,10 @@ from utils import load_test_image, load_baseline, \
 from methods import fetch_filters, fetch_feature_maps, CamExtractor, \
     GradCam, Visualize_GradCam, VanillaBackprop, VanillaBackprop_process, \
     GuidedBackprop, GuidedBackprop_process, CamExtractor, \
-    ScoreCam, CamExtractor2, GuidedGradCam, gradient_gradcam
-from outputs import cam_outputs, outputs_backprop, outputs_scorecam
+    ScoreCam, CamExtractor2, GuidedGradCam, gradient_gradcam, \
+    LRP, LRP_process
+from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
+    outputs_LRP
 
 @st.cache(ttl=12*3600)
 def load_model():
@@ -116,136 +118,16 @@ def load_model():
 
 
 
-##########################################################
-###########Visualize Layerwise Relevance LRP##############
-##########################################################
-# Visualize Layerwise Relevance LRP
-#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
-
-
-class LRP():
-    def __init__(self, model):
-        self.model = model
-
-    def LRP_forward(self, layer, input_tensor, gamma=None, epsilon=None):
-
-        if gamma is None:
-            gamma = lambda value: value + 0.05 * copy.deepcopy(value.data.detach()).clamp(min=0)
-        if epsilon is None:
-            eps = 1e-9
-            epsilon = lambda value: value + eps
-        layer = copy.deepcopy(layer)
-
-        try:
-            layer.weight = nn.Parameter(gamma(layer.weight))
-        except AttributeError:
-            pass
-
-        try:
-            layer.bias = nn.Parameter(gamma(layer.bias))
-        except AttributeError:
-            pass
-
-
-        return epsilon(layer(input_tensor))
-
-    def LRP_step(self, forward_output, layer, LRP_next_layer):
-
-        forward_output = forward_output.requires_grad_(True)
-
-        lrp_rule_forward_out = self.LRP_forward(layer, forward_output, None, None)
-
-        ele_div = (LRP_next_layer / lrp_rule_forward_out).data
-
-        (lrp_rule_forward_out * ele_div).sum().backward()
-
-        LRP_this_layer = (forward_output * forward_output.grad).data
-
-        return LRP_this_layer
-
-    def generate(self, input_image, target_class):
-        layers_in_model = list(self.model._modules['features']) + list(self.model._modules['classifier'])
-        number_of_layers = len(layers_in_model)
-
-        features_to_classifier_loc = len(self.model._modules['features'])
-
-        forward_output = [input_image]
-
-        for conv_layer in list(self.model._modules['features']):
-            forward_output.append(conv_layer.forward(forward_output[-1].detach()))
-
-        feature_to_class_shape = forward_output[-1].shape
-
-        forward_output[-1] = torch.flatten(forward_output[-1], 1)
-        for index, classifier_layer in enumerate(list(self.model._modules['classifier'])):
-            forward_output.append(classifier_layer.forward(forward_output[-1].detach()))
-
-        target_class_one_hot = torch.FloatTensor(1, 1000).zero_()
-        target_class_one_hot[0][target_class] = 1
-
-        LRP_per_layer = [None] * number_of_layers + [(forward_output[-1] * target_class_one_hot).data]
-
-        for layer_index in range(1, number_of_layers)[::-1]:
-
-            if layer_index == features_to_classifier_loc-1:
-                LRP_per_layer[layer_index+1] = LRP_per_layer[layer_index+1].reshape(feature_to_class_shape)
-
-            if isinstance(layers_in_model[layer_index], (torch.nn.Linear, torch.nn.Conv2d, torch.nn.MaxPool2d)):
-
-                lrp_this_layer = self.LRP_step(forward_output[layer_index], layers_in_model[layer_index], LRP_per_layer[layer_index+1])
-                LRP_per_layer[layer_index] = lrp_this_layer
-            else:
-                LRP_per_layer[layer_index] = LRP_per_layer[layer_index+1]
-        return LRP_per_layer
 
 
 
 
-def LRP_process(model, img):
-  layerwise_relevance = LRP(model)
-  im, pred_cls = process_img(img, model)
-  LRP_per_layer = layerwise_relevance.generate(im, pred_cls)
-  heat_list = list()
-  for layer in range(1,12):
-      lrp_to_vis = np.array(LRP_per_layer[layer][0]).sum(axis=0)
-      lrp_to_vis = np.array(Image.fromarray(lrp_to_vis).resize((im.shape[2],
-                              im.shape[3]), Image.ANTIALIAS))
-      heatmap = apply_heatmap(lrp_to_vis, 4, 4)
-      heat_list.append(heatmap)
-  return heat_list
 
 
 
-def outputs_LRP(img, heat_list):
-    col1, col2, col3, col4 = st.columns([0.25, 0.25, 0.25, 0.25])
-    with col1:
-        st.write('Original image')
-        st.image(img)
-        st.write('Layer 4')
-        st.image(heat_list[3])
-        st.write('Layer 8')
-        st.image(heat_list[7])
-    with col2:
-        st.write('Layer 1')
-        st.image(heat_list[0])
-        st.write('Layer 5')
-        st.image(heat_list[4])
-        st.write('Layer 9')
-        st.image(heat_list[8])
-    with col3:
-        st.write('Layer 2')
-        st.image(heat_list[1])
-        st.write('Layer 6')
-        st.image(heat_list[5])
-        st.write('Layer 10')
-        st.image(heat_list[9])
-    with col4:
-        st.write('Layer 3')
-        st.image(heat_list[2])
-        st.write('Layer 7')
-        st.image(heat_list[6])
-        st.write('Layer 11')
-        st.image(heat_list[10])
+
+
+
 
 
 ##########################################################
