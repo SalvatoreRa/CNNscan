@@ -852,23 +852,23 @@ def layer_act_guid_bp(img, model, cnn_layer, filter_pos):
   neg_sal =save_gradient_images(neg_sal)
   return [col_grad_img, grayscale_guided_grads, pos_sal, neg_sal]
 
-def output_layer_act_guid_bp(images = None, img= None):
+def output_layer_act_guid_bp(imgs_layr, img):
     col1, col2, col3= st.columns([0.33, 0.33, 0.33])
     with col1:
         st.write('original image')
-        st.image(img)
+        st.image(imgs_layr)
         st.write('positive saliency')
-        st.image(images[2])
+        st.image(imgs_layr[2])
         
     with col2:
         st.write('colored gradient')
-        st.image(images[0])
+        st.image(imgs_layr[0])
         st.write('negative saliency')
-        st.image(images[3])
+        st.image(imgs_layr[3])
 
     with col3:
         st.write('black and white gradient')
-        st.image(images[1])
+        st.image(imgs_layr[1])
         
 
 
