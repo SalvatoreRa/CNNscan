@@ -122,3 +122,34 @@ def outputs_LRP(img, heat_list):
 ##########################################################
 ###########     Visualize Smooth Grad      ###############
 ##########################################################
+
+
+def outputs_smoothgrad(img, smooths, smooths_bn, desc= 'Vanilla Backprop.'):
+    col1, col2, col3,  = st.columns([0.33, 0.33, 0.33])
+    with col1:
+        st.write('Original image')
+        st.image(img)
+        st.write('Colored ' + desc + ' sigma: 3')
+        st.image(smooths[2])
+        st.write('Original image')
+        st.image(img)
+        st.write('Grayscale ' + desc + ' sigma: 3')
+        st.image(smooths_bn[2])
+    with col2:
+        st.write('Colored ' + desc + ' sigma: 1')
+        st.image(smooths[0])
+        st.write('Colored ' + desc + ' sigma: 4')
+        st.image(smooths[3])
+        st.write('Grayscale ' + desc + ' sigma: 1')
+        st.image(smooths_bn[0])
+        st.write('Grayscale ' + desc + ' sigma: 4')
+        st.image(smooths_bn[3])
+    with col3:
+        st.write('Colored ' + desc + ' sigma: 2')
+        st.image(smooths[1])
+        st.write('Colored ' + desc + ' sigma: 5')
+        st.image(smooths[4])
+        st.write('Grayscale ' + desc + ' sigma: 2')
+        st.image(smooths_bn[1])
+        st.write('Grayscale ' + desc + ' sigma: 5')
+        st.image(smooths_bn[4])
