@@ -721,7 +721,7 @@ def output_adv_filt(images):
 ###########  with guided backpropagation   ###############
 ##########################################################
 
-class GuidedBackprop():
+class LR_GuidedBackprop():
     def __init__(self, model):
         self.model = model
         self.gradients = None
@@ -766,7 +766,7 @@ class GuidedBackprop():
 
 def layer_act_guid_bp(img, model, cnn_layer, filter_pos):
   im, pred_cls = process_img(img, model)
-  GBP = GuidedBackprop(model)
+  GBP = LR_GuidedBackprop(model)
   guided_grads = GBP.generate_gradients(im, pred_cls, cnn_layer, filter_pos)
   col_grad_img =save_gradient_images(guided_grads)
   grayscale_guided_grads = convert_to_grayscale(guided_grads)
