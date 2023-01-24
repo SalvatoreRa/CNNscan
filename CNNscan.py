@@ -1329,7 +1329,7 @@ def main():
         option = int(conv_layer_gb)
         x = pret_mod.eval()
         max = x.features[option].out_channels -1
-        filter_pos_gb = st.slider('select filter', 0, max, 1)
+        filter_la_gb = st.slider('select filter', 0, max, 1)
         image_to_LAGB = st.selectbox(
         'Select an image for layer activation:',
         ('provided test', 'provide image'),
@@ -1343,7 +1343,7 @@ def main():
             
         show_layer_act_guid_bp = st.button('visualize the Layer activation')
         if show_layer_act_guid_bp:
-            imgs_layr =layer_act_guid_bp(image_to_LAGB, pret_mod, option, filter_pos_gb)
+            imgs_layr =layer_act_guid_bp(image_to_LAGB, pret_mod, option, filter_la_gb)
             output_layer_act_guid_bp(imgs_layr, image_to_LAGB)
 
     with st.expander("DeepDream"):
