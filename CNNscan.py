@@ -35,7 +35,7 @@ from utils import load_test_image, load_baseline, \
     format_np_output, save_image, save_gradient_images, convert_to_grayscale, \
     process_img, save_class_activation_images, scorecam_process, \
     apply_colormap_on_image, apply_heatmap, recreate_image, \
-    preprocess_image, get_positive_negative_saliency, \ 
+    preprocess_image, get_positive_negative_saliency, \
     guided_grad_cam
 from methods import fetch_filters, fetch_feature_maps, CamExtractor, \
     GradCam, Visualize_GradCam, VanillaBackprop, VanillaBackprop_process, \
