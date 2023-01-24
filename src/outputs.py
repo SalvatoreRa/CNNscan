@@ -79,3 +79,7 @@ def outputs_scorecam(im1, im2, im3, im4, txt1, txt2, txt3, txt4):
         st.image(im2)
         st.write(txt4)
         st.image(im4)
+
+##########################################################
+###########  Visualize Guided SCORE-CAM    ###############
+##########################################################
