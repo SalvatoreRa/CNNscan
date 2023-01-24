@@ -212,3 +212,16 @@ def smooth_grad_process_guidBackprop(img, model):
 ###########  Visualize advanced Filters    ###############
 ##########################################################
 
+def output_adv_filt(images):
+    col1, col2, col3= st.columns([0.33, 0.33, 0.33])
+    with col1:
+        st.image(images[0])
+        st.image(images[3])
+        
+    with col2:
+        st.image(images[1])
+        st.image(images[4])
+
+    with col3:
+        st.image(images[2])
+        st.image(images[5])
