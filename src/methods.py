@@ -314,7 +314,7 @@ def GuidedBackprop_process(model, img):
 ##########################################################
 
 
-class CamExtractor():
+class scoreCamExtractor():
     """
         Extracts cam features from the model
     """
@@ -342,7 +342,7 @@ class ScoreCam():
         self.model = model
         self.model.eval()
         # Define extractor
-        self.extractor = CamExtractor(self.model, target_layer)
+        self.extractor = scoreCamExtractor(self.model, target_layer)
 
     def generate_cam(self, input_image, target_class=None):
         conv_output, model_output = self.extractor.forward_pass(input_image)

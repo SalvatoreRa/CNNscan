@@ -39,7 +39,7 @@ from utils import load_test_image, load_baseline, \
     guided_grad_cam
 from methods import fetch_filters, fetch_feature_maps, CamExtractor,\
     GradCam, Visualize_GradCam, VanillaBackprop, VanillaBackprop_process, \
-    GuidedBackprop, GuidedBackprop_process, CamExtractor, \
+    GuidedBackprop, GuidedBackprop_process, scoreCamExtractor, \
     ScoreCam, CamExtractor2, GuidedGradCam, gradient_gradcam, \
     LRP, LRP_process, LayerCam, LayerCAM_process, IntegratedGradients, \
     integrated_gradient_process, Grad_times_process, generate_smooth_grad, \
