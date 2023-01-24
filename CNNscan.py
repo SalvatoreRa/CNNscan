@@ -42,9 +42,10 @@ from methods import fetch_filters, fetch_feature_maps, CamExtractor, \
     GuidedBackprop, GuidedBackprop_process, CamExtractor, \
     ScoreCam, CamExtractor2, GuidedGradCam, gradient_gradcam, \
     LRP, LRP_process, LayerCam, LayerCAM_process, IntegratedGradients, \
-    integrated_gradient_process, Grad_times_process
+    integrated_gradient_process, Grad_times_process, generate_smooth_grad, \
+    smooth_grad_process, smooth_grad_process_guidBackprop
 from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
-    outputs_LRP
+    outputs_LRP, outputs_smoothgrad
 
 @st.cache(ttl=12*3600)
 def load_model():
@@ -109,90 +110,9 @@ def load_model():
 
 
 
-##########################################################
-###########     Visualize Smooth Grad      ###############
-##########################################################
 
-#this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations
 
-def generate_smooth_grad(Backprop, prep_img, target_class, param_n, param_sigma_multiplier):
 
-    smooth_grad = np.zeros(prep_img.size()[1:])
-
-    mean = 0
-    sigma = param_sigma_multiplier / (torch.max(prep_img) - torch.min(prep_img)).item()
-    for x in range(param_n):
-
-        noise = Variable(prep_img.data.new(prep_img.size()).normal_(mean, sigma**2))
-        noisy_img = prep_img + noise
-        vanilla_grads = Backprop.generate_gradients(noisy_img, target_class)
-        smooth_grad = smooth_grad + vanilla_grads
-    smooth_grad = smooth_grad / param_n
-    return smooth_grad
-
-@st.cache(ttl=12*3600)
-def smooth_grad_process(img, model):
-  im, pred_cls = process_img(img, model)
-  param_n = 50
-  VBP = VanillaBackprop(model)
-  smooths = list()
-  smooths_bn = list()
-  for param_sigma in range(1,6):
-    
-    smooth_grad = generate_smooth_grad(VBP, im, pred_cls, param_n, param_sigma)
-    smooth_grad_bn = convert_to_grayscale(smooth_grad)
-    smooth_grad = save_gradient_images(smooth_grad)
-    smooth_grad_bn = save_gradient_images(smooth_grad_bn)
-    smooths.append(smooth_grad)
-    smooths_bn.append(smooth_grad_bn)
-  return smooths, smooths_bn
-
-@st.cache(ttl=12*3600)
-def smooth_grad_process_guidBackprop(img, model):
-  im, pred_cls = process_img(img, model)
-  param_n = 50
-  GBP = GuidedBackprop(model)
-  smooths = list()
-  smooths_bn = list()
-  for param_sigma in range(1,6):
-    
-    smooth_grad = generate_smooth_grad(GBP, im, pred_cls, param_n, param_sigma)
-    smooth_grad_bn = convert_to_grayscale(smooth_grad)
-    smooth_grad = save_gradient_images(smooth_grad)
-    smooth_grad_bn = save_gradient_images(smooth_grad_bn)
-    smooths.append(smooth_grad)
-    smooths_bn.append(smooth_grad_bn)
-  return smooths, smooths_bn
-
-def outputs_smoothgrad(img, smooths, smooths_bn, desc= 'Vanilla Backprop.'):
-    col1, col2, col3,  = st.columns([0.33, 0.33, 0.33])
-    with col1:
-        st.write('Original image')
-        st.image(img)
-        st.write('Colored ' + desc + ' sigma: 3')
-        st.image(smooths[2])
-        st.write('Original image')
-        st.image(img)
-        st.write('Grayscale ' + desc + ' sigma: 3')
-        st.image(smooths_bn[2])
-    with col2:
-        st.write('Colored ' + desc + ' sigma: 1')
-        st.image(smooths[0])
-        st.write('Colored ' + desc + ' sigma: 4')
-        st.image(smooths[3])
-        st.write('Grayscale ' + desc + ' sigma: 1')
-        st.image(smooths_bn[0])
-        st.write('Grayscale ' + desc + ' sigma: 4')
-        st.image(smooths_bn[3])
-    with col3:
-        st.write('Colored ' + desc + ' sigma: 2')
-        st.image(smooths[1])
-        st.write('Colored ' + desc + ' sigma: 5')
-        st.image(smooths[4])
-        st.write('Grayscale ' + desc + ' sigma: 2')
-        st.image(smooths_bn[1])
-        st.write('Grayscale ' + desc + ' sigma: 5')
-        st.image(smooths_bn[4])
 
 ##########################################################
 ###########  Visualize advanced Filters    ###############
