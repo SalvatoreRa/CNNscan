@@ -184,3 +184,7 @@ def get_positive_negative_saliency(gradient):
     pos_saliency = (np.maximum(0, gradient) / gradient.max())
     neg_saliency = (np.maximum(0, -gradient) / -gradient.min())
     return pos_saliency, neg_saliency
+
+def guided_grad_cam(grad_cam_mask, guided_backprop_mask):
+    cam_gb = np.multiply(grad_cam_mask, guided_backprop_mask)
+    return cam_gb
