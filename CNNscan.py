@@ -937,17 +937,18 @@ def main():
           filt_idx =VGG19_filt
           pret_mod= VGG19()
     st.sidebar.markdown("---")
-    st.sidebar.markdown("some of the methods required you select")
-    conv_layer_app = st.selectbox(
+    st.sidebar.markdown("some of the methods required you select a convolutional layer and a filter")
+    conv_layer_app = st.sidebar.selectbox(
         'Select one convolution layer', filt_idx,
         help = 'select convolutional filter layer')    
     conv_layer_app = int(conv_layer_app)
     x = pret_mod.eval()
     max = x.features[conv_layer_app].out_channels -1
-    filter_app = st.slider('select one filter', 0, max, 1)
+    filter_app = st.sidebar.slider('select one filter', 0, max, 1)
     st.sidebar.markdown("---")
+    st.sidebar.markdown("some of the methods required you select a layer")
     max = len(pret_mod.eval().features) -1
-    Layer_app = st.slider('select one target layer', 0, max, 1,
+    Layer_app = st.sidebar.slider('select one target layer', 0, max, 1,
                         help= 'select target layer of the model')    
     
 
