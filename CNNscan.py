@@ -857,7 +857,7 @@ def output_layer_act_guid_bp(imgs_layr, img):
     col1, col2, col3= st.columns([0.33, 0.33, 0.33])
     with col1:
         st.write('original image')
-        st.image(imgs_layr)
+        st.image(img)
         st.write('positive saliency')
         st.image(imgs_layr[2])
         
