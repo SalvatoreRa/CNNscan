@@ -777,13 +777,91 @@ def output_adv_filt(images):
         st.image(images[2])
         st.image(images[5])
 
+##########################################################
+###########  Layer activation              ###############
+###########  with guided backpropagation   ###############
+##########################################################
+
+class GuidedBackprop():
+    def __init__(self, model):
+        self.model = model
+        self.gradients = None
+        self.forward_relu_outputs = []
+        self.model.eval()
+        self.update_relus()
+        self.hook_layers()
+
+    def hook_layers(self):
+        def hook_function(module, grad_in, grad_out):
+            self.gradients = grad_in[0]
+        first_layer = list(self.model.features._modules.items())[0][1]
+        first_layer.register_backward_hook(hook_function)
+
+    def update_relus(self):
+        def relu_backward_hook_function(module, grad_in, grad_out):
+            corresponding_forward_output = self.forward_relu_outputs[-1]
+            corresponding_forward_output[corresponding_forward_output > 0] = 1
+            modified_grad_out = corresponding_forward_output * torch.clamp(grad_in[0], min=0.0)
+            del self.forward_relu_outputs[-1]  # Remove last forward output
+            return (modified_grad_out,)
+
+        def relu_forward_hook_function(module, ten_in, ten_out):
+            self.forward_relu_outputs.append(ten_out)
+
+        for pos, module in self.model.features._modules.items():
+            if isinstance(module, ReLU):
+                module.register_backward_hook(relu_backward_hook_function)
+                module.register_forward_hook(relu_forward_hook_function)
+
+    def generate_gradients(self, input_image, target_class, cnn_layer, filter_pos):
+        self.model.zero_grad()
+        x = input_image
+        for index, layer in enumerate(self.model.features):
+            x = layer(x)
+            if index == cnn_layer:
+                break
+        conv_output = torch.sum(torch.abs(x[0, filter_pos]))
+        conv_output.backward()
+        gradients_as_arr = self.gradients.data.numpy()[0]
+        return gradients_as_arr
+
+def layer_act_guid_bp(img, model, cnn_layer, filter_pos):
+  im, pred_cls = process_img(img, model)
+  GBP = GuidedBackprop(model)
+  guided_grads = GBP.generate_gradients(im, pred_cls, cnn_layer, filter_pos)
+  col_grad_img =save_gradient_images(guided_grads)
+  grayscale_guided_grads = convert_to_grayscale(guided_grads)
+  grayscale_guided_grads =save_gradient_images(grayscale_guided_grads)
+  pos_sal, neg_sal = get_positive_negative_saliency(guided_grads)
+  pos_sal =save_gradient_images(pos_sal)
+  neg_sal =save_gradient_images(neg_sal)
+  images = [col_grad_img, grayscale_guided_grads, pos_sal, neg_sal]
+  return images
+
+def output_layer_act_guid_bp(imgs_layr, img):
+    col1, col2, col3= st.columns([0.33, 0.33, 0.33])
+    with col1:
+        st.write('original image')
+        st.image(img)
+        st.write('positive saliency')
+        st.image(imgs_layr[2])
+        
+    with col2:
+        st.write('colored gradient')
+        st.image(imgs_layr[0])
+        st.write('negative saliency')
+        st.image(imgs_layr[3])
+
+    with col3:
+        st.write('black and white gradient')
+        st.image(imgs_layr[1])
+        
+
 
 
 ##########################################################
 ###########         Visualize DeepDream    ###############
 ##########################################################
-
-
 
 
 class DeepDream():
@@ -953,7 +1031,7 @@ def main():
         conv_layer_alt = st.selectbox(
         'Select a convolution layer', filt_idx,
         help = 'select convolutional filter layer')
-        option = int(conv_layer)
+        option = int(conv_layer_alt)
         x = pret_mod.eval()
         max = x.features[option].out_channels -1
         filter_pos_alt = st.slider('select filter', 0, max, 1)
@@ -1225,6 +1303,34 @@ def main():
         if show_GSGI:
             smooths, smooths_bn = smooth_grad_process_guidBackprop(image_to_SGI, pret_mod)
             outputs_smoothgrad(image_to_SGI, smooths, smooths_bn, desc= 'Guided Backprop.')
+     
+    
+    with st.expander("Layer activation with guided backpropagation"):
+        st.write('Default model is **AlexNet** which is faster')
+        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
+        
+        conv_layer_gb = st.selectbox(
+        'Select  a convolution layer', filt_idx,
+        help = 'select convolutional filter layer')
+        option = int(conv_layer_gb)
+        x = pret_mod.eval()
+        max = x.features[option].out_channels -1
+        filter_la_gb = st.slider('select filter for layer activation', 0, max, 1)
+        image_to_LAGB = st.selectbox(
+        'Select an image for layer activation:',
+        ('provided test', 'provide image'),
+        help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
+
+        if image_to_LAGB == 'provide image':
+            image_to_LAGB = load_test_image()
+        else:
+            image_to_LAGB = load_baseline()
+            
+            
+        show_layer_act_guid_bp = st.button('visualize the Layer activation')
+        if show_layer_act_guid_bp:
+            imgs_layr =layer_act_guid_bp(image_to_LAGB, pret_mod, option, filter_la_gb)
+            output_layer_act_guid_bp(imgs_layr, image_to_LAGB)
 
     with st.expander("DeepDream"):
 
