@@ -534,3 +534,45 @@ def LRP_process(model, img):
       heatmap = apply_heatmap(lrp_to_vis, 4, 4)
       heat_list.append(heatmap)
   return heat_list
+
+
+##########################################################
+###########         Visualize LayerCAM     ###############
+##########################################################
+
+class LayerCam():
+
+    def __init__(self, model, target_layer):
+        self.model = model
+        self.model.eval()
+        # Define extractor
+        self.extractor = CamExtractor(self.model, target_layer)
+
+    def generate_cam(self, input_image, target_class=None):
+        conv_output, model_output = self.extractor.forward_pass(input_image)
+        if target_class is None:
+            target_class = np.argmax(model_output.data.numpy())
+        one_hot_output = torch.FloatTensor(1, model_output.size()[-1]).zero_()
+        one_hot_output[0][target_class] = 1
+        self.model.features.zero_grad()
+        self.model.classifier.zero_grad()
+        model_output.backward(gradient=one_hot_output, retain_graph=True)
+        guided_gradients = self.extractor.gradients.data.numpy()[0]
+        target = conv_output.data.numpy()[0]
+        weights = guided_gradients
+        weights[weights < 0] = 0 # discard negative gradients
+        cam = np.sum(weights * target, axis=0)
+        cam = (cam - np.min(cam)) / (np.max(cam) - np.min(cam))  # Normalize between 0-1
+        cam = np.uint8(cam * 255)  # Scale between 0-255 to visualize
+        cam = np.uint8(Image.fromarray(cam).resize((input_image.shape[2],
+                       input_image.shape[3]), Image.ANTIALIAS))/255
+
+        return cam
+
+
+def LayerCAM_process(img, model, layer =1):
+  im, pred_cls = process_img(img, model)
+  layer_cam = LayerCam(model, target_layer=layer)
+  cam = layer_cam.generate_cam(im, pred_cls)
+  heatmap, heatmap_on_image, activation_map = save_class_activation_images(img, cam)
+  return heatmap, heatmap_on_image, activation_map
