@@ -576,3 +576,58 @@ def LayerCAM_process(img, model, layer =1):
   cam = layer_cam.generate_cam(im, pred_cls)
   heatmap, heatmap_on_image, activation_map = save_class_activation_images(img, cam)
   return heatmap, heatmap_on_image, activation_map
+
+
+##########################################################
+########### Visualize Integrated Gradients ###############
+##########################################################
+
+
+class IntegratedGradients():
+    """
+        Produces gradients generated with integrated gradients from the image
+    """
+    def __init__(self, model):
+        self.model = model
+        self.gradients = None
+        self.model.eval()
+        self.hook_layers()
+
+    def hook_layers(self):
+        def hook_function(module, grad_in, grad_out):
+            self.gradients = grad_in[0]
+
+        first_layer = list(self.model.features._modules.items())[0][1]
+        first_layer.register_backward_hook(hook_function)
+
+    def generate_images_on_linear_path(self, input_image, steps):
+        step_list = np.arange(steps+1)/steps
+        xbar_list = [input_image*step for step in step_list]
+        return xbar_list
+
+    def generate_gradients(self, input_image, target_class):
+        model_output = self.model(input_image)
+        self.model.zero_grad()
+        one_hot_output = torch.FloatTensor(1, model_output.size()[-1]).zero_()
+        one_hot_output[0][target_class] = 1
+        model_output.backward(gradient=one_hot_output)
+        gradients_as_arr = self.gradients.data.numpy()[0]
+        return gradients_as_arr
+
+    def generate_integrated_gradients(self, input_image, target_class, steps):
+        xbar_list = self.generate_images_on_linear_path(input_image, steps)
+        integrated_grads = np.zeros(input_image.size())
+        for xbar_image in xbar_list:
+            single_integrated_grad = self.generate_gradients(xbar_image, target_class)
+            integrated_grads = integrated_grads + single_integrated_grad/steps
+        return integrated_grads[0]
+
+@st.cache(ttl=12*3600)
+def integrated_gradient_process(img, model):
+    im, pred_cls = process_img(img, model)
+    IG = IntegratedGradients(model)
+    integrated_grads = IG.generate_integrated_gradients(im, pred_cls, 100)
+    grayscale_integrated_grads = convert_to_grayscale(integrated_grads)
+    im = save_gradient_images(integrated_grads)
+    im_bn = save_gradient_images(grayscale_integrated_grads)
+    return im, im_bn
