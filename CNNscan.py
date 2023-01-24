@@ -31,7 +31,7 @@ import pathlib
 
 #this to import modules
 sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
-from utils import load_test_image, load_baseline,  \
+from utils import load_test_image, load_baseline, \
     format_np_output, save_image, save_gradient_images, convert_to_grayscale, \
     process_img, save_class_activation_images, scorecam_process, \
     apply_colormap_on_image, apply_heatmap, recreate_image, \
