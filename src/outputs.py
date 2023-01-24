@@ -61,3 +61,21 @@ def outputs_backprop(im1, im2, im3, txt1, txt2, txt3):
     with col3:
         st.write(txt3)
         st.image(im3)
+
+##########################################################
+###########         Visualize SCORE-CAM    ###############
+##########################################################
+
+
+def outputs_scorecam(im1, im2, im3, im4, txt1, txt2, txt3, txt4):
+    col1, col2 = st.columns([0.25, 0.25])
+    with col1:
+        st.write(txt1)
+        st.image(im1)
+        st.write(txt3)
+        st.image(im3)
+    with col2:
+        st.write(txt2)
+        st.image(im2)
+        st.write(txt4)
+        st.image(im4)
