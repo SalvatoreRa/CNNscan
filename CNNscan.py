@@ -38,17 +38,15 @@ from utils import (load_test_image, load_baseline,
     preprocess_image, get_positive_negative_saliency, 
     guided_grad_cam)
 from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtractor, GradCam, Visualize_GradCam,
-                    VanillaBackprop, VanillaBackprop_process, GuidedBackprop, GuidedBackprop_process, 
-                    scoreCamExtractor, ScoreCam, scorecam_process, GuidedGradCam, gradient_gradcam,
-                    IntegratedGradients, integrated_gradient_process, CNNLayerVisualization,
-                    LRP, LRP_process, LayerCam, LayerCAM_process, 
-                    Grad_times_process, generate_smooth_grad, smooth_grad_process,
-                    smooth_grad_process_guidBackprop)
-#from methods import ( 
-#    , , , ,  
-#    , smooth_grad_process_guidBackprop, , visualise_layer_without_hooks, advance_filt)
+    VanillaBackprop, VanillaBackprop_process, GuidedBackprop, GuidedBackprop_process, 
+    scoreCamExtractor, ScoreCam, scorecam_process, GuidedGradCam, gradient_gradcam,
+    IntegratedGradients, integrated_gradient_process, CNNLayerVisualization,
+    LRP, LRP_process, LayerCam, LayerCAM_process, 
+    Grad_times_process, generate_smooth_grad, smooth_grad_process,
+    smooth_grad_process_guidBackprop, LR_GuidedBackprop, layer_act_guid_bp)
+
 from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
-    outputs_LRP, outputs_smoothgrad, output_adv_filt
+    outputs_LRP, outputs_smoothgrad, output_adv_filt, output_layer_act_guid_bp
 
 
 @st.cache(ttl=12*3600)
@@ -110,6 +108,15 @@ def load_model():
   model.load_state_dict(state_dict)
   return model
 
+@st.cache(ttl=3600)
+def VGG16():
+    pret_mod =  models.vgg16(pretrained=True)
+    return pret_mod
+
+@st.cache(ttl=3600)
+def VGG19():
+    pret_mod =  models.vgg19(pretrained=True)
+    return pret_mod
 
 
 
@@ -120,86 +127,6 @@ def load_model():
 
 
 
-
-##########################################################
-###########  Layer activation              ###############
-###########  with guided backpropagation   ###############
-##########################################################
-
-class LR_GuidedBackprop():
-    def __init__(self, model):
-        self.model = model
-        self.gradients = None
-        self.forward_relu_outputs = []
-        self.model.eval()
-        self.update_relus()
-        self.hook_layers()
-
-    def hook_layers(self):
-        def hook_function(module, grad_in, grad_out):
-            self.gradients = grad_in[0]
-        first_layer = list(self.model.features._modules.items())[0][1]
-        first_layer.register_backward_hook(hook_function)
-
-    def update_relus(self):
-        def relu_backward_hook_function(module, grad_in, grad_out):
-            corresponding_forward_output = self.forward_relu_outputs[-1]
-            corresponding_forward_output[corresponding_forward_output > 0] = 1
-            modified_grad_out = corresponding_forward_output * torch.clamp(grad_in[0], min=0.0)
-            del self.forward_relu_outputs[-1]  # Remove last forward output
-            return (modified_grad_out,)
-
-        def relu_forward_hook_function(module, ten_in, ten_out):
-            self.forward_relu_outputs.append(ten_out)
-
-        for pos, module in self.model.features._modules.items():
-            if isinstance(module, ReLU):
-                module.register_backward_hook(relu_backward_hook_function)
-                module.register_forward_hook(relu_forward_hook_function)
-
-    def generate_gradients(self, input_image, target_class, cnn_layer, filter_pos):
-        self.model.zero_grad()
-        x = input_image
-        for index, layer in enumerate(self.model.features):
-            x = layer(x)
-            if index == cnn_layer:
-                break
-        conv_output = torch.sum(torch.abs(x[0, filter_pos]))
-        conv_output.backward()
-        gradients_as_arr = self.gradients.data.numpy()[0]
-        return gradients_as_arr
-
-def layer_act_guid_bp(img, model, cnn_layer, filter_pos):
-  im, pred_cls = process_img(img, model)
-  GBP = LR_GuidedBackprop(model)
-  guided_grads = GBP.generate_gradients(im, pred_cls, cnn_layer, filter_pos)
-  col_grad_img =save_gradient_images(guided_grads)
-  grayscale_guided_grads = convert_to_grayscale(guided_grads)
-  grayscale_guided_grads =save_gradient_images(grayscale_guided_grads)
-  pos_sal, neg_sal = get_positive_negative_saliency(guided_grads)
-  pos_sal =save_gradient_images(pos_sal)
-  neg_sal =save_gradient_images(neg_sal)
-  images = [col_grad_img, grayscale_guided_grads, pos_sal, neg_sal]
-  return images
-
-def output_layer_act_guid_bp(imgs_layr, img):
-    col1, col2, col3= st.columns([0.33, 0.33, 0.33])
-    with col1:
-        st.write('original image')
-        st.image(img)
-        st.write('positive saliency')
-        st.image(imgs_layr[2])
-        
-    with col2:
-        st.write('colored gradient')
-        st.image(imgs_layr[0])
-        st.write('negative saliency')
-        st.image(imgs_layr[3])
-
-    with col3:
-        st.write('black and white gradient')
-        st.image(imgs_layr[1])
-        
 
 
 
@@ -247,15 +174,7 @@ class DeepDream():
                 images.append(im)
         return images
 
-@st.cache(ttl=3600)
-def VGG16():
-    pret_mod =  models.vgg16(pretrained=True)
-    return pret_mod
 
-@st.cache(ttl=3600)
-def VGG19():
-    pret_mod =  models.vgg19(pretrained=True)
-    return pret_mod
 
 def dream(model, cnn_layer, filter_pos, image):
     dd = DeepDream(model.features, cnn_layer, filter_pos, image)
