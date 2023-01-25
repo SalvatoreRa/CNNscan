@@ -593,21 +593,21 @@ def main():
         'Select an image for LayerCAM:',
         ('provided test', 'provide image'),
         help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
-        
+        st.markdown("---")
+        st.markdown("Please select on the target layer")
+        st.markdown("This method will return the heatmap, superimposed images")
         
         if image_to_layerCAM == 'provide image':
             image_to_layerCAM = load_test_image()
         else:
             image_to_layerCAM = load_baseline()
                 
-        max = len(pret_mod.eval().features) -1
-        Layer = st.slider('select taret layer', 0, max, 1,
-                        help= 'select target layer of the model')
+    
         
         show_LayerCAM = st.button('show LayerCAM')
         if show_LayerCAM:
             heatmap, heatmap_on_image, activation_map = LayerCAM_process(image_to_layerCAM, 
-                                                                    pret_mod, layer =Layer)
+                                                                    pret_mod, layer =Layer_app)
             txt1 = 'Original image' 
             txt2 = 'Class Activation Map - layerCAM, layer: ' + str(Layer)
             txt3 = 'Class Activation HeatMap - layerCAM, layer: ' + str(Layer)
