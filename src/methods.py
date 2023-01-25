@@ -247,7 +247,7 @@ def VanillaBackprop_process(model, img):
 
 
 ##########################################################
-###########  Visualize vanilla propagation ###############
+###########  Visualize Guided propagation  ###############
 ##########################################################
 
 
@@ -364,6 +364,12 @@ class ScoreCam():
         cam = np.uint8(Image.fromarray(cam).resize((input_image.shape[2],
                        input_image.shape[3]), Image.ANTIALIAS))/255
         return cam
+    
+def scorecam_process(model, img):
+  im, pred_cls = process_img(img, model)
+  score_cam = ScoreCam(model, target_layer=11)
+  cam = score_cam.generate_cam(im, pred_cls)
+  return cam
 
 ##########################################################
 ###########  Visualize Guided SCORE-CAM    ###############
