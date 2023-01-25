@@ -196,3 +196,26 @@ def output_layer_act_guid_bp(imgs_layr, img):
     with col3:
         st.write('black and white gradient')
         st.image(imgs_layr[1])
+
+##########################################################
+###########         Visualize DeepDream    ###############
+##########################################################
+
+def outputs_DD(images):
+    col1, col2, col3, col4 = st.columns([0.25, 0.25, 0.25, 0.25])
+    with col1:
+        st.image(images[0])
+        st.image(images[4])
+        st.image(images[8])
+    with col2:
+        st.image(images[1])
+        st.image(images[5])
+        st.image(images[9])
+    with col3:
+        st.image(images[2])
+        st.image(images[6])
+        st.image(images[10])
+    with col4:
+        st.image(images[3])
+        st.image(images[7])
+        st.image(images[11])
