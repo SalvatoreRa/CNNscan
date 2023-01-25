@@ -154,59 +154,7 @@ def outputs_smoothgrad(img, smooths, smooths_bn, desc= 'Vanilla Backprop.'):
         st.write('Grayscale ' + desc + ' sigma: 5')
         st.image(smooths_bn[4])
 
-##########################################################
-###########     Visualize Smooth Grad      ###############
-##########################################################
 
-
-def generate_smooth_grad(Backprop, prep_img, target_class, param_n, param_sigma_multiplier):
-
-    smooth_grad = np.zeros(prep_img.size()[1:])
-
-    mean = 0
-    sigma = param_sigma_multiplier / (torch.max(prep_img) - torch.min(prep_img)).item()
-    for x in range(param_n):
-
-        noise = Variable(prep_img.data.new(prep_img.size()).normal_(mean, sigma**2))
-        noisy_img = prep_img + noise
-        vanilla_grads = Backprop.generate_gradients(noisy_img, target_class)
-        smooth_grad = smooth_grad + vanilla_grads
-    smooth_grad = smooth_grad / param_n
-    return smooth_grad
-
-@st.cache(ttl=12*3600)
-def smooth_grad_process(img, model):
-  im, pred_cls = process_img(img, model)
-  param_n = 50
-  VBP = VanillaBackprop(model)
-  smooths = list()
-  smooths_bn = list()
-  for param_sigma in range(1,6):
-    
-    smooth_grad = generate_smooth_grad(VBP, im, pred_cls, param_n, param_sigma)
-    smooth_grad_bn = convert_to_grayscale(smooth_grad)
-    smooth_grad = save_gradient_images(smooth_grad)
-    smooth_grad_bn = save_gradient_images(smooth_grad_bn)
-    smooths.append(smooth_grad)
-    smooths_bn.append(smooth_grad_bn)
-  return smooths, smooths_bn
-
-@st.cache(ttl=12*3600)
-def smooth_grad_process_guidBackprop(img, model):
-  im, pred_cls = process_img(img, model)
-  param_n = 50
-  GBP = GuidedBackprop(model)
-  smooths = list()
-  smooths_bn = list()
-  for param_sigma in range(1,6):
-    
-    smooth_grad = generate_smooth_grad(GBP, im, pred_cls, param_n, param_sigma)
-    smooth_grad_bn = convert_to_grayscale(smooth_grad)
-    smooth_grad = save_gradient_images(smooth_grad)
-    smooth_grad_bn = save_gradient_images(smooth_grad_bn)
-    smooths.append(smooth_grad)
-    smooths_bn.append(smooth_grad_bn)
-  return smooths, smooths_bn
 
 ##########################################################
 ###########  Visualize advanced Filters    ###############
