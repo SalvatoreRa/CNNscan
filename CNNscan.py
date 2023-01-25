@@ -593,14 +593,10 @@ def main():
     with st.expander("Layer activation with guided backpropagation"):
         st.write('Default model is **AlexNet** which is faster')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
-        
-        conv_layer_gb = st.selectbox(
-        'Select  a convolution layer', filt_idx,
-        help = 'select convolutional filter layer')
-        option = int(conv_layer_gb)
-        x = pret_mod.eval()
-        max = x.features[option].out_channels -1
-        filter_la_gb = st.slider('select filter for layer activation', 0, max, 1)
+        st.markdown("---")
+        st.markdown("Please select on the sidebar the convolutional layer and a specific filter")
+
+
         image_to_LAGB = st.selectbox(
         'Select an image for layer activation:',
         ('provided test', 'provide image'),
@@ -614,7 +610,7 @@ def main():
             
         show_layer_act_guid_bp = st.button('visualize the Layer activation')
         if show_layer_act_guid_bp:
-            imgs_layr =layer_act_guid_bp(image_to_LAGB, pret_mod, option, filter_la_gb)
+            imgs_layr =layer_act_guid_bp(image_to_LAGB, pret_mod, conv_layer_app, filter_app)
             output_layer_act_guid_bp(imgs_layr, image_to_LAGB)
 
     with st.expander("DeepDream"):
