@@ -33,13 +33,13 @@ import pathlib
 sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
 from utils import (load_test_image, load_baseline, 
     format_np_output, save_image, save_gradient_images, convert_to_grayscale, 
-    process_img, save_class_activation_images, scorecam_process, 
+    process_img, save_class_activation_images,  
     apply_colormap_on_image, apply_heatmap, recreate_image, 
     preprocess_image, get_positive_negative_saliency, 
     guided_grad_cam)
 from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtractor, GradCam, Visualize_GradCam,
                     VanillaBackprop, VanillaBackprop_process, GuidedBackprop, GuidedBackprop_process, 
-                    scoreCamExtractor, ScoreCam)
+                    scoreCamExtractor, ScoreCam, scorecam_process)
 #from methods import ( fetch_filters, fetch_feature_maps, CamExtractor, GradCam, Visualize_GradCam, VanillaBackprop, VanillaBackprop_process, 
 #    GuidedBackprop, GuidedBackprop_process, scoreCamExtractor, ScoreCam, CamExtractor2, GuidedGradCam, gradient_gradcam, 
 #    LRP, LRP_process, LayerCam, LayerCAM_process, IntegratedGradients, integrated_gradient_process, Grad_times_process, generate_smooth_grad, 
