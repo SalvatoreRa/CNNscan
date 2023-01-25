@@ -37,18 +37,7 @@ from utils import (load_test_image, load_baseline,
     apply_colormap_on_image, apply_heatmap, recreate_image, 
     preprocess_image, get_positive_negative_saliency, 
     guided_grad_cam)
-sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
-from methods import ( fetch_filters, fetch_feature_maps, CamExtractor, 
-    GradCam, Visualize_GradCam, VanillaBackprop, VanillaBackprop_process, 
-    GuidedBackprop, GuidedBackprop_process, scoreCamExtractor, 
-    ScoreCam, CamExtractor2, GuidedGradCam, gradient_gradcam, 
-    LRP, LRP_process, LayerCam, LayerCAM_process, IntegratedGradients, 
-    integrated_gradient_process, Grad_times_process, generate_smooth_grad, 
-    smooth_grad_process, smooth_grad_process_guidBackprop, 
-    CNNLayerVisualization, visualise_layer_without_hooks, advance_filt)
-sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
-from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
-    outputs_LRP, outputs_smoothgrad, output_adv_filt
+
 
 @st.cache(ttl=12*3600)
 def load_model():
