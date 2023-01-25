@@ -179,8 +179,8 @@ def main():
     VGG16_filt = [0, 2, 5, 7, 10, 12, 14, 17, 19, 21, 24, 26, 28]
     VGG19_filt = [0, 2, 5, 7, 10, 12, 14, 16,19, 21, 23, 25, 28, 30, 32, 34]
     if mod_app == 'AlexaNET':
-          filt_idx =alexa_idx
           pret_mod= model
+          filt_idx =conv_layer_indices(pret_mod)
     if mod_app == 'VGG16':
           filt_idx =VGG16_filt
           pret_mod= VGG16()
