@@ -37,7 +37,7 @@ from utils import (load_test_image, load_baseline,
     apply_colormap_on_image, apply_heatmap, recreate_image, 
     preprocess_image, get_positive_negative_saliency, 
     guided_grad_cam)
-from methods import ( fetch_filters, fetch_feature_maps, CamExtractor)
+from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtractor)
 #from methods import ( fetch_filters, fetch_feature_maps, CamExtractor, GradCam, Visualize_GradCam, VanillaBackprop, VanillaBackprop_process, 
 #    GuidedBackprop, GuidedBackprop_process, scoreCamExtractor, ScoreCam, CamExtractor2, GuidedGradCam, gradient_gradcam, 
 #    LRP, LRP_process, LayerCam, LayerCAM_process, IntegratedGradients, integrated_gradient_process, Grad_times_process, generate_smooth_grad, 
@@ -369,7 +369,9 @@ def main():
     with st.expander("Visualize the filters"):
         st.write('Default model is **AlexNet** which is faster')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
-        
+        st.markdown("---")
+        st.markdown("Please select on the sidebar the convolutional layer")
+        st.markdown("The first 16 filters of the selected convolutional layer will be visualized")
         show_filters = st.button('show the filters')
         if show_filters:
             fetch_filters(pret_mod, filt_idx, layer = conv_layer_app)
@@ -377,7 +379,8 @@ def main():
     with st.expander("Alternative visualization of the filters"):
         st.write('Default model is **AlexNet** which is faster')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
-        
+        st.markdown("---")
+        st.markdown("Please select on the sidebar the convolutional layer and a filter")
         conv_layer_alt = st.selectbox(
         'Select a convolution layer', filt_idx,
         help = 'select convolutional filter layer')
