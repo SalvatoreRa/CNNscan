@@ -37,7 +37,8 @@ from utils import (load_test_image, load_baseline,
     apply_colormap_on_image, apply_heatmap, recreate_image, 
     preprocess_image, get_positive_negative_saliency, 
     guided_grad_cam)
-from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtractor, GradCam, Visualize_GradCam)
+from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtractor, GradCam, Visualize_GradCam,
+                    VanillaBackprop, VanillaBackprop_process)
 #from methods import ( fetch_filters, fetch_feature_maps, CamExtractor, GradCam, Visualize_GradCam, VanillaBackprop, VanillaBackprop_process, 
 #    GuidedBackprop, GuidedBackprop_process, scoreCamExtractor, ScoreCam, CamExtractor2, GuidedGradCam, gradient_gradcam, 
 #    LRP, LRP_process, LayerCam, LayerCAM_process, IntegratedGradients, integrated_gradient_process, Grad_times_process, generate_smooth_grad, 
@@ -400,7 +401,9 @@ def main():
     with st.expander("Visualize the feature maps"):
         st.write('Default model is **AlexNet** which is faster')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#feature-map-visualization)')
-        
+        st.markdown("---")
+        st.markdown("Please select an image for the method")
+        st.markdown("This method will return the feature maps")
         image_to_use = st.selectbox(
         'Select the image to use',
         ('provided test', 'provide image'),
@@ -418,7 +421,9 @@ def main():
     with st.expander("Visualize GradCam"):
         st.write('Default model is **AlexNet** which is faster')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#GradCam)')
-        
+        st.markdown("---")
+        st.markdown("Please select on the target layer")
+        st.markdown("This method will return the heatmap, superimposed images")
         max = len(pret_mod.eval().features) -1
         target_layer = st.slider('select target layer', 0, max, 1,
                         help= 'select target layer of the model')
