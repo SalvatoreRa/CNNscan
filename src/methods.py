@@ -792,3 +792,64 @@ def smooth_grad_process_guidBackprop(img, model):
     smooths.append(smooth_grad)
     smooths_bn.append(smooth_grad_bn)
   return smooths, smooths_bn
+
+##########################################################
+###########  Layer activation              ###############
+###########  with guided backpropagation   ###############
+##########################################################
+
+class LR_GuidedBackprop():
+    def __init__(self, model):
+        self.model = model
+        self.gradients = None
+        self.forward_relu_outputs = []
+        self.model.eval()
+        self.update_relus()
+        self.hook_layers()
+
+    def hook_layers(self):
+        def hook_function(module, grad_in, grad_out):
+            self.gradients = grad_in[0]
+        first_layer = list(self.model.features._modules.items())[0][1]
+        first_layer.register_backward_hook(hook_function)
+
+    def update_relus(self):
+        def relu_backward_hook_function(module, grad_in, grad_out):
+            corresponding_forward_output = self.forward_relu_outputs[-1]
+            corresponding_forward_output[corresponding_forward_output > 0] = 1
+            modified_grad_out = corresponding_forward_output * torch.clamp(grad_in[0], min=0.0)
+            del self.forward_relu_outputs[-1]  # Remove last forward output
+            return (modified_grad_out,)
+
+        def relu_forward_hook_function(module, ten_in, ten_out):
+            self.forward_relu_outputs.append(ten_out)
+
+        for pos, module in self.model.features._modules.items():
+            if isinstance(module, ReLU):
+                module.register_backward_hook(relu_backward_hook_function)
+                module.register_forward_hook(relu_forward_hook_function)
+
+    def generate_gradients(self, input_image, target_class, cnn_layer, filter_pos):
+        self.model.zero_grad()
+        x = input_image
+        for index, layer in enumerate(self.model.features):
+            x = layer(x)
+            if index == cnn_layer:
+                break
+        conv_output = torch.sum(torch.abs(x[0, filter_pos]))
+        conv_output.backward()
+        gradients_as_arr = self.gradients.data.numpy()[0]
+        return gradients_as_arr
+
+def layer_act_guid_bp(img, model, cnn_layer, filter_pos):
+  im, pred_cls = process_img(img, model)
+  GBP = LR_GuidedBackprop(model)
+  guided_grads = GBP.generate_gradients(im, pred_cls, cnn_layer, filter_pos)
+  col_grad_img =save_gradient_images(guided_grads)
+  grayscale_guided_grads = convert_to_grayscale(guided_grads)
+  grayscale_guided_grads =save_gradient_images(grayscale_guided_grads)
+  pos_sal, neg_sal = get_positive_negative_saliency(guided_grads)
+  pos_sal =save_gradient_images(pos_sal)
+  neg_sal =save_gradient_images(neg_sal)
+  images = [col_grad_img, grayscale_guided_grads, pos_sal, neg_sal]
+  return images
