@@ -43,10 +43,12 @@ from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtrac
     IntegratedGradients, integrated_gradient_process, CNNLayerVisualization,
     LRP, LRP_process, LayerCam, LayerCAM_process, 
     Grad_times_process, generate_smooth_grad, smooth_grad_process,
-    smooth_grad_process_guidBackprop, LR_GuidedBackprop, layer_act_guid_bp)
+    smooth_grad_process_guidBackprop, LR_GuidedBackprop, layer_act_guid_bp,
+    DeepDream, dream)
 
 from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
-    outputs_LRP, outputs_smoothgrad, output_adv_filt, output_layer_act_guid_bp
+    outputs_LRP, outputs_smoothgrad, output_adv_filt, output_layer_act_guid_bp, \
+    outputs_DD
 
 
 @st.cache(ttl=12*3600)
@@ -130,75 +132,12 @@ def VGG19():
 
 
 
-##########################################################
-###########         Visualize DeepDream    ###############
-##########################################################
-
-
-class DeepDream():
-    def __init__(self, model, selected_layer, selected_filter, image):
-        self.model = model
-        self.model.eval()
-        self.selected_layer = selected_layer
-        self.selected_filter = selected_filter
-        self.conv_output = 0
-        self.created_image = image.convert('RGB')        
-        self.hook_layer()
-    def hook_layer(self):
-        def hook_function(module, grad_in, grad_out):
-            self.conv_output = grad_out[0, self.selected_filter]
-
-
-        self.model[self.selected_layer].register_forward_hook(hook_function)
-
-    def dream(self):
-
-        self.processed_image = preprocess_image(self.created_image, True)
-        optimizer = SGD([self.processed_image], lr=12,  weight_decay=1e-4)
-        images = list()
-        for i in range(1, 251):
-            optimizer.zero_grad()
-            x = self.processed_image
-            for index, layer in enumerate(self.model):
-                x = layer(x)
-                if index == self.selected_layer:
-                    break
-            loss = -torch.mean(self.conv_output)
-            print('Iteration:', str(i), 'Loss:', "{0:.2f}".format(loss.data.numpy()))
-            loss.backward()
-            optimizer.step()
-            self.created_image = recreate_image(self.processed_image)
-            if i % 20 == 0:
-                print(self.created_image.shape)
-                im =save_image(self.created_image)
-                images.append(im)
-        return images
 
 
 
-def dream(model, cnn_layer, filter_pos, image):
-    dd = DeepDream(model.features, cnn_layer, filter_pos, image)
-    images = dd.dream()
-    return images
+
     
-def outputs_DD(images):
-    col1, col2, col3, col4 = st.columns([0.25, 0.25, 0.25, 0.25])
-    with col1:
-        st.image(images[0])
-        st.image(images[4])
-        st.image(images[8])
-    with col2:
-        st.image(images[1])
-        st.image(images[5])
-        st.image(images[9])
-    with col3:
-        st.image(images[2])
-        st.image(images[6])
-        st.image(images[10])
-    with col4:
-        st.image(images[3])
-        st.image(images[7])
-        st.image(images[11])
+
 
 
 ##########################################################################
