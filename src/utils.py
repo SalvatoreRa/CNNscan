@@ -54,6 +54,13 @@ def load_baseline():
     return img_screen
 
 
+def conv_layer_indices(model):
+    conv_layers = []
+    for name, module in model.named_modules():
+        if isinstance(module, nn.Conv2d):
+            conv_layers.append(int(name.split(".")[1]))
+    return conv_layers
+
 def process_img(img, model):
     norm_mean = [0.485, 0.456, 0.406]
     norm_std = [0.229, 0.224, 0.225]
