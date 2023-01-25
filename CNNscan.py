@@ -341,7 +341,7 @@ def main():
           filt_idx =VGG19_filt
           pret_mod= VGG19()
     st.sidebar.markdown("---")
-    st.sidebar.markdown("some of the methods required you select a convolutional layer and a filter")
+    st.sidebar.markdown("Some of the methods required you select a convolutional layer and a filter")
     conv_layer_app = st.sidebar.selectbox(
         'Select one convolution layer', filt_idx,
         help = 'select convolutional filter layer')    
@@ -350,7 +350,7 @@ def main():
     max = x.features[conv_layer_app].out_channels -1
     filter_app = st.sidebar.slider('select one filter', 0, max, 1)
     st.sidebar.markdown("---")
-    st.sidebar.markdown("some of the methods required you select a layer")
+    st.sidebar.markdown("Some of the methods required you select a layer")
     max = len(pret_mod.eval().features) -1
     Layer_app = st.sidebar.slider('select one target layer', 0, max, 1,
                         help= 'select target layer of the model')    
@@ -381,11 +381,21 @@ def main():
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
         st.markdown("---")
         st.markdown("Please select on the sidebar the convolutional layer and a specific filter")
-        st.markdown("This method will return one image for the selected filter")
+        st.markdown("This method will return six images for the selected filter (the images are obtained at different steps)")
         show_alt_filters = st.button('visualize the filter')
         if show_alt_filters:
             imgs_filt =advance_filt(pret_mod, conv_layer_app, filter_app )
             output_adv_filt(imgs_filt)
+            buf = BytesIO()
+            imgs_filt[5].save(buf, format="JPEG")
+            byte_im =buf.getvalue()
+            st.download_button(
+                label="Download Last Image",
+                data=byte_im,
+                file_name="styled_img"+".jpg",
+                mime="image/jpg",
+                key = 'alternative_filters_download_button'
+                )
 
     with st.expander("Visualize the feature maps"):
         st.write('Default model is **AlexNet** which is faster')
