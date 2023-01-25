@@ -36,7 +36,7 @@ from utils import (load_test_image, load_baseline,
     process_img, save_class_activation_images,  
     apply_colormap_on_image, apply_heatmap, recreate_image, 
     preprocess_image, get_positive_negative_saliency, 
-    guided_grad_cam)
+    guided_grad_cam, conv_layer_indices)
 from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtractor, GradCam, Visualize_GradCam,
     VanillaBackprop, VanillaBackprop_process, GuidedBackprop, GuidedBackprop_process, 
     scoreCamExtractor, ScoreCam, scorecam_process, GuidedGradCam, gradient_gradcam,
