@@ -370,13 +370,9 @@ def main():
         st.write('Default model is **AlexNet** which is faster')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
         
-        conv_layer = st.selectbox(
-        'Select the convolution layer', filt_idx,
-        help = 'select convolutional filter layer')
-        option = int(conv_layer)
         show_filters = st.button('show the filters')
         if show_filters:
-            fetch_filters(pret_mod, filt_idx, layer = option)
+            fetch_filters(pret_mod, filt_idx, layer = conv_layer_app)
             
     with st.expander("Alternative visualization of the filters"):
         st.write('Default model is **AlexNet** which is faster')
