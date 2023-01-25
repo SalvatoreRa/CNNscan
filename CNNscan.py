@@ -40,12 +40,12 @@ from utils import (load_test_image, load_baseline,
 from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtractor, GradCam, Visualize_GradCam,
                     VanillaBackprop, VanillaBackprop_process, GuidedBackprop, GuidedBackprop_process, 
                     scoreCamExtractor, ScoreCam, scorecam_process, GuidedGradCam, gradient_gradcam,
-                    IntegratedGradients, integrated_gradient_process,
+                    IntegratedGradients, integrated_gradient_process, CNNLayerVisualization,
                     LRP, LRP_process, LayerCam, LayerCAM_process,
                     Grad_times_process)
 #from methods import ( 
 #    , , , , generate_smooth_grad, 
-#    smooth_grad_process, smooth_grad_process_guidBackprop, CNNLayerVisualization, visualise_layer_without_hooks, advance_filt)
+#    smooth_grad_process, smooth_grad_process_guidBackprop, , visualise_layer_without_hooks, advance_filt)
 from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
     outputs_LRP, outputs_smoothgrad, output_adv_filt
 
@@ -610,9 +610,9 @@ def main():
             heatmap, heatmap_on_image, activation_map = LayerCAM_process(image_to_layerCAM, 
                                                                     pret_mod, layer =Layer_app)
             txt1 = 'Original image' 
-            txt2 = 'Class Activation Map - layerCAM, layer: ' + str(Layer)
-            txt3 = 'Class Activation HeatMap - layerCAM, layer: ' + str(Layer)
-            txt4 = 'layerCAM usperimposed on the image, layer: ' + str(Layer)
+            txt2 = 'Class Activation Map - layerCAM, layer: ' + str(Layer_app)
+            txt3 = 'Class Activation HeatMap - layerCAM, layer: ' + str(Layer_app)
+            txt4 = 'layerCAM usperimposed on the image, layer: ' + str(Layer_app)
             outputs_scorecam(image_to_layerCAM, activation_map, heatmap, heatmap_on_image, txt1, txt2, txt3, txt4)
             
     with st.expander("Grad Times Image"):
