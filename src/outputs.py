@@ -173,3 +173,26 @@ def output_adv_filt(images):
     with col3:
         st.image(images[2])
         st.image(images[5])
+
+##########################################################
+###########  Layer activation              ###############
+###########  with guided backpropagation   ###############
+##########################################################
+
+def output_layer_act_guid_bp(imgs_layr, img):
+    col1, col2, col3= st.columns([0.33, 0.33, 0.33])
+    with col1:
+        st.write('original image')
+        st.image(img)
+        st.write('positive saliency')
+        st.image(imgs_layr[2])
+        
+    with col2:
+        st.write('colored gradient')
+        st.image(imgs_layr[0])
+        st.write('negative saliency')
+        st.image(imgs_layr[3])
+
+    with col3:
+        st.write('black and white gradient')
+        st.image(imgs_layr[1])
