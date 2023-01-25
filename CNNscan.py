@@ -120,23 +120,7 @@ def VGG19():
     pret_mod =  models.vgg19(pretrained=True)
     return pret_mod
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
+  
 
 
 
@@ -555,7 +539,8 @@ def main():
     with st.expander("DeepDream"):
 
         st.write('Default model is **AlexNet** which is faster, however other models leads to better results')
-      
+        st.markdown("---")
+        st.markdown("Please select on the sidebar the convolutional layer and a specific filter")
         image_to_DD = st.selectbox(
         'Select an image for DeepDream:',
         ('provided test', 'provide image'),
@@ -566,56 +551,10 @@ def main():
         else:
             image_to_DD = load_baseline()
 
-        DD_par = st.selectbox(
-        'Select parameters for DD:',
-        ('default', 'customize'),
-        help = 'you can use the default parameters (model, layer, filter) or set the parameter you prefer')
-
-        if DD_par == 'default':
-            mod_dd = model
-            cnn_layer = 10
-            filter_pos = 8
-
-        else:
-            mod_dd = st.selectbox('Select model for DeepDream:',
-            ('AlexaNET', 'VGG16', 'VGG19'),
-             help = 'select the model you want to use. VGG16 and VGG19 are computationally expensive and they will take time')
-            if mod_dd == 'AlexaNET':
-                mod_dd = model
-                cnn_layer = st.selectbox('Select layer:', 
-                                         ('0', '3', '6', '8', '10'),
-                                        help = 'select the convolutional layer')
-                cnn_layer = int(cnn_layer)
-            if mod_dd == 'VGG16':
-                pret_mod = VGG16()
-                mod_dd = pret_mod
-                cnn_layer = st.selectbox('Select layer:', 
-                ('0', '2', '5', '7', '10', '12', '14', '17',
-                '19', '21', '24', '26', '28' ),
-                 help = 'select the convolutional layer')
-                cnn_layer = int(cnn_layer)
-            if mod_dd == 'VGG19':
-                pret_mod = VGG19()
-                mod_dd = pret_mod
-                cnn_layer = st.selectbox('Select layer:', 
-                ('0', '2', '5', '7', '10', '12', '14', '16',
-                '19', '21', '23', '25', '28', '30',
-                '32', '34'),
-                help = 'select the convolutional layer')
-                cnn_layer = int(cnn_layer)
-            
-            x = mod_dd.eval()
-            max = x.features[cnn_layer].out_channels -1
-            filter_pos = st.slider('select filter', 0, max, 1)
-            
-
-
-                
-            
-
+ 
         show_DD = st.button('show DeepDream')
         if show_DD:
-            images_dd = dream(mod_dd, cnn_layer, filter_pos, image_to_DD)       
+            images_dd = dream(mod_dd, conv_layer_app, filter_app, image_to_DD)       
             outputs_DD(images_dd)
             buf = BytesIO()
             images_dd[11].save(buf, format="JPEG")
