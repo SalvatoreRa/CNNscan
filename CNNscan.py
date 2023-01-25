@@ -41,9 +41,10 @@ from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtrac
                     VanillaBackprop, VanillaBackprop_process, GuidedBackprop, GuidedBackprop_process, 
                     scoreCamExtractor, ScoreCam, scorecam_process, GuidedGradCam, gradient_gradcam,
                     IntegratedGradients, integrated_gradient_process,
-                    LRP, LRP_process, LayerCam, LayerCAM_process)
+                    LRP, LRP_process, LayerCam, LayerCAM_process,
+                    Grad_times_process)
 #from methods import ( 
-#    , , , Grad_times_process, generate_smooth_grad, 
+#    , , , , generate_smooth_grad, 
 #    smooth_grad_process, smooth_grad_process_guidBackprop, CNNLayerVisualization, visualise_layer_without_hooks, advance_filt)
 from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
     outputs_LRP, outputs_smoothgrad, output_adv_filt
