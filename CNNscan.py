@@ -182,11 +182,11 @@ def main():
           pret_mod= model
           filt_idx =conv_layer_indices(pret_mod)
     if mod_app == 'VGG16':
-          filt_idx =VGG16_filt
           pret_mod= VGG16()
+          filt_idx =conv_layer_indices(pret_mod)
     if mod_app == 'VGG19':
-          filt_idx =VGG19_filt
           pret_mod= VGG19()
+          filt_idx =conv_layer_indices(pret_mod)
     st.sidebar.markdown("---")
     st.sidebar.markdown("Some of the methods required you select a convolutional layer and a filter")
     conv_layer_app = st.sidebar.selectbox(
