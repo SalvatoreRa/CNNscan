@@ -380,17 +380,11 @@ def main():
         st.write('Default model is **AlexNet** which is faster')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
         st.markdown("---")
-        st.markdown("Please select on the sidebar the convolutional layer and a filter")
-        conv_layer_alt = st.selectbox(
-        'Select a convolution layer', filt_idx,
-        help = 'select convolutional filter layer')
-        option = int(conv_layer_alt)
-        x = pret_mod.eval()
-        max = x.features[option].out_channels -1
-        filter_pos_alt = st.slider('select filter', 0, max, 1)
+        st.markdown("Please select on the sidebar the convolutional layer and a specific filter")
+        st.markdown("This method will return one image for the selected filter")
         show_alt_filters = st.button('visualize the filter')
         if show_alt_filters:
-            imgs_filt =advance_filt(pret_mod, option, filter_pos_alt )
+            imgs_filt =advance_filt(pret_mod, conv_layer_app, filter_app )
             output_adv_filt(imgs_filt)
 
     with st.expander("Visualize the feature maps"):
