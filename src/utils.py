@@ -108,11 +108,6 @@ def save_class_activation_images(org_img, activation_map):
     activation_map = save_image(activation_map )
     return heatmap, heatmap_on_image, activation_map
 
-def scorecam_process(model, img):
-  im, pred_cls = process_img(img, model)
-  score_cam = ScoreCam(model, target_layer=11)
-  cam = score_cam.generate_cam(im, pred_cls)
-  return cam
 
 def apply_colormap_on_image(org_im, activation, colormap_name):
     color_map = cm.get_cmap(colormap_name)
