@@ -49,7 +49,7 @@ from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtrac
 
 from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
     outputs_LRP, outputs_smoothgrad, output_adv_filt, output_layer_act_guid_bp, \
-    outputs_DD
+    outputs_DD, output_inverted
 
 
 @st.cache(ttl=12*3600)
@@ -536,6 +536,41 @@ def main():
         if show_layer_act_guid_bp:
             imgs_layr =layer_act_guid_bp(image_to_LAGB, pret_mod, conv_layer_app, filter_app)
             output_layer_act_guid_bp(imgs_layr, image_to_LAGB)
+            
+    with st.expander("Inverted Image Representations"):
+        st.write('Default model is **AlexNet** which is faster')
+        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
+        st.markdown("---")
+        st.markdown("Please select on the sidebar a layer")
+
+
+        image_to_invert = st.selectbox(
+        'Select an image for Inverted Image Representations:',
+        ('provided test', 'provide image'),
+        help = 'select the image to test. You can use the provided image or upload an image (jpg, png)',
+        key = 'image_to_invert')
+
+        if image_to_invert == 'provide image':
+            image_to_invert = load_test_image()
+        else:
+            image_to_invert = load_baseline()
+            
+            
+        show_image_invert= st.button('visualize the Inverted Image Representations')
+        if show_image_invert:
+            image_size = 224
+            imgs_invert =inverted_representation_process(image_to_invert, pret_mod, image_size, Layer_app )
+            output_inverted(imgs_invert, image_to_invert)
+            buf = BytesIO()
+            imgs_invert[8].save(buf, format="JPEG")
+            byte_im =buf.getvalue()
+            st.download_button(
+                label="Download Last Image",
+                data=byte_im,
+                file_name="styled_img"+".jpg",
+                mime="image/jpg",
+                key = 'inverted image  download'
+                )
 
     with st.expander("DeepDream"):
 
