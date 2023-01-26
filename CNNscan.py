@@ -560,7 +560,7 @@ def main():
             ('224', '256', '512'),
             key ='inverted image size',
             help = 'dimension of the inverted image (squared, ex = 224,224)')
-            image_size= int(image_size)
+        image_size= int(image_size)
             
         show_image_invert= st.button('visualize the Inverted Image Representations')
         if show_image_invert:
