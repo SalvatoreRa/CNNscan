@@ -45,7 +45,7 @@ from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtrac
     LRP, LRP_process, LayerCam, LayerCAM_process, 
     Grad_times_process, generate_smooth_grad, smooth_grad_process,
     smooth_grad_process_guidBackprop, LR_GuidedBackprop, layer_act_guid_bp, InvertedRepresentation, 
-    inverted_representation_process, DeepDream, dream)
+    inverted_representation_process, ClassSpecificImageGeneration, class_generated_images, DeepDream, dream)
 
 from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
     outputs_LRP, outputs_smoothgrad, output_adv_filt, output_layer_act_guid_bp, \
@@ -555,15 +555,16 @@ def main():
         else:
             image_to_invert = load_baseline()
             
-            
-        show_image_invert= st.button('visualize the Inverted Image Representations')
-        if show_image_invert:
-            image_size = st.radio(
+        image_size = st.radio(
             "select the image size:",
             ('224', '256', '512'),
             key ='inverted image size',
             help = 'dimension of the inverted image (squared, ex = 224,224)')
             image_size= int(image_size)
+            
+        show_image_invert= st.button('visualize the Inverted Image Representations')
+        if show_image_invert:
+            
             imgs_invert =inverted_representation_process(image_to_invert, pret_mod, image_size, Layer_app )
             output_inverted(imgs_invert, image_to_invert)
             buf = BytesIO()
