@@ -198,6 +198,30 @@ def output_layer_act_guid_bp(imgs_layr, img):
         st.image(imgs_layr[1])
 
 ##########################################################
+###########    Inverted representation     ###############
+##########################################################
+
+def output_inverted(images, img):
+    col1, col2, col3= st.columns([0.33, 0.33, 0.33])
+    st.write('the first image is the original image, the others method generated')
+    with col1:
+        st.image(img)
+        st.image(images[3])
+        st.image(images[6])
+        
+    with col2:
+        st.image(images[1])
+        st.image(images[4])
+        st.image(images[7])
+
+    with col3:
+        st.image(images[2])
+        st.image(images[5])
+        st.image(images[8])
+
+
+        
+##########################################################
 ###########         Visualize DeepDream    ###############
 ##########################################################
 
