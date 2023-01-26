@@ -558,7 +558,12 @@ def main():
             
         show_image_invert= st.button('visualize the Inverted Image Representations')
         if show_image_invert:
-            image_size = 224
+            image_size = st.radio(
+            "select the image size:",
+            ('224', '256', '512'),
+            key ='inverted image size',
+            help = 'dimension of the inverted image (squared, ex = 224,224)')
+            image_size= int(image_size)
             imgs_invert =inverted_representation_process(image_to_invert, pret_mod, image_size, Layer_app )
             output_inverted(imgs_invert, image_to_invert)
             buf = BytesIO()
