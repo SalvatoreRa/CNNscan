@@ -855,6 +855,86 @@ def layer_act_guid_bp(img, model, cnn_layer, filter_pos):
   return images
 
 ##########################################################
+###########     Inverted representation    ###############
+##########################################################
+
+class InvertedRepresentation():
+    def __init__(self, model):
+        self.model = model
+        self.model.eval()
+
+    def alpha_norm(self, input_matrix, alpha):
+        alpha_norm = ((input_matrix.view(-1))**alpha).sum()
+        return alpha_norm
+
+    def total_variation_norm(self, input_matrix, beta):
+        to_check = input_matrix[:, :-1, :-1]  # Trimmed: right - bottom
+        one_bottom = input_matrix[:, 1:, :-1]  # Trimmed: top - right
+        one_right = input_matrix[:, :-1, 1:]  # Trimmed: top - right
+        total_variation = (((to_check - one_bottom)**2 +
+                            (to_check - one_right)**2)**(beta/2)).sum()
+        return total_variation
+
+    def euclidian_loss(self, org_matrix, target_matrix):
+        distance_matrix = target_matrix - org_matrix
+        euclidian_distance = self.alpha_norm(distance_matrix, 2)
+        normalized_euclidian_distance = euclidian_distance / self.alpha_norm(org_matrix, 2)
+        return normalized_euclidian_distance
+
+    def get_output_from_specific_layer(self, x, layer_id):
+        layer_output = None
+        for index, layer in enumerate(self.model.features):
+            x = layer(x)
+            if str(index) == str(layer_id):
+                layer_output = x[0]
+                break
+        return layer_output
+
+    def generate_inverted_image_specific_layer(self, input_image, img_size, target_layer=3):
+        opt_img = Variable(1e-1 * torch.randn(1, 3, img_size, img_size), requires_grad=True)
+        optimizer = SGD([opt_img], lr=1e4, momentum=0.9)
+        input_image_layer_output = \
+            self.get_output_from_specific_layer(input_image, target_layer)
+        alpha_reg_alpha = 6
+        alpha_reg_lambda = 1e-7
+        tv_reg_beta = 2
+        tv_reg_lambda = 1e-8
+        images = list()
+
+        for i in range(201):
+            optimizer.zero_grad()
+            output = self.get_output_from_specific_layer(opt_img, target_layer)
+            euc_loss = 1e-1 * self.euclidian_loss(input_image_layer_output.detach(), output)
+            reg_alpha = alpha_reg_lambda * self.alpha_norm(opt_img, alpha_reg_alpha)
+            reg_total_variation = tv_reg_lambda * self.total_variation_norm(opt_img,
+                                                                            tv_reg_beta)
+            loss = euc_loss + reg_alpha + reg_total_variation
+            loss.backward()
+            optimizer.step()
+            # Generate image every 25 iterations
+            if i % 25 == 0:
+                print('Iteration:', str(i), 'Loss:', loss.data.numpy())
+                recreated_im = recreate_image(opt_img)
+                im =save_image(recreated_im)
+                images.append(im)
+
+            if i % 40 == 0:
+                for param_group in optimizer.param_groups:
+                    param_group['lr'] *= 1/10
+        return images
+
+
+def inverted_representation_process(img, model, image_size,target_layer):
+  '''
+  inverted representation
+  '''
+  im, pred_cls = process_img(img, model)
+  inverted_representation = InvertedRepresentation(model)
+  images = inverted_representation.generate_inverted_image_specific_layer(im, image_size,target_layer)
+  return images
+
+
+##########################################################
 ###########         Visualize DeepDream    ###############
 ##########################################################
 
