@@ -935,6 +935,49 @@ def inverted_representation_process(img, model, image_size,target_layer):
 
 
 ##########################################################
+###########    Class generated images      ###############
+##########################################################
+
+class ClassSpecificImageGeneration():
+  
+    def __init__(self, model, target_class):
+        self.mean = [-0.485, -0.456, -0.406]
+        self.std = [1/0.229, 1/0.224, 1/0.225]
+        self.model = model
+        self.model.eval()
+        self.target_class = target_class
+        self.created_image = np.uint8(np.random.uniform(0, 255, (224, 224, 3)))
+
+    def generate(self, iterations=150):
+        initial_learning_rate = 6
+        images = list()
+
+        for i in range(1, iterations):
+            self.processed_image = preprocess_image(self.created_image, False)
+            optimizer = SGD([self.processed_image], lr=initial_learning_rate)
+            output = self.model(self.processed_image)
+            class_loss = -output[0, self.target_class]
+
+            if i % 10 == 0 or i == iterations-1:
+                print('Iteration:', str(i), 'Loss',
+                      "{0:.2f}".format(class_loss.data.numpy()))
+            self.model.zero_grad()
+            class_loss.backward()
+            optimizer.step()
+            self.created_image = recreate_image(self.processed_image)
+            if i % 15 == 0 or i == iterations-1:
+                
+                im =save_image(self.created_image)
+                images.append(im)
+
+        return images
+
+def class_generated_images(model, class_to_gen):
+  csig = ClassSpecificImageGeneration(model, class_to_gen)
+  images =csig.generate()
+  return images
+
+##########################################################
 ###########         Visualize DeepDream    ###############
 ##########################################################
 
