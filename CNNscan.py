@@ -29,7 +29,7 @@ import sys
 import pathlib
 
 
-#this to import modules
+#We are importing from the modules
 sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
 from utils import (load_test_image, load_baseline, 
     format_np_output, save_image, save_gradient_images, convert_to_grayscale, 
@@ -37,14 +37,15 @@ from utils import (load_test_image, load_baseline,
     apply_colormap_on_image, apply_heatmap, recreate_image, 
     preprocess_image, get_positive_negative_saliency, 
     guided_grad_cam, conv_layer_indices)
+
 from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtractor, GradCam, Visualize_GradCam,
     VanillaBackprop, VanillaBackprop_process, GuidedBackprop, GuidedBackprop_process, 
     scoreCamExtractor, ScoreCam, scorecam_process, GuidedGradCam, gradient_gradcam,
     IntegratedGradients, integrated_gradient_process, CNNLayerVisualization,
     LRP, LRP_process, LayerCam, LayerCAM_process, 
     Grad_times_process, generate_smooth_grad, smooth_grad_process,
-    smooth_grad_process_guidBackprop, LR_GuidedBackprop, layer_act_guid_bp,
-    DeepDream, dream)
+    smooth_grad_process_guidBackprop, LR_GuidedBackprop, layer_act_guid_bp, InvertedRepresentation, 
+    inverted_representation_process, DeepDream, dream)
 
 from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
     outputs_LRP, outputs_smoothgrad, output_adv_filt, output_layer_act_guid_bp, \
