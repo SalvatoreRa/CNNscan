@@ -587,14 +587,13 @@ def main():
         st.markdown("Please select on the sidebar a layer")
 
         categ_imagenet = read_imagenet_categ()
-        st.write('### Full Dataset', categ_imagenet)
+        st.write('### Imagene categories', categ_imagenet)
         selected_indices = st.multiselect('Select rows:', categ_imagenet.index)
-        selected_rows = categ_imagenet.loc[selected_indices]
-        st.write('### Selected Rows', selected_rows)
-        st.write('### Selected index', selected_indices)
-        class_to_gen =155
+        st.sidebar.markdown("---")
         
-            
+        class_to_gen = st.sidebar.slider('select one class', 0, 999, 1,
+                        help= 'select the corrisponding number of the image class you want')
+        class_to_gen =130    
         
             
         class_gen_img= st.button('visualize class generated images')
