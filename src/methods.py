@@ -938,6 +938,7 @@ def inverted_representation_process(img, model, image_size,target_layer):
 ###########    Class generated images      ###############
 ##########################################################
 
+@st.cache(ttl=3600)
 class ClassSpecificImageGeneration():
   
     def __init__(self, model, target_class):
@@ -958,7 +959,7 @@ class ClassSpecificImageGeneration():
             output = self.model(self.processed_image)
             class_loss = -output[0, self.target_class]
 
-            if i % 10 == 0 or i == iterations-1:
+            if i % 15 == 0 or i == iterations-1:
                 print('Iteration:', str(i), 'Loss',
                       "{0:.2f}".format(class_loss.data.numpy()))
             self.model.zero_grad()
@@ -972,6 +973,7 @@ class ClassSpecificImageGeneration():
 
         return images
 
+@st.cache(ttl=3600)
 def class_generated_images(model, class_to_gen):
   csig = ClassSpecificImageGeneration(model, class_to_gen)
   images =csig.generate()
