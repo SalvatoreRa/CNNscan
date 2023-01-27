@@ -589,10 +589,18 @@ def main():
         categ_imagenet = read_imagenet_categ()
         st.write('### Imagene categories', categ_imagenet)
         selected_indices = st.multiselect('Select rows:', categ_imagenet.index)
-        st.sidebar.markdown("---")
+        st.markdown("---")
         
         class_to_gen = st.sidebar.slider('select one class', 0, 999, 1,
                         help= 'select the corrisponding number of the image class you want')
+        st.smarkdown("---")
+        col1, col2 = st.columns( [0.2, 0.8])
+        with col1:
+        st.write(class_to_gen)
+        
+
+
+        
         class_to_gen =130    
         
             
