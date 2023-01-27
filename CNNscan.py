@@ -36,7 +36,7 @@ from utils import (load_test_image, load_baseline,
     process_img, save_class_activation_images,  
     apply_colormap_on_image, apply_heatmap, recreate_image, 
     preprocess_image, get_positive_negative_saliency, 
-    guided_grad_cam, conv_layer_indices)
+    guided_grad_cam, conv_layer_indices, read_imagenet_categ)
 
 from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtractor, GradCam, Visualize_GradCam,
     VanillaBackprop, VanillaBackprop_process, GuidedBackprop, GuidedBackprop_process, 
@@ -577,6 +577,37 @@ def main():
                 mime="image/jpg",
                 key = 'inverted image  download'
                 )
+
+
+
+    with st.expander("Class generated images"):
+        st.write('Default model is **AlexNet** which is faster')
+        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
+        st.markdown("---")
+        st.markdown("Please select on the sidebar a layer")
+
+        class_to_gen =155
+        
+            
+        
+            
+        show_image_invert= st.button('visualize the Inverted Image Representations')
+        if show_image_invert:
+            
+            imgs_gen = class_generated_images(pret_mod, class_to_gen)
+            output_inverted(imgs_invert, image_to_invert)
+            buf = BytesIO()
+            imgs_invert[8].save(buf, format="JPEG")
+            byte_im =buf.getvalue()
+            st.download_button(
+                label="Download Last Image",
+                data=byte_im,
+                file_name="styled_img"+".jpg",
+                mime="image/jpg",
+                key = 'inverted image  download'
+                )
+
+
 
     with st.expander("DeepDream"):
 
