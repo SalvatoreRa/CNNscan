@@ -192,11 +192,11 @@ def guided_grad_cam(grad_cam_mask, guided_backprop_mask):
     return cam_gb
 
 def read_imagenet_categ():
-  imagenet_cat = "https://raw.githubusercontent.com/SalvatoreRa/CNNscan/main/imagenet1000_clsidx_to_labels.txt"
-  response = requests.get(imagenet_cat)
-  data_text = response.text
-  data = eval(data_text)
+    imagenet_cat = "https://raw.githubusercontent.com/SalvatoreRa/CNNscan/main/imagenet1000_clsidx_to_labels.txt"
+    response = requests.get(imagenet_cat)
+    data_text = response.text
+    data = eval(data_text)
 
-  categ = pd.DataFrame.from_dict(data, orient='index',
-                       columns=['cat'])
-  return categ
+    categ = pd.DataFrame.from_dict(data, orient='index',
+                        columns=['cat'])
+    return categ
