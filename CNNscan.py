@@ -593,7 +593,9 @@ def main():
         
         class_to_gen = st.slider('select one class', 0, 999, 1,
                         help= 'select the corrisponding number of the image class you want')
-        st.smarkdown("---")
+        
+        st.markdown("---")
+
         col1, col2 = st.columns( [0.2, 0.8])
         with col1:
             st.write(class_to_gen)
