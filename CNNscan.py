@@ -593,20 +593,20 @@ def main():
             
         
             
-        show_image_invert= st.button('visualize the Inverted Image Representations')
-        if show_image_invert:
+        class_gen_img= st.button('visualize class generated images')
+        if class_gen_img:
             
             imgs_gen = class_generated_images(pret_mod, class_to_gen)
             output_inverted(imgs_invert, image_to_invert)
             buf = BytesIO()
-            imgs_invert[8].save(buf, format="JPEG")
+            imgs_gen[8].save(buf, format="JPEG")
             byte_im =buf.getvalue()
             st.download_button(
                 label="Download Last Image",
                 data=byte_im,
                 file_name="styled_img"+".jpg",
                 mime="image/jpg",
-                key = 'inverted image  download'
+                key = 'class generated  download'
                 )
 
 
