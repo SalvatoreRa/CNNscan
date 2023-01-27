@@ -596,8 +596,10 @@ def main():
         st.smarkdown("---")
         col1, col2 = st.columns( [0.2, 0.8])
         with col1:
-        st.write(class_to_gen)
-        
+            st.write(class_to_gen)
+        with col2:
+            st.write(categ_imagenet.iloc[categ_imagenet, 0])
+
 
 
         
