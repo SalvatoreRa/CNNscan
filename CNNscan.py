@@ -49,7 +49,7 @@ from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtrac
 
 from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
     outputs_LRP, outputs_smoothgrad, output_adv_filt, output_layer_act_guid_bp, \
-    outputs_DD, output_inverted
+    outputs_DD, output_inverted, outputs_CGI
 
 
 @st.cache(ttl=12*3600)
@@ -593,7 +593,7 @@ def main():
             categ_imagenet = read_imagenet_categ()
             st.write('### Imagene categories', categ_imagenet)
         with col3:
-            
+
         st.markdown("---")
         
         class_to_gen = st.slider('select one class', 0, 999, 1,
