@@ -584,11 +584,16 @@ def main():
         st.write('Default model is **AlexNet** which is faster')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
         st.markdown("---")
-        st.markdown("Please select on the sidebar a layer")
+        st.markdown("Please select a class image")
 
-        categ_imagenet = read_imagenet_categ()
-        st.write('### Imagene categories', categ_imagenet)
-        
+        col1, col2, col3 = st.columns( [0.2, 0.6, 0.2])
+        with col1:
+            
+        with col2:
+            categ_imagenet = read_imagenet_categ()
+            st.write('### Imagene categories', categ_imagenet)
+        with col3:
+            
         st.markdown("---")
         
         class_to_gen = st.slider('select one class', 0, 999, 1,
