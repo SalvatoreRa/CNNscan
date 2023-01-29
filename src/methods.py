@@ -953,7 +953,17 @@ class ClassSpecificImageGeneration():
         initial_learning_rate = 6
         images = list()
 
+        st.write('Making magic: please wait')
+        my_bar = st.progress(0)
+
         for i in range(1, iterations):
+
+            percent_complete = int(100/iterations) * (i+1)
+            if percent_complete >= 100:
+                percent_complete = 100
+            my_bar.progress(percent_complete)
+
+
             self.processed_image = preprocess_image(self.created_image, False)
             optimizer = SGD([self.processed_image], lr=initial_learning_rate)
             output = self.model(self.processed_image)
