@@ -940,6 +940,9 @@ def inverted_representation_process(img, model, image_size,target_layer):
 
 @st.cache(ttl=3600, suppress_st_warning=True)
 class ClassSpecificImageGeneration():
+
+    st.write('Making magic: please wait')
+    my_bar = st.progress(0)
   
     def __init__(self, model, target_class):
         self.mean = [-0.485, -0.456, -0.406]
@@ -953,8 +956,7 @@ class ClassSpecificImageGeneration():
         initial_learning_rate = 6
         images = list()
 
-        st.write('Making magic: please wait')
-        my_bar = st.progress(0)
+        
 
         for i in range(1, iterations):
 
