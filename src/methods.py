@@ -983,9 +983,9 @@ class ClassSpecificImageGeneration():
 
         return images
 
-@st.cache(ttl=3600)
+@st.cache(ttl=3600, suppress_st_warning=True)
 def class_generated_images(model, class_to_gen):
-  csig = ClassSpecificImageGeneration(model, class_to_gen)
+  csig = ClassSpecifi, cImageGeneration(model, class_to_gen)
   images =csig.generate()
   return images
 
