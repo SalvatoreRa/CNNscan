@@ -591,7 +591,7 @@ def main():
         with col1:
             print("place holder otherwise he gave an error")
         with col2:
-            categ_imagenet = st.cache(read_imagenet_categ)
+            categ_imagenet = st.cache(read_imagenet_categ)()
             st.write('### Imagene categories', categ_imagenet)
         with col3:
             print("place holder otherwise he gave an error")
