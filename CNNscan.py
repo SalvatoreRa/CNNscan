@@ -588,11 +588,12 @@ def main():
 
         col1, col2, col3 = st.columns( [0.2, 0.6, 0.2])
         with col1:
-            
+            print("place holder otherwise he gave an error")
         with col2:
             categ_imagenet = read_imagenet_categ()
             st.write('### Imagene categories', categ_imagenet)
         with col3:
+            print("place holder otherwise he gave an error")
 
         st.markdown("---")
         
