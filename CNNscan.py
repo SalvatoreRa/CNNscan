@@ -601,6 +601,7 @@ def main():
         class_to_gen = st.slider('select one class', 0, 999, 1,
                         help= 'select the corrisponding number of the image class you want')
         
+        class_to_gen = int(class_to_gen)
         st.markdown("---")
 
         col1, col2 = st.columns( [0.2, 0.8])
@@ -610,10 +611,7 @@ def main():
             st.write(categ_imagenet.iloc[class_to_gen, 0])
 
 
-
-        
-        class_to_gen =130    
-        
+                   
             
         class_gen_img= st.button('visualize class generated images')
         if class_gen_img:
