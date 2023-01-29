@@ -50,7 +50,7 @@ from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtrac
 
 from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
     outputs_LRP, outputs_smoothgrad, output_adv_filt, output_layer_act_guid_bp, \
-    outputs_DD, output_inverted
+    outputs_DD, output_inverted, outputs_CGI
 
 
 @st.cache(ttl=12*3600)
@@ -619,7 +619,7 @@ def main():
         if class_gen_img:
             
             imgs_gen = class_generated_images(pret_mod, class_to_gen)
-            output_inverted(imgs_invert, image_to_invert)
+            outputs_CGI(imgs_gen)
             buf = BytesIO()
             imgs_gen[8].save(buf, format="JPEG")
             byte_im =buf.getvalue()
