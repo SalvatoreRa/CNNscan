@@ -938,7 +938,7 @@ def inverted_representation_process(img, model, image_size,target_layer):
 ###########    Class generated images      ###############
 ##########################################################
 
-@st.cache(ttl=3600)
+@st.cache(ttl=3600, suppress_st_warning=True)
 class ClassSpecificImageGeneration():
   
     def __init__(self, model, target_class):
