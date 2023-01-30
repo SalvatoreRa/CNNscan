@@ -1,7 +1,7 @@
 #structural libraries
 import streamlit as st
 import io
-from PIL import Image
+from PIL import Image, ImageFilter
 from io import BytesIO
 import requests
 
