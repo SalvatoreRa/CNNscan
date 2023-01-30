@@ -35,7 +35,7 @@ from utils import (load_test_image, load_baseline,
     process_img, save_class_activation_images,  
     apply_colormap_on_image, apply_heatmap, recreate_image, 
     preprocess_image, get_positive_negative_saliency, 
-    guided_grad_cam)
+    guided_grad_cam, preprocess_and_blur_image)
 
 #part of this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations        
 # check his amazing repository
