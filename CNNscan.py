@@ -638,7 +638,7 @@ def main():
         key = 'reg_gen_choice button')
 
         if reg_gen_choice == 'default':
-            class_to_gen = 130  # Flamingo
+            target_class = 130  # Flamingo
             iterations=150
             blur_freq=4
             blur_rad=1
@@ -646,9 +646,12 @@ def main():
             clipping_value=0.1
             initial_learning_rate = 6
         else:
-            class_to_gen = 130
+            target_class = class_to_gen
+            iterations = st.slider('select number iterations', 50, 300, 1) 
 
-        imgs_gen_reg = regularized_class_img_gen(pret_mod, class_to_gen, iterations, blur_freq, blur_rad, wd, clipping_value, initial_learning_rate)
+        
+        
+        imgs_gen_reg = regularized_class_img_gen(pret_mod, target_class, iterations, blur_freq, blur_rad, wd, clipping_value, initial_learning_rate)
         outputs_CGI(imgs_gen_reg)
         buf = BytesIO()
         imgs_gen_reg[8].save(buf, format="JPEG")
