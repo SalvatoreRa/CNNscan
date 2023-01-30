@@ -649,7 +649,10 @@ def main():
             target_class = class_to_gen
             iterations = st.slider('select number iterations', 50, 300, 1) 
             blur_freq = st.slider('select blur frequency', 1, 10, 1)
-        
+            blur_freq =
+            wd=
+            clipping_value=
+            initial_learning_rate = 
         
         imgs_gen_reg = regularized_class_img_gen(pret_mod, target_class, iterations, blur_freq, blur_rad, wd, clipping_value, initial_learning_rate)
         outputs_CGI(imgs_gen_reg)
