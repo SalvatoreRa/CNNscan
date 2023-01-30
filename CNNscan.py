@@ -649,10 +649,13 @@ def main():
             target_class = class_to_gen
             iterations = st.slider('select number iterations', 50, 300, 1) 
             blur_freq = st.slider('select blur frequency', 1, 10, 1)
-            blur_freq =
-            wd=
-            clipping_value=
-            initial_learning_rate = 
+            blur_rad = st.slider('select blur radius', 1, 10, 1)
+            wd= st.selectbox('Select layer:', 
+                ('0.00001', '0.00005', '0.0001', '0.0005', '0.001', 
+                '0.005', '0.01', '0.05','0.1'))
+            wd = float(wd)
+            clipping_value= st.slider('select clipping value', 0.1, 0.9, 0.1)
+            initial_learning_rate = st.slider('select initial learning rate', 1, 10, 1)
         
         imgs_gen_reg = regularized_class_img_gen(pret_mod, target_class, iterations, blur_freq, blur_rad, wd, clipping_value, initial_learning_rate)
         outputs_CGI(imgs_gen_reg)
