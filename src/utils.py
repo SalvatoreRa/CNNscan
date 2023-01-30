@@ -200,3 +200,35 @@ def read_imagenet_categ():
     categ = pd.DataFrame.from_dict(data, orient='index',
                         columns=['cat'])
     return categ
+
+def preprocess_and_blur_image(pil_im, resize_im=True, blur_rad=None):
+    mean = [0.485, 0.456, 0.406]
+    std = [0.229, 0.224, 0.225]
+    
+    if type(pil_im) != Image.Image:
+        try:
+            pil_im = Image.fromarray(pil_im)
+        except Exception as e:
+            print(
+                "could not transform PIL_img to a PIL Image object. Please check input.")
+    
+    if resize_im:
+        pil_im.thumbnail((224, 224))
+
+    if blur_rad:
+        pil_im = pil_im.filter(ImageFilter.GaussianBlur(blur_rad))
+
+    im_as_arr = np.float32(pil_im)
+    im_as_arr = im_as_arr.transpose(2, 0, 1)  
+ 
+    for channel, _ in enumerate(im_as_arr):
+        im_as_arr[channel] /= 255
+        im_as_arr[channel] -= mean[channel]
+        im_as_arr[channel] /= std[channel]
+
+    im_as_ten = torch.from_numpy(im_as_arr).float()
+
+    im_as_ten.unsqueeze_(0)
+
+    im_as_var = Variable(im_as_ten, requires_grad=True)
+    return im_as_var
