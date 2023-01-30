@@ -984,7 +984,123 @@ def class_generated_images(model, class_to_gen):
   images =csig.generate()
   return images
 
+##########################################################
+###########         Regularized            ###############
+###########  Class generated images        ###############
+##########################################################
+class RegularizedClassSpecificImageGeneration():
+  
+    def __init__(self, model, target_class, iterations, blur_freq, blur_rad, wd, clipping_value, initial_learning_rate):
+        self.mean = [-0.485, -0.456, -0.406]
+        self.std = [1/0.229, 1/0.224, 1/0.225]
+        self.model = model
+        self.model.eval()
+        self.target_class = target_class
+        self.iterations = iterations
+        self.blur_freq = blur_freq
+        self.blur_rad = blur_rad
+        self.wd = wd
+        self.clipping_value = clipping_value
+        self.initial_learning_rate = initial_learning_rate
+        # Generate a random image
+        self.created_image = np.uint8(np.random.uniform(0, 255, (224, 224, 3)))
 
+
+    def generate(self):
+   
+        initial_learning_rate = self.initial_learning_rate
+        target_class = self.target_class
+        iterations = self.iterations
+        blur_freq = self.blur_freq
+        blur_rad = self.blur_rad
+        wd = self.wd
+        clipping_value = self.clipping_value
+        images = list()
+        for i in range(1, iterations):
+           
+            if i % blur_freq == 0:
+                self.processed_image = preprocess_and_blur_image(
+                    self.created_image, False, blur_rad)
+            else:
+                self.processed_image = preprocess_and_blur_image(
+                    self.created_image, False)
+            
+            optimizer = SGD([self.processed_image],
+                            lr=initial_learning_rate, weight_decay=wd)
+           
+            output = self.model(self.processed_image)
+            
+            class_loss = -output[0, self.target_class]
+
+            if i in np.linspace(0, iterations, 10, dtype=int):
+                print('Iteration:', str(i), 'Loss',
+                      "{0:.2f}".format(class_loss.data.cpu().numpy()))
+            
+            self.model.zero_grad()
+            
+            class_loss.backward()
+
+            if clipping_value:
+                torch.nn.utils.clip_grad_norm(
+                    self.model.parameters(), clipping_value)
+            
+            optimizer.step()
+            
+            self.created_image = recreate_image(self.processed_image)
+
+            if i % 15 == 0 or i == iterations-1:
+                # Save image
+                
+                im =save_image(self.created_image)
+                images.append(im)
+
+        return images
+
+
+def preprocess_and_blur_image(pil_im, resize_im=True, blur_rad=None):
+    mean = [0.485, 0.456, 0.406]
+    std = [0.229, 0.224, 0.225]
+    
+    if type(pil_im) != Image.Image:
+        try:
+            pil_im = Image.fromarray(pil_im)
+        except Exception as e:
+            print(
+                "could not transform PIL_img to a PIL Image object. Please check input.")
+    
+    if resize_im:
+        pil_im.thumbnail((224, 224))
+
+    if blur_rad:
+        pil_im = pil_im.filter(ImageFilter.GaussianBlur(blur_rad))
+
+    im_as_arr = np.float32(pil_im)
+    im_as_arr = im_as_arr.transpose(2, 0, 1)  
+ 
+    for channel, _ in enumerate(im_as_arr):
+        im_as_arr[channel] /= 255
+        im_as_arr[channel] -= mean[channel]
+        im_as_arr[channel] /= std[channel]
+
+    im_as_ten = torch.from_numpy(im_as_arr).float()
+
+    im_as_ten.unsqueeze_(0)
+
+    im_as_var = Variable(im_as_ten, requires_grad=True)
+    return im_as_var
+
+target_class = 130  # Flamingo
+iterations=150
+blur_freq=4
+blur_rad=1
+wd=0.0001
+clipping_value=0.1
+initial_learning_rate = 6
+pretrained_model = models.alexnet(pretrained=True)
+def regularized_class_img_gen(pretrained_model, target_class, iterations, blur_freq, blur_rad, wd, clipping_value, initial_learning_rate):
+  csig = RegularizedClassSpecificImageGeneration(pretrained_model, target_class, iterations, blur_freq, blur_rad, wd, clipping_value, initial_learning_rate)
+  images = csig.generate()
+  return images
 
 ##########################################################
 ###########         Visualize DeepDream    ###############
