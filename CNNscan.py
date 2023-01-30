@@ -629,7 +629,15 @@ def main():
                 mime="image/jpg",
                 key = 'class generated  download'
                 )
+        
+        
+        reg_gen_choice = st.selectbox(
+        'Select parameters for regularized model:',
+        ('default', 'customize'),
+        help = 'you can use the default parameters or set the parameter you prefer',
+        key = '')
 
+        if reg_gen_choice == 'default':
 
 
     with st.expander("DeepDream"):
