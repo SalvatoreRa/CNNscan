@@ -648,8 +648,18 @@ def main():
         else:
             class_to_gen = 130
 
-        images = regularized_class_img_gen(pret_mod, target_class, iterations, blur_freq, blur_rad, wd, clipping_value, initial_learning_rate)
-
+        imgs_gen_reg = regularized_class_img_gen(pret_mod, class_to_gen, iterations, blur_freq, blur_rad, wd, clipping_value, initial_learning_rate)
+        outputs_CGI(imgs_gen_reg)
+        buf = BytesIO()
+        imgs_gen_reg[8].save(buf, format="JPEG")
+        byte_im =buf.getvalue()
+        st.download_button(
+            label="Download Last Image",
+            data=byte_im,
+            file_name="styled_img"+".jpg",
+            mime="image/jpg",
+            key = 'class generated regularized download'
+            )    
 
     with st.expander("DeepDream"):
 
