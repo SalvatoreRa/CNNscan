@@ -645,6 +645,10 @@ def main():
             wd=0.0001
             clipping_value=0.1
             initial_learning_rate = 6
+        else:
+            target_class = 130
+
+        images = regularized_class_img_gen(pret_mod, target_class, iterations, blur_freq, blur_rad, wd, clipping_value, initial_learning_rate)
 
 
     with st.expander("DeepDream"):
