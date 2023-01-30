@@ -638,7 +638,7 @@ def main():
         key = 'reg_gen_choice button')
 
         if reg_gen_choice == 'default':
-            target_class = 130  # Flamingo
+            class_to_gen = 130  # Flamingo
             iterations=150
             blur_freq=4
             blur_rad=1
@@ -646,7 +646,7 @@ def main():
             clipping_value=0.1
             initial_learning_rate = 6
         else:
-            target_class = 130
+            class_to_gen = 130
 
         images = regularized_class_img_gen(pret_mod, target_class, iterations, blur_freq, blur_rad, wd, clipping_value, initial_learning_rate)
 
