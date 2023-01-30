@@ -635,9 +635,16 @@ def main():
         'Select parameters for regularized model:',
         ('default', 'customize'),
         help = 'you can use the default parameters or set the parameter you prefer',
-        key = '')
+        key = 'reg_gen_choice button')
 
         if reg_gen_choice == 'default':
+            target_class = 130  # Flamingo
+            iterations=150
+            blur_freq=4
+            blur_rad=1
+            wd=0.0001
+            clipping_value=0.1
+            initial_learning_rate = 6
 
 
     with st.expander("DeepDream"):
