@@ -658,7 +658,9 @@ def main():
             initial_learning_rate = st.slider('select initial learning rate', 1, 10, 1)
             
             
-        class_gen_reg_img= st.button('visualize class generated images')
+        class_gen_reg_img= st.button('visualize class generated images',
+                                     help = 'This is the regularized version',
+                                     key = 'regularized version')
         if class_gen_reg_img:
         
             imgs_gen_reg = regularized_class_img_gen(pret_mod, target_class, iterations, blur_freq, blur_rad, wd, clipping_value, initial_learning_rate)
