@@ -656,19 +656,23 @@ def main():
             wd = float(wd)
             clipping_value= st.slider('select clipping value', 0.1, 0.9, 0.1)
             initial_learning_rate = st.slider('select initial learning rate', 1, 10, 1)
+            
+            
+        class_gen_reg_img= st.button('visualize class generated images')
+        if class_gen_reg_img:
         
-        imgs_gen_reg = regularized_class_img_gen(pret_mod, target_class, iterations, blur_freq, blur_rad, wd, clipping_value, initial_learning_rate)
-        outputs_CGI(imgs_gen_reg)
-        buf = BytesIO()
-        imgs_gen_reg[8].save(buf, format="JPEG")
-        byte_im =buf.getvalue()
-        st.download_button(
-            label="Download Last Image",
-            data=byte_im,
-            file_name="styled_img"+".jpg",
-            mime="image/jpg",
-            key = 'class generated regularized download'
-            )    
+            imgs_gen_reg = regularized_class_img_gen(pret_mod, target_class, iterations, blur_freq, blur_rad, wd, clipping_value, initial_learning_rate)
+            outputs_CGI(imgs_gen_reg)
+            buf = BytesIO()
+            imgs_gen_reg[8].save(buf, format="JPEG")
+            byte_im =buf.getvalue()
+            st.download_button(
+                label="Download Last Image",
+                data=byte_im,
+                file_name="styled_img"+".jpg",
+                mime="image/jpg",
+                key = 'class generated regularized download'
+                )    
 
     with st.expander("DeepDream"):
 
