@@ -47,7 +47,7 @@ from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtrac
     smooth_grad_process_guidBackprop, LR_GuidedBackprop, layer_act_guid_bp, InvertedRepresentation, 
     inverted_representation_process, ClassSpecificImageGeneration, class_generated_images, 
     DeepDream, dream, RegularizedClassSpecificImageGeneration, 
-    regularized_class_img_gen)
+    regularized_class_img_gen, model_layers_to_df)
 
 from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
     outputs_LRP, outputs_smoothgrad, output_adv_filt, output_layer_act_guid_bp, \
@@ -215,6 +215,10 @@ def main():
         response = requests.get(url2)
         img_screen = Image.open(BytesIO(response.content))
         st.image(img_screen)
+        st.write('visualize the structure as a dataframe')
+        show_df = st.button('show the dataframe', help= 'visualize the structure in a dataframe')
+        if show_df:
+            model_layers_to_df(pret_mod)
 
     with st.expander("Visualize the filters"):
         st.write('Default model is **AlexNet** which is faster')
