@@ -40,6 +40,13 @@ from utils import (load_test_image, load_baseline,
 #part of this code is adapted from: https://github.com/utkuozbulak/pytorch-cnn-visualizations        
 # check his amazing repository
 
+def model_layers_to_df(model):
+    rows = []
+    for name, module in model.named_modules():
+        if isinstance(module, nn.Conv2d) or isinstance(module, nn.Linear):
+            rows.append((name, str(module)))
+    return pd.DataFrame(rows, columns=["Name", "Layer"])
+
 ##########################################################
 ###########         Fetch Filters          ###############
 ##########################################################
