@@ -47,7 +47,8 @@ def load_baseline():
     '''
     load the baseline image: our beloved and judgemental cat
     '''
-    img_path = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/manja-vitolic-gKXKBY-C-Dk-unsplash.jpg?raw=true"
+    img_path = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/manja-vitolic-gKXKBY-C-Dk-unsplash-resized.jpg?raw=true"
+    
     response = requests.get(img_path)
     img_screen = Image.open(BytesIO(response.content))
     st.image(img_screen)
