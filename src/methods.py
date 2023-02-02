@@ -45,7 +45,8 @@ def model_layers_to_df(model):
     for name, module in model.named_modules():
         if isinstance(module, nn.Conv2d) or isinstance(module, nn.Linear):
             rows.append((name, str(module)))
-    return pd.DataFrame(rows, columns=["Name", "Layer"])
+    df = pd.DataFrame(rows, columns=["Name", "Layer"])
+    return  st.dataframe(df)
 
 ##########################################################
 ###########         Fetch Filters          ###############
