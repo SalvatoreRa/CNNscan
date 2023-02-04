@@ -243,6 +243,7 @@ def download_images(images, captions, cols = 2, rows = 2):
       if captions is not None:
         ax[i].set_title(str(captions[i]))
     plt.tight_layout()
-    return figure
+    fig = ax.get_figure()
+    return fig
     
 
