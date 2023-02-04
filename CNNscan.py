@@ -248,7 +248,7 @@ def main():
             st.download_button(
                 label="Download Last Image",
                 data=byte_im,
-                file_name="styled_img"+".jpg",
+                file_name="alternative_filters"+".jpg",
                 mime="image/jpg",
                 key = 'alternative_filters_download_button'
                 )
@@ -259,14 +259,15 @@ def main():
                                             captions= None, 
                                             cols = 3, rows = 3 )
                 fn = 'images_filters' + ".jpg"
-                im_to_down.savefig(fn)
-                with open(fn, "rb") as img:
-                    btn = st.download_button(
-                        label="Download the images",
-                        data=img,
-                        file_name=fn,
-                        mime="image/jpg",
-                        key = "1"
+                buf = BytesIO()
+                im_to_down.save(buf, format="JPEG")
+                byte_im =buf.getvalue()
+                st.download_button(
+                    label="Download all images",
+                    data=byte_im,
+                    file_name="filters_img"+".jpg",
+                    mime="image/jpg",
+                    key = 'all images filter'
                     )
 
     with st.expander("Visualize the feature maps"):
