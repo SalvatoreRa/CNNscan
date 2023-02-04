@@ -252,7 +252,6 @@ def download_images(images, captions, cols = 2, rows = 2):
     buf.seek(0)
     image = plt.imread(buf)
     return image
-The above code saves the plot as a PNG image in memory using BytesIO, then reads the image data using imread and returns it.
 
 
 
