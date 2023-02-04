@@ -252,6 +252,11 @@ def main():
                 mime="image/jpg",
                 key = 'alternative_filters_download_button'
                 )
+        show_all_imgs = st.button('save all images',
+                                   key = '1')
+        if show_all_imgs:
+            download_images(imgs_filt, captions= None, 
+            cols = 3, rows = 3, file_name= 'images_filters')
 
     with st.expander("Visualize the feature maps"):
         st.write('Default model is **AlexNet** which is faster')
