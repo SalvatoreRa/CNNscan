@@ -248,7 +248,7 @@ def download_images(images, captions, cols = 2, rows = 2,
     plt.savefig(fn)
     with open(fn, "rb") as img:
         btn = st.download_button(
-            label="Download images",
+            label="Download the images",
             data=img,
             file_name=fn,
             mime="image/png"
