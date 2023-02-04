@@ -264,7 +264,7 @@ def main():
                     label="Download the images",
                     data=img,
                     file_name=fn,
-                    mime="image/jpg"
+                    mime="image/jpg",
                     key = "1"
                 )
 
