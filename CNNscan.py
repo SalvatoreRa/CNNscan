@@ -261,7 +261,7 @@ def main():
                                             captions= None, 
                                             cols = 3, rows = 3 )
                 
-                plt.savefig(img, format='png')
+                im_to_down.savefig(img, format='png')
                 
                 btn = st.download_button(
                 label="Download image",
