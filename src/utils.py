@@ -244,5 +244,13 @@ def download_images(images, captions, cols = 2, rows = 2,
       if captions is not None:
         ax[i].set_title(str(captions[i]))
     plt.tight_layout()
-    plt.show()
+    fn = file_name + ".png"
+    plt.savefig(fn)
+    with open(fn, "rb") as img:
+        btn = st.download_button(
+            label="Download images",
+            data=img,
+            file_name=fn,
+            mime="image/png"
+        )
 
