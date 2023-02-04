@@ -258,17 +258,16 @@ def main():
                 im_to_down =download_images(imgs_filt, 
                                             captions= None, 
                                             cols = 3, rows = 3 )
-                fn = 'images_filters' + ".jpg"
-                buf = BytesIO()
-                im_to_down.save(buf, format="JPEG")
-                byte_im =buf.getvalue()
-                st.download_button(
-                    label="Download all images",
-                    data=byte_im,
-                    file_name="filters_img"+".jpg",
-                    mime="image/jpg",
-                    key = 'all images filter'
-                    )
+                fn = 'scatter.png'
+                img = io.BytesIO()
+                plt.savefig(img, format='png')
+                
+                btn = st.download_button(
+                label="Download image",
+                data=img,
+                file_name=fn,
+                mime="image/png"
+                )
 
     with st.expander("Visualize the feature maps"):
         st.write('Default model is **AlexNet** which is faster')

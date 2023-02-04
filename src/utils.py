@@ -246,10 +246,9 @@ def download_images(images, captions, cols = 2, rows = 2):
         ax[i].set_title(str(captions[i]))
     plt.tight_layout()
     fig = ax.get_figure()
-    buf = io.BytesIO()
-    fig.savefig(buf, format='png')
-    buf.seek(0)
-    return buf.read()
+    return fig
+
+
 
 
 
