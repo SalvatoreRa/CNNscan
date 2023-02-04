@@ -255,11 +255,12 @@ def main():
             save_all_imgs = st.button('save all images',
                                     key = '1')
             if save_all_imgs:
+                fn = 'scatter.png'
+                img = io.BytesIO()
                 im_to_down =download_images(imgs_filt, 
                                             captions= None, 
                                             cols = 3, rows = 3 )
-                fn = 'scatter.png'
-                img = io.BytesIO()
+                
                 plt.savefig(img, format='png')
                 
                 btn = st.download_button(
