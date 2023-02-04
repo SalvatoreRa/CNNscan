@@ -234,7 +234,6 @@ def preprocess_and_blur_image(pil_im, resize_im=True, blur_rad=None):
     return im_as_var
 
 
-    
 
 def download_images(images, captions, cols = 2, rows = 2):
     n_img = len(images)
@@ -250,8 +249,8 @@ def download_images(images, captions, cols = 2, rows = 2):
     buf = io.BytesIO()
     fig.savefig(buf, format='png')
     buf.seek(0)
-    image = plt.imread(buf)
-    return image
+    return buf.read()
+
 
 
 
