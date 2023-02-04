@@ -233,8 +233,7 @@ def preprocess_and_blur_image(pil_im, resize_im=True, blur_rad=None):
     im_as_var = Variable(im_as_ten, requires_grad=True)
     return im_as_var
 
-def download_images(images, captions, cols = 2, rows = 2,
-    file_name= 'images'):
+def download_images(images, captions, cols = 2, rows = 2):
     n_img = len(images)
     figure, axis = plt.subplots(rows, cols)
     ax = axis.flatten()
@@ -244,13 +243,6 @@ def download_images(images, captions, cols = 2, rows = 2,
       if captions is not None:
         ax[i].set_title(str(captions[i]))
     plt.tight_layout()
-    fn = file_name + ".png"
-    plt.savefig(fn)
-    with open(fn, "rb") as img:
-        btn = st.download_button(
-            label="Download the images",
-            data=img,
-            file_name=fn,
-            mime="image/png"
-        )
+    return figure
+    
 
