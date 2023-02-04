@@ -255,10 +255,11 @@ def main():
         save_all_imgs = st.button('save all images',
                                    key = '1')
         if save_all_imgs:
-            download_images(imgs_filt, captions= None, 
-            cols = 3, rows = 3 )
+            im_to_down =download_images(imgs_filt, 
+                                        captions= None, 
+                                        cols = 3, rows = 3 )
             fn = 'images_filters' + ".jpg"
-            plt.savefig(fn)
+            im_to_down.savefig(fn)
             with open(fn, "rb") as img:
                 btn = st.download_button(
                     label="Download the images",
