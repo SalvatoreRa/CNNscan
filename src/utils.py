@@ -233,8 +233,16 @@ def preprocess_and_blur_image(pil_im, resize_im=True, blur_rad=None):
     im_as_var = Variable(im_as_ten, requires_grad=True)
     return im_as_var
 
-def save_images(images, captions, cols = 3, rows = 1):
+def download_images(images, captions, cols = 2, rows = 2,
+    file_name= 'images'):
     n_img = len(images)
     figure, axis = plt.subplots(rows, cols)
-    ax = axis.ravel()
+    ax = axis.flatten()
+    for i in range(n_img):
+      ax[i].imshow(images[i])
+      ax[i].axis('off')
+      if captions is not None:
+        ax[i].set_title(str(captions[i]))
+    plt.tight_layout()
+    plt.show()
 
