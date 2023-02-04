@@ -233,6 +233,9 @@ def preprocess_and_blur_image(pil_im, resize_im=True, blur_rad=None):
     im_as_var = Variable(im_as_ten, requires_grad=True)
     return im_as_var
 
+
+    
+
 def download_images(images, captions, cols = 2, rows = 2):
     n_img = len(images)
     figure, axis = plt.subplots(rows, cols)
@@ -244,6 +247,15 @@ def download_images(images, captions, cols = 2, rows = 2):
         ax[i].set_title(str(captions[i]))
     plt.tight_layout()
     fig = ax.get_figure()
-    return fig
-    
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+    image = plt.imread(buf)
+    return image
+The above code saves the plot as a PNG image in memory using BytesIO, then reads the image data using imread and returns it.
+
+
+
+
+
 
