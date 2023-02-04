@@ -48,7 +48,6 @@ def load_baseline():
     load the baseline image: our beloved and judgemental cat
     '''
     img_path = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/manja-vitolic-gKXKBY-C-Dk-unsplash-resized.jpg?raw=true"
-    
     response = requests.get(img_path)
     img_screen = Image.open(BytesIO(response.content))
     st.image(img_screen)
@@ -234,4 +233,8 @@ def preprocess_and_blur_image(pil_im, resize_im=True, blur_rad=None):
     im_as_var = Variable(im_as_ten, requires_grad=True)
     return im_as_var
 
+def save_images(images, captions, cols = 3, rows = 1):
+    n_img = len(images)
+    figure, axis = plt.subplots(rows, cols)
+    ax = axis.ravel()
 
