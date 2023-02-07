@@ -294,13 +294,9 @@ def main():
         st.write('Default model is **AlexNet** which is faster')
         st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#GradCam)')
         st.markdown("---")
-        st.markdown("Please select on the target layer")
+        st.markdown("Please select a target layer on the sidebar")
         st.markdown("This method will return the heatmap, superimposed images")
-        max = len(pret_mod.eval().features) -1
-        target_layer = st.slider('select target layer', 0, max, 1,
-                        help= 'select target layer of the model')
-        t = target_layer
-
+        
         image_to_cam = st.selectbox(
         'Select an image to use',
         ('provided test', 'provide image'),
@@ -314,7 +310,7 @@ def main():
         show_gradcam = st.button('show GradCam')
         if show_gradcam:
             
-            heats, sup, act_map = Visualize_GradCam(pret_mod, image_cam, target_layer=t)
+            heats, sup, act_map = Visualize_GradCam(pret_mod, image_cam, target_layer=Layer_app)
             cam_outputs(image_cam, heats, sup, act_map)
             
     with st.expander("Visualize Vanilla Backpropagation"):
