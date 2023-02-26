@@ -1135,3 +1135,118 @@ def dream(model, cnn_layer, filter_pos, image):
     dd = DeepDream(model.features, cnn_layer, filter_pos, image)
     images = dd.dream()
     return images
+
+##########################################################
+###########         Visualize DeepDream    ###############
+##########################################################
+
+import networkx as nx
+import random
+
+    
+def hierarchy_pos(G, root=None, width=1., vert_gap = 0.2, vert_loc = 0, xcenter = 0.5):
+
+    '''
+    From Joel's answer at https://stackoverflow.com/a/29597209/2966723.  
+    Licensed under Creative Commons Attribution-Share Alike 
+    
+    
+    '''
+    if not nx.is_tree(G):
+        raise TypeError('cannot use hierarchy_pos on a graph that is not a tree')
+
+    if root is None:
+        if isinstance(G, nx.DiGraph):
+            root = next(iter(nx.topological_sort(G)))  #allows back compatibility with nx version 1.11
+        else:
+            root = random.choice(list(G.nodes))
+
+    def _hierarchy_pos(G, root, width=1., vert_gap = 0.2, vert_loc = 0, xcenter = 0.5, pos = None, parent = None):
+        '''
+        see hierarchy_pos docstring for most arguments
+
+        pos: a dict saying where all nodes go if they have been assigned
+        parent: parent of this branch. - only affects it if non-directed
+
+        '''
+    
+        if pos is None:
+            pos = {root:(xcenter,vert_loc)}
+        else:
+            pos[root] = (xcenter, vert_loc)
+        children = list(G.neighbors(root))
+        if not isinstance(G, nx.DiGraph) and parent is not None:
+            children.remove(parent)  
+        if len(children)!=0:
+            dx = width/len(children) 
+            nextx = xcenter - width/2 - dx/2
+            for child in children:
+                nextx += dx
+                pos = _hierarchy_pos(G,child, width = dx, vert_gap = vert_gap, 
+                                    vert_loc = vert_loc-vert_gap, xcenter=nextx,
+                                    pos=pos, parent = root)
+        return pos
+
+            
+    return _hierarchy_pos(G, root, width, vert_gap, vert_loc, xcenter)
+
+
+
+
+def plot_conv_model_structure(model):
+    G = nx.DiGraph()
+    i =0
+
+    x = model.eval()
+
+    conv = dict()  
+    pooling = dict() 
+    linear = dict()
+    act = dict()
+
+    for name, module in model.named_modules():
+      
+      if isinstance(module, nn.Conv2d): 
+        G.add_node(i, label='Conv2D')
+        filt = x.features[int(name.split('.')[1])].out_channels
+        kern = x.features[int(name.split('.')[1])].kernel_size 
+        stride = x.features[int(name.split('.')[1])].stride 
+        conv[i] = 'Conv2D, filters = ' + str(filt) + \
+        ', kernel = '+ str(kern) + ', stride = ' + str(stride)
+      if isinstance(module, nn.MaxPool2d): 
+        G.add_node(i, label='MaxPool2d')
+        kern = x.features[int(name.split('.')[1])].kernel_size 
+        stride = x.features[int(name.split('.')[1])].stride 
+        pooling[i] = 'MaxPool2d, ' + \
+        'kernel = '+ str(kern) + ', stride = ' + str(stride)  
+      if isinstance(module, nn.Linear):
+        G.add_node(i, label='linear')
+        neur = x.classifier[int(name.split('.')[1])].out_features 
+        linear[i] = 'linear, units = ' + str(neur)
+      if isinstance(module, nn.ReLU) or isinstance(module, nn.Sigmoid):
+        G.add_node(i, label='act')
+        if isinstance(module, nn.ReLU):
+          act[i] = 'ReLU'
+        if isinstance(module, nn.Sigmoid):
+          act[i] = 'Sigmoid'
+      
+      i +=1
+
+    edge_labels =dict()
+    source_nodes = list(G.nodes)[:-1]
+    dest_nodes = list(G.nodes)[1:]
+    for u,v in zip(source_nodes, dest_nodes):
+        G.add_edge(u, v)
+    #tree like pos 
+    pos = hierarchy_pos(G,2) 
+    #drawing 
+    plt.figure(figsize=(12, 16))
+    nx.draw_networkx_nodes(G, pos, node_shape= 's', node_size=0, alpha=0.3)
+    nx.draw_networkx_edges(G, pos, edge_color='black', arrows=True)
+    nx.draw_networkx_labels(G, pos, conv, font_size=15, font_family='Arial', bbox =dict(facecolor = "skyblue"))
+    nx.draw_networkx_labels(G, pos, pooling, font_size=15, font_family='Arial', bbox =dict(facecolor = "yellow"))
+    nx.draw_networkx_labels(G, pos, act, font_size=15, font_family='Arial', bbox =dict(facecolor = "red"))
+    nx.draw_networkx_labels(G, pos, linear, font_size=15, font_family='Arial', bbox =dict(facecolor = "lightgreen"))
+    plt.axis('off')
+    st.show()
+      
