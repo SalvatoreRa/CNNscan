@@ -58,6 +58,8 @@ from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
     outputs_LRP, outputs_smoothgrad, output_adv_filt, output_layer_act_guid_bp, \
     outputs_DD, output_inverted, outputs_CGI
 
+from description import (Aknowledgment)
+
 
 @st.cache(ttl=12*3600)
 def load_model():
@@ -167,15 +169,13 @@ def main():
     with st.sidebar.expander("About this App"):
      st.write("""
         This simple app is showing how to "do a radiography to a CNN".
-        //
         Showed here there are different methods to visualize what is happening inside the convolutional neural network
      """)
     with st.sidebar.expander("Additional information"):
      st.write("""
      """)
     with st.sidebar.expander("Aknowledgment"):
-     st.write("""
-     """)
+     Aknowledgment()
     
     st.sidebar.markdown("---")
     st.sidebar.header("Settings")
