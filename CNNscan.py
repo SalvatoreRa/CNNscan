@@ -28,6 +28,7 @@ import os
 import sys
 import pathlib
 import networkx as nx
+import random
 
 
 #We are importing from the modules
