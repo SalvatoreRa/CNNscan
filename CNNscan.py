@@ -225,7 +225,7 @@ def main():
 
     with st.expander("Visualize the filters"):
         st.write('Default model is **AlexNet** which is faster')
-        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
+        
         st.markdown("---")
         st.markdown("Please select on the sidebar the convolutional layer")
         st.markdown("The first 16 filters of the selected convolutional layer will be visualized")
@@ -235,7 +235,7 @@ def main():
             
     with st.expander("Alternative visualization of the filters"):
         st.write('Default model is **AlexNet** which is faster')
-        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#filter-visualization)')
+        
         st.markdown("---")
         st.markdown("Please select on the sidebar the convolutional layer and a specific filter")
         st.markdown("This method will return six images for the selected filter (the images are obtained at different steps)")
@@ -253,27 +253,11 @@ def main():
                 mime="image/jpg",
                 key = 'alternative_filters_download_button'
                 )
-            save_all_imgs = st.button('save all images',
-                                    key = '1')
-            if save_all_imgs:
-                
-                download_images(imgs_filt, 
-                                captions= None, 
-                                cols = 3, rows = 3 )
-                
-                plt.savefig(img, format='png')
-                fn = 'scatter.png'
-                img = io.BytesIO()
-                btn = st.download_button(
-                label="Download image",
-                data=img,
-                file_name=fn,
-                mime="image/png"
-                )
+            
 
     with st.expander("Visualize the feature maps"):
         st.write('Default model is **AlexNet** which is faster')
-        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#feature-map-visualization)')
+        
         st.markdown("---")
         st.markdown("Please select an image for the method")
         st.markdown("This method will return the feature maps")
@@ -293,7 +277,7 @@ def main():
 
     with st.expander("Visualize GradCam"):
         st.write('Default model is **AlexNet** which is faster')
-        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#GradCam)')
+        
         st.markdown("---")
         st.markdown("Please select a target layer on the sidebar")
         st.markdown("This method will return the heatmap, superimposed images")
@@ -316,7 +300,7 @@ def main():
             
     with st.expander("Visualize Vanilla Backpropagation"):
         st.write('Default model is **AlexNet** which is faster, however other models leads to different results')
-        st.write('If you want to know more check: [Filter visualization](https://github.com/SalvatoreRa/CNNscan/blob/main/addendum.md#Vanilla-Backpropagation)')
+        
         
 
         image_to_backpr = st.selectbox(
