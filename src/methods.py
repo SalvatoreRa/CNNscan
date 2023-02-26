@@ -1240,7 +1240,7 @@ def plot_conv_model_structure(model):
     #tree like pos 
     pos = hierarchy_pos(G,2) 
     #drawing 
-    plt.figure(figsize=(12, 16))
+    fig = plt.figure(figsize=(12, 16))
     nx.draw_networkx_nodes(G, pos, node_shape= 's', node_size=0, alpha=0.3)
     nx.draw_networkx_edges(G, pos, edge_color='black', arrows=True)
     nx.draw_networkx_labels(G, pos, conv, font_size=15, font_family='Arial', bbox =dict(facecolor = "skyblue"))
@@ -1248,5 +1248,5 @@ def plot_conv_model_structure(model):
     nx.draw_networkx_labels(G, pos, act, font_size=15, font_family='Arial', bbox =dict(facecolor = "red"))
     nx.draw_networkx_labels(G, pos, linear, font_size=15, font_family='Arial', bbox =dict(facecolor = "lightgreen"))
     plt.axis('off')
-    st.show()
+    st.pyplot(fig)
       
