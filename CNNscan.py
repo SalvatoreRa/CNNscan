@@ -58,7 +58,7 @@ from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
     outputs_LRP, outputs_smoothgrad, output_adv_filt, output_layer_act_guid_bp, \
     outputs_DD, output_inverted, outputs_CGI
 
-from description import (Aknowledgment)
+from description import (Aknowledgment, CNN_overview)
 
 
 @st.cache(ttl=12*3600)
@@ -162,6 +162,7 @@ def main():
     st.image(img_screen, caption=capt, width=None, use_column_width=None, clamp=False, channels="RGB", output_format="auto")
     st.subheader('Visualize what happening inside a convolutional neural network (CNN)')
 
+    #### SIDEBAR #####
     st.sidebar.image(logo,  width=150)
     st.sidebar.markdown("Made by [Salvatore Raieli](https://www.linkedin.com/in/salvatore-raieli/)")
     st.sidebar.markdown("---")
@@ -211,6 +212,12 @@ def main():
                         help= 'select target layer of the model')    
     
 
+    #### Main Corpus ####
+
+    methods_tab, theory_tab = st.tabs(["CNNscan", "Theory & details"])
+    with methods_tab:
+        st.write("")
+        
     with st.expander("Visualize the structure"):
         if  mod_app == 'AlexaNET':
             url1 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet.png?raw=true"
@@ -718,6 +725,8 @@ def main():
                 file_name="styled_img"+".jpg",
                 mime="image/jpg"
                 )
+    with methods_tab:
+        st.write("")
 
 if __name__ == "__main__":
     main()
