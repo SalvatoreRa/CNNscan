@@ -51,7 +51,8 @@ from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtrac
     smooth_grad_process_guidBackprop, LR_GuidedBackprop, layer_act_guid_bp, InvertedRepresentation, 
     inverted_representation_process, ClassSpecificImageGeneration, class_generated_images, 
     DeepDream, dream, RegularizedClassSpecificImageGeneration, 
-    regularized_class_img_gen, model_layers_to_df)
+    regularized_class_img_gen, model_layers_to_df,
+    hierarchy_pos, plot_conv_model_structure)
 
 from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
     outputs_LRP, outputs_smoothgrad, output_adv_filt, output_layer_act_guid_bp, \
