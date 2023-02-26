@@ -16,6 +16,8 @@ def Aknowledgment():
 
 def CNN_overview():
 
+    st.header("Convolutional Neural network")
+
     st.markdown(
         """
         **[Convolutional nets](https://en.wikipedia.org/wiki/Convolutional_neural_network)** showed to outperform classical neural network on image datasets. A convolutional layer takes an image and as output has a 3D tensor of shape (height, width, channels). Interesting, the height and width are less than original image (shrinkage that increase going deep in the network). The convolutional neural network following the convolutional layers there is at least one dense layer. Generally, the last convolutional layer is flattened before to going through the dense layers. The principal difference between dense layer and convolutional layer is that the first learn global patterns while the second learns local pattern of an image.
