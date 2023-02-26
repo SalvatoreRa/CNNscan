@@ -217,7 +217,7 @@ def main():
     methods_tab, theory_tab = st.tabs(["CNNscan", "Theory & details"])
     with methods_tab:
         st.write("")
-        
+
     with st.expander("Visualize the structure"):
         if  mod_app == 'AlexaNET':
             url1 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet.png?raw=true"
@@ -725,8 +725,8 @@ def main():
                 file_name="styled_img"+".jpg",
                 mime="image/jpg"
                 )
-    with methods_tab:
-        st.write("")
+    with theory_tab:
+        CNN_overview()
 
 if __name__ == "__main__":
     main()
