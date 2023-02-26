@@ -28,6 +28,7 @@ import os
 import sys
 import pathlib
 import networkx
+import random
 
 
 sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
