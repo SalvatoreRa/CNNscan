@@ -27,6 +27,7 @@ from copy import deepcopy
 import os
 import sys
 import pathlib
+import networkx as nx
 
 
 #We are importing from the modules
