@@ -1240,8 +1240,8 @@ def plot_conv_model_structure(model):
     #tree like pos 
     pos = hierarchy_pos(G,2) 
     #drawing 
-    plt.figure(figsize=(12, 16))
-    fig, ax = plt.subplots()
+    
+    fig, ax = plt.subplots(figsize=(12, 16))
     nx.draw_networkx_nodes(G, pos, node_shape= 's', node_size=0, alpha=0.3, ax = ax)
     nx.draw_networkx_edges(G, pos, edge_color='black', arrows=True, ax = ax)
     nx.draw_networkx_labels(G, pos, conv, font_size=15, font_family='Arial', 
@@ -1255,3 +1255,10 @@ def plot_conv_model_structure(model):
     plt.axis('off')
     st.pyplot(fig)
       
+def netx_test():
+    G = nx.karate_club_graph()
+    fig, ax = plt.subplots()
+    pos = nx.kamada_kawai_layout(G)
+    nx.draw(G,pos, with_labels=True)
+    st.pyplot(fig)
+    st.balloons()
