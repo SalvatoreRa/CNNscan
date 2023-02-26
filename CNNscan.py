@@ -226,9 +226,10 @@ def main():
         if show_df:
             model_layers_to_df(pret_mod)
         show_structure =st.button('show the structure as a graph',
-         help= 'visualize the structure in a dataframe')
+         help= 'visualize the structure as a graph')
         if show_df:
-            plot_conv_model_structure(pret_mod)
+            #plot_conv_model_structure(pret_mod)
+            netx_test()
 
 
     with st.expander("Visualize the filters"):
