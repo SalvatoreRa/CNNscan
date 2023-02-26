@@ -225,6 +225,11 @@ def main():
         show_df = st.button('show the dataframe', help= 'visualize the structure in a dataframe')
         if show_df:
             model_layers_to_df(pret_mod)
+        show_structure =st.button('show the structure as a graph',
+         help= 'visualize the structure in a dataframe')
+        if show_df:
+            plot_conv_model_structure(pret_mod)
+
 
     with st.expander("Visualize the filters"):
         st.write('Default model is **AlexNet** which is faster')
