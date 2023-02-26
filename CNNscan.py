@@ -212,14 +212,15 @@ def main():
     
 
     with st.expander("Visualize the structure"):
-        url1 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet.png?raw=true"
-        url2 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet2.png?raw=true"
-        response = requests.get(url1)
-        img_screen = Image.open(BytesIO(response.content))
-        st.image(img_screen)
-        response = requests.get(url2)
-        img_screen = Image.open(BytesIO(response.content))
-        st.image(img_screen)
+        if  mod_app == 'AlexaNET':
+            url1 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet.png?raw=true"
+            url2 = "https://github.com/SalvatoreRa/CNNscan/blob/main/img/alexnet2.png?raw=true"
+            response = requests.get(url1)
+            img_screen = Image.open(BytesIO(response.content))
+            st.image(img_screen)
+            response = requests.get(url2)
+            img_screen = Image.open(BytesIO(response.content))
+            st.image(img_screen)
         st.write('visualize the structure as a dataframe')
         show_df = st.button('show the dataframe', help= 'visualize the structure in a dataframe')
         if show_df:
