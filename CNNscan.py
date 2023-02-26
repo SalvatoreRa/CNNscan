@@ -726,7 +726,8 @@ def main():
                 mime="image/jpg"
                 )
     with theory_tab:
-        CNN_overview()
+        with st.expander("Overview of a CNN"):
+            CNN_overview()
 
 if __name__ == "__main__":
     main()
