@@ -4,3 +4,4 @@ torchvision
 scikit-learn
 networkx
 lime
+scikit-image
