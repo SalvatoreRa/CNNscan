@@ -52,12 +52,12 @@ from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtrac
     GuidedBackprop_process, scoreCamExtractor, ScoreCam, 
     scorecam_process, GuidedGradCam, gradient_gradcam,
     IntegratedGradients, integrated_gradient_process, 
-    CNNLayerVisualization, LRP, LRP_process, LasyerCam, 
-    LayerCAM_process
+    CNNLayerVisualization, LRP, LRP_process, LayerCam, 
+    
     
      )
 from methods import (Grad_times_process, generate_smooth_grad, smooth_grad_process,
-     
+     LayerCAM_process,
    
     
     
