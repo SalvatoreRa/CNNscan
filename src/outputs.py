@@ -264,3 +264,20 @@ def outputs_DD(images):
         st.image(images[3])
         st.image(images[7])
         st.image(images[11])
+
+
+##########################################################
+###########         Visualize LIME         ###############
+##########################################################
+
+def outputs_LIME(images):
+    col1, col2, col3 = st.columns([0.33, 0.33, 0.33])
+    with col1:
+        st.write("original image")
+        st.image(images[0])
+    with col2:
+        st.write("positive association with image")
+        st.image(images[1])
+    with col3:
+        st.write("pos/neg association with image")
+        st.image(images[2])

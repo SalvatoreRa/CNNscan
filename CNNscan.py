@@ -769,6 +769,7 @@ def main():
                     n_sample =100
                 img_boundry1, img_boundry2 = lime(image_to_LIME, 
                 pret_mod, n_sample)
+                outputs_LIME([image_to_LIME, img_boundry1, img_boundry2])
             
     with theory_tab:
         with st.expander("Overview of a CNN"):
