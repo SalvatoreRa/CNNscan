@@ -762,7 +762,7 @@ def main():
             show_LIME = st.button('show LIME',
             help ="this method is showing LIME overlapping on the image"
             )
-            if show_lime:
+            if show_LIME:
                 if mod_app == 'AlexaNET':
                     n_sample =1000
                 if mod_app == 'VGG16':
