@@ -54,9 +54,9 @@ from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtrac
     IntegratedGradients, integrated_gradient_process, 
     CNNLayerVisualization, LRP, LRP_process, LasyerCam, 
     LayerCAM_process, Grad_times_process, generate_smooth_grad, 
-    smooth_grad_process
+    
      )
-from methods import (
+from methods import (smooth_grad_process,
      
    
     
