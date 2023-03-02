@@ -1287,21 +1287,26 @@ def dataframe_prediction(img, model):
       # unsqeeze converts single image to batch of 1
       return transf(img).unsqueeze(0)
 
-  path_imgnet = 'https://raw.githubusercontent.com/SalvatoreRa/CNNscan/main/imagenet_class_index.json'
-  idx2label, cls2label, cls2idx = [], {}, {}
-  with urllib.request.urlopen(path_imgnet) as read_file:
-      print("bo")
-      class_idx = json.load(read_file)
-      idx2label = [class_idx[str(k)][1] for k in range(len(class_idx))]
-      cls2label = {class_idx[str(k)][0]: class_idx[str(k)][1] for k in range(len(class_idx))}
-      cls2idx = {class_idx[str(k)][0]: k for k in range(len(class_idx))} 
+  
+  def read_imagenet_categ():
+    imagenet_cat = "https://raw.githubusercontent.com/SalvatoreRa/CNNscan/main/imagenet1000_clsidx_to_labels.txt"
+    response = requests.get(imagenet_cat)
+    data_text = response.text
+    data = eval(data_text)
 
+    categ = pd.DataFrame.from_dict(data, orient='index',
+                        columns=['cat'])
+    return categ
+
+
+  categ = read_imagenet_categ()
+  
   img_t = get_input_tensors(img)
   model.eval()
   logits = model(img_t)
   probs = F.softmax(logits, dim=1)
   probs5 = probs.topk(5)
-  probs_top5 = tuple((p,c, idx2label[c]) for p, c in zip(probs5[0][0].detach().numpy(), probs5[1][0].detach().numpy()))
+  probs_top5 = tuple((p,c, categ.iloc[c, 0]) for p, c in zip(probs5[0][0].detach().numpy(), probs5[1][0].detach().numpy()))
   df =pd.DataFrame(probs_top5, columns = ["probability", "Idx class", "class name"])
   return df
 
