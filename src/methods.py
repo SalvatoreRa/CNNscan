@@ -1290,6 +1290,7 @@ def dataframe_prediction(img, model):
   path_imgnet = 'https://raw.githubusercontent.com/SalvatoreRa/CNNscan/main/imagenet_class_index.json'
   idx2label, cls2label, cls2idx = [], {}, {}
   with urllib.request.urlopen(path_imgnet) as read_file:
+      print("bo")
       class_idx = json.load(read_file)
       idx2label = [class_idx[str(k)][1] for k in range(len(class_idx))]
       cls2label = {class_idx[str(k)][0]: class_idx[str(k)][1] for k in range(len(class_idx))}
