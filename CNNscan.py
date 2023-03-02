@@ -718,7 +718,7 @@ def main():
     
             show_DD = st.button('show DeepDream')
             if show_DD:
-                images_dd = dream(mod_dd, conv_layer_app, filter_app, image_to_DD)       
+                images_dd = dream(pret_mod, conv_layer_app, filter_app, image_to_DD)       
                 outputs_DD(images_dd)
                 buf = BytesIO()
                 images_dd[11].save(buf, format="JPEG")
@@ -729,6 +729,30 @@ def main():
                     file_name="styled_img"+".jpg",
                     mime="image/jpg"
                     )
+
+        with st.expander("LIME and predictions"):
+
+            st.write('Default model is **AlexNet** which is faster, however other models leads to better results')
+            st.markdown("---")
+            
+            image_to_LIME = st.selectbox(
+            'Select an image for LIME:',
+            ('provided test', 'provide image'),
+            help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
+
+            if image_to_LIME == 'provide image':
+                image_to_LIME = load_test_image()
+            else:
+                image_to_LIME = load_baseline()
+
+            st.write("inspect the 5 five classes (from imagenet) for your image")
+            st.write("the datataframe return the top 5 classes, the ID of the class, and the probability")
+            show_DF = st.button('show dataframe prediction',
+            help ="this dataframe return top 5 class probabilities")
+            
+            if show_DF:
+                df_lime = dataframe_prediction(image_to_LIME, pret_mod)
+                st.dataframe(df)
     with theory_tab:
         with st.expander("Overview of a CNN"):
             CNN_overview()
