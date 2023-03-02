@@ -1262,7 +1262,13 @@ def plot_conv_model_structure(model):
 ###########         Visualize LIME         ###############
 ##########################################################
 
-def Image_process_lime(img, model):
+def dataframe_prediction(img, model):
+  '''
+    this function take an image and a model and return a 
+    dataframe with the top 5 prediction (as for probabilities)
+    the dataframe contains index for the imagenet class and 
+    the class name
+  '''
   # resize and take the center part of image to what our model expects
   def get_input_transform():
       normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
