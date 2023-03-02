@@ -1366,4 +1366,4 @@ def lime(img, model, N_samples):
   return img_boundry1, img_boundry2
   
 
-img_boundry1, img_boundry2 = lime(img, model, 1000)
+
