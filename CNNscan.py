@@ -752,7 +752,7 @@ def main():
             
             if show_DF:
                 df_lime = dataframe_prediction(image_to_LIME, pret_mod)
-                st.dataframe(df)
+                st.dataframe(df_lime)
     with theory_tab:
         with st.expander("Overview of a CNN"):
             CNN_overview()
