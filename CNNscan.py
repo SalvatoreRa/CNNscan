@@ -50,13 +50,14 @@ from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtrac
     VanillaBackprop, VanillaBackprop_process, GuidedBackprop, GuidedBackprop_process, 
     scoreCamExtractor, ScoreCam, scorecam_process, GuidedGradCam, gradient_gradcam,
     IntegratedGradients, integrated_gradient_process, CNNLayerVisualization,
-    LRP, LRP_process, LayerCam, LayerCAM_process, 
+    LRP, LRP_process, LasyerCam, LayerCAM_process, 
     Grad_times_process, generate_smooth_grad, smooth_grad_process,
     smooth_grad_process_guidBackprop, LR_GuidedBackprop, layer_act_guid_bp, InvertedRepresentation, 
     inverted_representation_process, ClassSpecificImageGeneration, class_generated_images, 
     DeepDream, dream, RegularizedClassSpecificImageGeneration, 
     regularized_class_img_gen, model_layers_to_df,
-    hierarchy_pos, plot_conv_model_structure, dataframe_prediction)
+    hierarchy_pos, plot_conv_model_structure, dataframe_prediction,
+    lime)
 
 from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
     outputs_LRP, outputs_smoothgrad, output_adv_filt, output_layer_act_guid_bp, \
@@ -748,11 +749,27 @@ def main():
             st.write("inspect the 5 five classes (from imagenet) for your image")
             st.write("the datataframe return the top 5 classes, the ID of the class, and the probability")
             show_DF = st.button('show dataframe prediction',
-            help ="this dataframe return top 5 class probabilities")
+            help ="this dataframe return top 5 class probabilities"
+            )
             
             if show_DF:
                 df_lime = dataframe_prediction(image_to_LIME, pret_mod)
                 st.dataframe(df_lime)
+
+            
+            show_LIME = st.button('show LIME',
+            help ="this method is showing LIME overlapping on the image"
+            )
+            if show_lime:
+                if mod_app == 'AlexaNET':
+                    n_sample =1000
+                if mod_app == 'VGG16':
+                    n_sample =100
+                if mod_app == 'VGG19':
+                    n_sample =100
+                img_boundry1, img_boundry2 = lime(image_to_LIME, 
+                pret_mod, n_sample)
+            
     with theory_tab:
         with st.expander("Overview of a CNN"):
             CNN_overview()
