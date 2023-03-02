@@ -387,13 +387,13 @@ def main():
 
             show_scorecam = st.button('show ScoreCam')
             if show_scorecam:
-            scorecam = scorecam_process(pret_mod, image_to_scorecam)
-            heatmap, heatmap_on_image, activation_map = save_class_activation_images(image_to_scorecam, scorecam)
-            txt1 = 'Original image' 
-            txt2 = 'Score-weighted Class Activation Map colored'
-            txt3 = 'Score-weighted Class Activation Map on image'
-            txt4 = 'Score-weighted Class Activation Map - black and white'
-            outputs_scorecam(image_to_scorecam, heatmap, heatmap_on_image, activation_map, txt1, txt2, txt3, txt4)
+                scorecam = scorecam_process(pret_mod, image_to_scorecam)
+                heatmap, heatmap_on_image, activation_map = save_class_activation_images(image_to_scorecam, scorecam)
+                txt1 = 'Original image' 
+                txt2 = 'Score-weighted Class Activation Map colored'
+                txt3 = 'Score-weighted Class Activation Map on image'
+                txt4 = 'Score-weighted Class Activation Map - black and white'
+                outputs_scorecam(image_to_scorecam, heatmap, heatmap_on_image, activation_map, txt1, txt2, txt3, txt4)
             
         with st.expander("Visualize Integrated Gradients"):
         
