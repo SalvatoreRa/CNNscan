@@ -47,9 +47,12 @@ from utils import (load_test_image, load_baseline,
     )
 
 from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtractor, 
-GradCam, Visualize_GradCam )
-from methods import (advance_filt, fetch_feature_maps, CamExtractor, GradCam, Visualize_GradCam,
-    VanillaBackprop, VanillaBackprop_process, GuidedBackprop, GuidedBackprop_process, 
+    GradCam, Visualize_GradCam, advance_filt, fetch_feature_maps, 
+    CamExtractor, VanillaBackprop, VanillaBackprop_process, GuidedBackprop, 
+    GuidedBackprop_process
+     )
+from methods import (
+     
     scoreCamExtractor, ScoreCam, scorecam_process, GuidedGradCam, gradient_gradcam,
     IntegratedGradients, integrated_gradient_process, CNNLayerVisualization,
     LRP, LRP_process, LasyerCam, LayerCAM_process,
