@@ -53,10 +53,10 @@ from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtrac
     scorecam_process, GuidedGradCam, gradient_gradcam,
     IntegratedGradients, integrated_gradient_process, 
     CNNLayerVisualization, LRP, LRP_process, LasyerCam, 
-    LayerCAM_process, Grad_times_process 
+    LayerCAM_process, 
     
      )
-from methods import (generate_smooth_grad, smooth_grad_process,
+from methods import (Grad_times_process, generate_smooth_grad, smooth_grad_process,
      
    
     
