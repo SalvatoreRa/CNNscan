@@ -50,12 +50,13 @@ from methods import ( fetch_filters, advance_filt, fetch_feature_maps, CamExtrac
     GradCam, Visualize_GradCam, advance_filt, fetch_feature_maps, 
     CamExtractor, VanillaBackprop, VanillaBackprop_process, GuidedBackprop, 
     GuidedBackprop_process, scoreCamExtractor, ScoreCam, 
-    scorecam_process, GuidedGradCam, gradient_gradcam
+    scorecam_process, GuidedGradCam, gradient_gradcam,
+     IntegratedGradients, integrated_gradient_process, 
+     CNNLayerVisualization
      )
 from methods import (
      
-    
-    IntegratedGradients, integrated_gradient_process, CNNLayerVisualization,
+   
     LRP, LRP_process, LasyerCam, LayerCAM_process,
     Grad_times_process, generate_smooth_grad, smooth_grad_process,
     smooth_grad_process_guidBackprop, LR_GuidedBackprop, layer_act_guid_bp, InvertedRepresentation, 
