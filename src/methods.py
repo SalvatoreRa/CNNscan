@@ -1140,7 +1140,7 @@ def dream(model, cnn_layer, filter_pos, image):
     return images
 
 ##########################################################
-###########         Visualize DeepDream    ###############
+###########         Visualize Structure    ###############
 ##########################################################
 
 import networkx as nx
@@ -1258,3 +1258,44 @@ def plot_conv_model_structure(model):
     plt.axis('off')
     st.pyplot(fig)
       
+##########################################################
+###########         Visualize LIME         ###############
+##########################################################
+
+def Image_process_lime(img, model):
+  # resize and take the center part of image to what our model expects
+  def get_input_transform():
+      normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                      std=[0.229, 0.224, 0.225])       
+      transf = transforms.Compose([
+          transforms.Resize((256, 256)),
+          transforms.CenterCrop(224),
+          transforms.ToTensor(),
+          normalize
+      ])    
+
+      return transf
+
+  def get_input_tensors(img):
+      transf = get_input_transform()
+      # unsqeeze converts single image to batch of 1
+      return transf(img).unsqueeze(0)
+
+  path_imgnet = 'https://raw.githubusercontent.com/SalvatoreRa/CNNscan/main/imagenet_class_index.json'
+  idx2label, cls2label, cls2idx = [], {}, {}
+  with urllib.request.urlopen(path_imgnet) as read_file:
+      class_idx = json.load(read_file)
+      idx2label = [class_idx[str(k)][1] for k in range(len(class_idx))]
+      cls2label = {class_idx[str(k)][0]: class_idx[str(k)][1] for k in range(len(class_idx))}
+      cls2idx = {class_idx[str(k)][0]: k for k in range(len(class_idx))} 
+
+  img_t = get_input_tensors(img)
+  model.eval()
+  logits = model(img_t)
+  probs = F.softmax(logits, dim=1)
+  probs5 = probs.topk(5)
+  probs_top5 = tuple((p,c, idx2label[c]) for p, c in zip(probs5[0][0].detach().numpy(), probs5[1][0].detach().numpy()))
+  df =pd.DataFrame(probs_top5, columns = ["probability", "Idx class", "class name"])
+  return df
+
+
