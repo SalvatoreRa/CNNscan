@@ -4,6 +4,11 @@ import io
 from PIL import Image, ImageFilter
 from io import BytesIO
 import requests
+import os
+import sys
+import pathlib
+import json
+import urllib.request
 
 #model specific libraries
 import numpy as np
@@ -24,9 +29,6 @@ from torch.optim import SGD, Adam
 import copy
 from matplotlib.colors import ListedColormap
 from copy import deepcopy
-import os
-import sys
-import pathlib
 import networkx as nx
 import random
 
