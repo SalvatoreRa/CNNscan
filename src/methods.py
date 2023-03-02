@@ -1288,7 +1288,7 @@ def dataframe_prediction(img, model):
       return transf(img).unsqueeze(0)
 
   
-  def read_imagenet_categ():
+  def read_imagenet_categs():
     imagenet_cat = "https://raw.githubusercontent.com/SalvatoreRa/CNNscan/main/imagenet1000_clsidx_to_labels.txt"
     response = requests.get(imagenet_cat)
     data_text = response.text
@@ -1299,7 +1299,7 @@ def dataframe_prediction(img, model):
     return categ
 
 
-  categ = read_imagenet_categ()
+  categ = read_imagenet_categs()
   
   img_t = get_input_tensors(img)
   model.eval()
