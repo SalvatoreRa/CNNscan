@@ -145,6 +145,7 @@ def VGG19():
 ########################  Main app               #########################
 ##########################################################################
 # Create the main app
+@st.cache(ttl=3600)
 def main():
     model = load_model()
 
@@ -769,7 +770,7 @@ def main():
                     n_sample =100
                 if mod_app == 'VGG19':
                     n_sample =100
-                @st.cache(ttl=3600)
+                
                 img_boundry1, img_boundry2 = lime(image_to_LIME, 
                 pret_mod, n_sample)
                 outputs_LIME([image_to_LIME, img_boundry1, img_boundry2])
