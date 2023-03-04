@@ -145,7 +145,7 @@ def VGG19():
 ########################  Main app               #########################
 ##########################################################################
 # Create the main app
-@st.cache(ttl=3600, suppress_st_warning=True)
+@st.st.cache_data(ttl=3600, suppress_st_warning=True)
 def main():
     model = load_model()
 
