@@ -68,7 +68,7 @@ from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
 from description import (Aknowledgment, CNN_overview)
 
 
-@st.cache(ttl=12*3600)
+@st.cache(ttl=3600)
 def load_model():
   model_urls = {
     'alexnet': 'https://download.pytorch.org/models/alexnet-owt-7be5be79.pth',
@@ -769,6 +769,7 @@ def main():
                     n_sample =100
                 if mod_app == 'VGG19':
                     n_sample =100
+                @st.cache(ttl=3600)
                 img_boundry1, img_boundry2 = lime(image_to_LIME, 
                 pret_mod, n_sample)
                 outputs_LIME([image_to_LIME, img_boundry1, img_boundry2])
