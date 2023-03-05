@@ -810,7 +810,7 @@ def main():
 
                 
                 smoothing =sm
-                plot_shap(img, pret_mod, Layer_app, 
+                plot_shap(image_to_SHAPE, pret_mod, Layer_app, 
                 size =size_pic, n_samples = samples,
                 ls = smoothing)
 
