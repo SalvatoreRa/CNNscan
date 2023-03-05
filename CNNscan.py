@@ -35,6 +35,7 @@ from lime import lime_image
 from skimage.segmentation import mark_boundaries
 import pandas as pd
 from streamlit_shap import st_shap
+from skimage.transform import resize
 
 #We are importing from the modules
 sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
