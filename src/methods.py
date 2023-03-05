@@ -1394,20 +1394,25 @@ def plot_shap(img, model, Layer_app, size =(512,512), n_samples = 50, ls=0 ):
   im /= 255
   im = np.expand_dims(im, axis=0)
   to_explain = im
+  
+  #retrieve the name of the predictions
+  def read_imagenet_categs():
+    imagenet_cat = "https://raw.githubusercontent.com/SalvatoreRa/CNNscan/main/imagenet1000_clsidx_to_labels.txt"
+    response = requests.get(imagenet_cat)
+    data_text = response.text
+    data = eval(data_text)
 
-  #retrieve the class name of the predictions
-  url = "https://raw.githubusercontent.com/SalvatoreRa/CNNscan/main/imagenet_class_index.json"
-  fname = shap.datasets.cache(url)
-  with open(fname) as f:
-      class_names = json.load(f)
+    categ = pd.DataFrame.from_dict(data, orient='index',
+                        columns=['cat'])
+    return categ
 
   e = shap.GradientExplainer((model, model.features[Layer_app]), normalize(im), local_smoothing=ls)
   shap_values,indexes = e.shap_values(normalize(to_explain), ranked_outputs=2, nsamples=n_samples)
 
   # get the names for the classes
-  index_names = np.vectorize(lambda x: class_names[str(x)][1])(indexes)
+  indx = indexes.numpy().tolist()[0]
+  index_names = categ.iloc[indx, 0].to_list()
 
   # plot the explanations
   shap_values = [np.swapaxes(np.swapaxes(s, 2, 3), 1, -1) for s in shap_values]
-  st_shap(shap.image_plot(shap_values, to_explain, index_names))
-  
+  shap.image_plot(shap_values, to_explain, index_names)
