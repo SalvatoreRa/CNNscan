@@ -1372,5 +1372,42 @@ def lime(img, model, N_samples):
 
   return img_boundry1, img_boundry2
   
+##########################################################
+###########         Visualize SHAP         ###############
+##########################################################
 
+def plot_shap(img, model, Layer_app, size =(512,512), n_samples = 50, ls=0 ):
+  
 
+  def normalize(image):
+    mean = [0.485, 0.456, 0.406]
+    std = [0.229, 0.224, 0.225]
+    if image.max() > 1:
+        image /= 255
+    image = (image - mean) / std
+    # in addition, roll the axis so that they suit pytorch
+    return torch.tensor(image.swapaxes(-1, 1).swapaxes(2, 3)).float()
+  
+  #resize the image, normalize, and make it a batch
+  im = np.array(img).astype(dtype = np.float32)
+  im = resize(im, size)
+  im /= 255
+  im = np.expand_dims(im, axis=0)
+  to_explain = im
+
+  #retrieve the class name of the predictions
+  url = "https://raw.githubusercontent.com/SalvatoreRa/CNNscan/main/imagenet_class_index.json"
+  fname = shap.datasets.cache(url)
+  with open(fname) as f:
+      class_names = json.load(f)
+
+  e = shap.GradientExplainer((model, model.features[Layer_app]), normalize(im), local_smoothing=ls)
+  shap_values,indexes = e.shap_values(normalize(to_explain), ranked_outputs=2, nsamples=n_samples)
+
+  # get the names for the classes
+  index_names = np.vectorize(lambda x: class_names[str(x)][1])(indexes)
+
+  # plot the explanations
+  shap_values = [np.swapaxes(np.swapaxes(s, 2, 3), 1, -1) for s in shap_values]
+  st_shap(shap.image_plot(shap_values, to_explain, index_names))
+  
