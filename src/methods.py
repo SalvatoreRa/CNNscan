@@ -32,6 +32,7 @@ import random
 from lime import lime_image
 from skimage.segmentation import mark_boundaries
 import pandas as pd
+from streamlit_shap import st_shap
 
 
 sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
@@ -1197,6 +1198,12 @@ def hierarchy_pos(G, root=None, width=1., vert_gap = 0.2, vert_loc = 0, xcenter 
 
 
 def plot_conv_model_structure(model):
+    """
+    plot the structure of a model as a graph
+    colors are representing different blocks
+
+    """
+
     G = nx.DiGraph()
     i =0
 
