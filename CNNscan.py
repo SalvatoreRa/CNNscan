@@ -778,6 +778,42 @@ def main():
                 pret_mod, n_sample)
                 outputs_LIME([image_to_LIME, img_boundry1, img_boundry2])
             
+
+        with st.expander("Visualize SHAP value"):
+
+            st.write('Default model is **AlexNet** which is faster, however other models leads to better results')
+            st.markdown("---")
+            
+            image_to_SHAPE = st.selectbox(
+            'Select an image for SHAP:',
+            ('provided test', 'provide image'),
+            help = 'select the image to test. You can use the provided image or upload an image (jpg, png)')
+
+            if image_to_SHAPE == 'provide image':
+                image_to_SHAPE = load_test_image()
+            else:
+                image_to_SHAPE = load_baseline()
+
+            st.write("select a target layer on the sidebar")
+            st.write("you can control the smoothing:")
+            sm = st.slider('select smoothing', 0, 1, 0.1)
+            show_SHAPE = st.button('show SHAP',
+            help ="this method is showing SHAP overlapping on the image"
+            )
+            if show_SHAPE:
+                if mod_app == 'AlexaNET':
+                    size_pic = (512,512)
+                    samples = 20
+                if mod_app == 'VGG16' or mod_app == 'VGG16':
+                    size_pic = (224,224)
+                    samples = 10
+
+                
+                smoothing =sm
+                plot_shap(img, pret_mod, Layer_app, 
+                size =size_pic, n_samples = samples,
+                ls = smoothing)
+
     with theory_tab:
         with st.expander("Overview of a CNN"):
             CNN_overview()
