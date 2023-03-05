@@ -34,6 +34,7 @@ from skimage.segmentation import mark_boundaries
 import pandas as pd
 from streamlit_shap import st_shap
 from skimage.transform import resize
+import shap
 
 sys.path.append(str(pathlib.Path().absolute()).split("/src")[0] + "/src")
 from utils import (load_test_image, load_baseline, 
