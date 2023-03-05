@@ -796,7 +796,7 @@ def main():
 
             st.write("select a target layer on the sidebar")
             st.write("you can control the smoothing:")
-            sm = st.slider('select smoothing', 0, 1, 0.1)
+            sm = st.slider('select smoothing', 0.0, 1.0, 0.1)
             show_SHAPE = st.button('show SHAP',
             help ="this method is showing SHAP overlapping on the image"
             )
