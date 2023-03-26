@@ -1,5 +1,5 @@
 torch
-matplotlib
+matplotlib==3.4.3
 torchvision
 scikit-learn
 networkx
