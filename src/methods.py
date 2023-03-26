@@ -1411,6 +1411,7 @@ def plot_shap(img, model, Layer_app, size =(512,512), n_samples = 50, ls=0 ):
   shap_values,indexes = e.shap_values(normalize(to_explain), ranked_outputs=2, nsamples=n_samples)
 
   # get the names for the classes
+  categ = read_imagenet_categs()
   indx = indexes.numpy().tolist()[0]
   index_names = categ.iloc[indx, 0].to_list()
 
