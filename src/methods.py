@@ -1417,4 +1417,5 @@ def plot_shap(img, model, Layer_app, size =(512,512), n_samples = 50, ls=0 ):
 
   # plot the explanations
   shap_values = [np.swapaxes(np.swapaxes(s, 2, 3), 1, -1) for s in shap_values]
-  st_shap(shap.image_plot(shap_values, to_explain, index_names))
+  st_shap(shap.image_plot(shap_values, to_explain, index_names)
+    height=550, width=850)
