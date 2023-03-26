@@ -72,7 +72,7 @@ from outputs import cam_outputs, outputs_backprop, outputs_scorecam, \
 from description import (Aknowledgment, CNN_overview)
 
 
-@st.cache(ttl=3600)
+@st.cache_resource
 def load_model():
   model_urls = {
     'alexnet': 'https://download.pytorch.org/models/alexnet-owt-7be5be79.pth',
@@ -131,17 +131,20 @@ def load_model():
   model.load_state_dict(state_dict)
   return model
 
-@st.cache(ttl=3600)
+@st.cache_resource
 def VGG16():
     pret_mod =  models.vgg16(pretrained=True)
     return pret_mod
 
-@st.cache(ttl=3600)
+@st.cache_resource
 def VGG19():
     pret_mod =  models.vgg19(pretrained=True)
     return pret_mod
 
-  
+@st.cache_resource
+def alexNet():
+    pret_mod =  models.alexnet(pretrained=True)
+    return pret_mod 
 
 
 
@@ -151,7 +154,7 @@ def VGG19():
 # Create the main app
 
 def main():
-    model = load_model()
+    model = alexNet()
 
     col1, col2 = st.columns( [0.8, 0.2])
     with col1:               
