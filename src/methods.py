@@ -447,7 +447,7 @@ class GuidedGradCam():
                        input_image.shape[3]), Image.ANTIALIAS))/255
         return cam
 
-@st.cache(ttl=12*3600)      
+@st.cache_resource    
 def gradient_gradcam(model, img):
   gcv2 = GuidedGradCam(model, target_layer=11)
   im, pred_cls = process_img(img, model)
@@ -643,7 +643,7 @@ class IntegratedGradients():
             integrated_grads = integrated_grads + single_integrated_grad/steps
         return integrated_grads[0]
 
-@st.cache(ttl=12*3600)
+@st.cache_resource
 def integrated_gradient_process(img, model):
     im, pred_cls = process_img(img, model)
     IG = IntegratedGradients(model)
@@ -659,7 +659,7 @@ def integrated_gradient_process(img, model):
 ##########################################################
 
 
-@st.cache(ttl=12*3600)    
+@st.cache_resource
 def Grad_times_process(img, model):
   im, pred_cls = process_img(img, model)
   VBP = VanillaBackprop(model)
@@ -774,7 +774,7 @@ def generate_smooth_grad(Backprop, prep_img, target_class, param_n, param_sigma_
     smooth_grad = smooth_grad / param_n
     return smooth_grad
 
-@st.cache(ttl=12*3600)
+@st.cache_resource
 def smooth_grad_process(img, model):
   im, pred_cls = process_img(img, model)
   param_n = 50
@@ -791,7 +791,7 @@ def smooth_grad_process(img, model):
     smooths_bn.append(smooth_grad_bn)
   return smooths, smooths_bn
 
-@st.cache(ttl=12*3600)
+@st.cache_resource
 def smooth_grad_process_guidBackprop(img, model):
   im, pred_cls = process_img(img, model)
   param_n = 50
@@ -953,7 +953,7 @@ def inverted_representation_process(img, model, image_size,target_layer):
 ###########    Class generated images      ###############
 ##########################################################
 
-@st.cache(ttl=3600, suppress_st_warning=True)
+@st.cache_resource
 class ClassSpecificImageGeneration():
 
       
@@ -993,7 +993,7 @@ class ClassSpecificImageGeneration():
 
         return images
 
-@st.cache(ttl=3600, suppress_st_warning=True)
+@st.cache_resource
 def class_generated_images(model, class_to_gen):
   csig = ClassSpecificImageGeneration(model, class_to_gen)
   images =csig.generate()
@@ -1005,7 +1005,7 @@ def class_generated_images(model, class_to_gen):
 ##########################################################
 
 
-@st.cache(ttl=3600, suppress_st_warning=True)
+@st.cache_resource
 class RegularizedClassSpecificImageGeneration():
   
     def __init__(self, model, target_class, iterations, blur_freq, blur_rad, wd, clipping_value, initial_learning_rate):
