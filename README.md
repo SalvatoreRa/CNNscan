@@ -1,6 +1,8 @@
 # CNNscan
 A CT-scan of your CNN
 
+<img src="https://github.com/SalvatoreRa/CNNscan/blob/main/img/logo.png?raw=true" width="400" height="200"/>
+
 # Implemented methods
 * filter visualization - implemented with AlexaNet, VGG16, VGG19
 * feature map visualization - implemented with AlexaNet, VGG16, VGG19
