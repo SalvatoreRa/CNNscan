@@ -20,6 +20,12 @@ In the future, several more methods will be added, increased the number of model
 
 **Over to you to play!**
 
+link to the app:
+
+<a href="https://salvatorera-cnnscan-cnnscan-y7c8pc.streamlit.app/">
+  <img src="https://github.com/SalvatoreRa/CNNscan/blob/main/img/logo.png?raw=true" width="200" height="100"/>
+</a>
+
 
 # Implemented methods
 * filter visualization - implemented with AlexaNet, VGG16, VGG19
